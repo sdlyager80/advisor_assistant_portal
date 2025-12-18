@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
-  // This file exists only to suppress Tailwind CSS warnings from Vite/PostCSS
-  // The project uses Halstack (DXC Design System), not Tailwind CSS
-  // If these warnings appear, it's safe to ignore them or keep this empty config
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  // NOTE: This project uses Halstack (DXC Design System), not Tailwind CSS
+  // This config exists only to suppress PostCSS warnings from Vite
 }
