@@ -4,21 +4,19 @@
   "description": "Advisor Assistant Portal built with React and Halstack for ServiceNow integration",
   "private": true,
   "dependencies": {
-    "@dxc-technology/halstack-react": "^15.3.2",
+    "@dxc-technology/halstack-react": "^12.2.0",
     "@fortawesome/fontawesome-free": "^6.5.1",
     "axios": "^1.6.2",
     "date-fns": "^3.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-data-grid": "7.0.0-beta.44",
-    "styled-components": "^5.3.11"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.3.3",
-    "vite": "^7.3.0"
+    "vite": "^5.0.8"
   },
   "scripts": {
     "dev": "vite",
