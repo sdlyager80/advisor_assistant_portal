@@ -249,7 +249,7 @@ const CustomersScreen = () => {
               alignItems: 'center',
               py: 3,
               mb: 3,
-              bgcolor: isListening ? '#f3e5f5' : '#f5f5f5',
+              bgcolor: isListening ? '#e0f2f1' : '#f5f5f5',
               borderRadius: 2,
               transition: 'background-color 0.3s'
             }}
@@ -269,15 +269,15 @@ const CustomersScreen = () => {
                 '@keyframes pulse': {
                   '0%': {
                     transform: 'scale(1)',
-                    boxShadow: '0 0 0 0 rgba(220, 0, 78, 0.7)'
+                    boxShadow: '0 0 0 0 rgba(0, 137, 123, 0.7)'
                   },
                   '50%': {
                     transform: 'scale(1.05)',
-                    boxShadow: '0 0 0 10px rgba(220, 0, 78, 0)'
+                    boxShadow: '0 0 0 10px rgba(0, 137, 123, 0)'
                   },
                   '100%': {
                     transform: 'scale(1)',
-                    boxShadow: '0 0 0 0 rgba(220, 0, 78, 0)'
+                    boxShadow: '0 0 0 0 rgba(0, 137, 123, 0)'
                   }
                 }
               }}

@@ -39,7 +39,7 @@ const theme = createTheme({
       main: '#1976d2',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#00897b',
     },
     background: {
       default: '#f5f5f5',

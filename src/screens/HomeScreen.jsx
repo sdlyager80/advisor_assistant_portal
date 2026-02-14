@@ -188,7 +188,7 @@ const HomeScreen = ({ userData }) => {
               <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                 <Avatar
                   sx={{
-                    bgcolor: insight.type === 'priority' ? '#dc004e' :
+                    bgcolor: insight.type === 'priority' ? '#00897b' :
                             insight.type === 'opportunity' ? '#2e7d32' : '#1976d2',
                     width: 40,
                     height: 40,
