@@ -109,9 +109,8 @@ const DemoScreen = ({
     const languages = ['English', 'Spanish', 'English', 'English']; // Weight English more
     const language = languages[Math.floor(Math.random() * languages.length)];
 
-    // Random advisor name
-    const advisorNames = ['Michael', 'Jennifer', 'David', 'Grace', 'Robert'];
-    const advisorName = advisorNames[Math.floor(Math.random() * advisorNames.length)];
+    // Advisor name - Grace Wilson
+    const advisorName = 'Grace Wilson';
 
     return {
       age,
@@ -1027,7 +1026,7 @@ const DemoScreen = ({
                   Milestone
                 </Typography>
                 <Typography variant="body1" fontWeight={700}>
-                  {customerData.age}th Birthday (Tomorrow)
+                  {customerData.age}th Birthday (in 2 weeks)
                 </Typography>
               </Grid>
               <Grid item xs={6}>

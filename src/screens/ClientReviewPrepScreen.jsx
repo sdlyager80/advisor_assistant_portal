@@ -1034,8 +1034,17 @@ COMPLIANCE:
             fullWidth
             label="Personal Message (Optional)"
             multiline
-            rows={2}
-            defaultValue={`Hi ${clientData.name},\n\nAs discussed, I'm sending the rider application documents for your review and signature. Please let me know if you have any questions.`}
+            rows={4}
+            defaultValue={`Hi ${clientData.name},
+
+I hope this message finds you well! Following up on our conversation at ${clientData.meetingTime}, I've prepared the rider application documents we discussed for your review.
+
+These riders will provide valuable additional protection for you and your family, including long-term care coverage and accelerated death benefit options. The documents are pre-filled with your policy information to make the process as smooth as possible.
+
+Please review and sign at your convenience. I'm here if you have any questions or would like to discuss any details further. Looking forward to enhancing your coverage!
+
+Warm regards,
+Grace Wilson`}
             margin="normal"
           />
         </DialogContent>
