@@ -412,7 +412,7 @@ export const assembleDocuments = async (appointmentId) => {
 export const getAuditTrail = async (documentId) => {
   if (USE_MOCK_DATA) {
     return [
-      { action: 'Created', user: 'Sarah Anderson', timestamp: '2026-02-10 09:00' },
+      { action: 'Created', user: 'Grace Wilson', timestamp: '2026-02-10 09:00' },
       { action: 'Reviewed', user: 'John Smith', timestamp: '2026-02-10 14:30' },
       { action: 'Signed', user: 'John Smith', timestamp: '2026-02-10 14:35' }
     ];

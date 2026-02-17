@@ -105,7 +105,7 @@ const AutomationScreen = () => {
           <Grid item xs={12} md={6}>
             <UseCaseCard
               userQuery="Show me audit trail for the Martinez policy"
-              agentAction="Pulls complete policy history: application submitted March 15 by advisor Sarah Anderson, medical underwriting review March 18, approval March 22, beneficiary form signed March 25 (e-signature verified), policy issued March 28, first premium paid April 1, beneficiary change request July 10, change approved July 12 (compliance verified). All actions logged with timestamps, user IDs, and IP addresses."
+              agentAction="Pulls complete policy history: application submitted March 15 by advisor Grace Wilson, medical underwriting review March 18, approval March 22, beneficiary form signed March 25 (e-signature verified), policy issued March 28, first premium paid April 1, beneficiary change request July 10, change approved July 12 (compliance verified). All actions logged with timestamps, user IDs, and IP addresses."
               outcome="Complete defensible audit trail for regulatory review"
               interactionType="voice"
               color={colors.red}

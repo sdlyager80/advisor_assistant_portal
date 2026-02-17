@@ -57,7 +57,7 @@ const IllustrationWorkflowScreen = ({
   onNavigateToEngagement,
   clientData = {
     name: 'John Smith',
-    age: 63,
+    age: 64,
     currentValue: 485000,
   },
   illustrationParams = {
@@ -83,6 +83,14 @@ const IllustrationWorkflowScreen = ({
   });
 
   const [showParameters, setShowParameters] = useState(true);
+
+  // Toggle states for chart lines
+  const [showAccountValue, setShowAccountValue] = useState(true);
+  const [showCashSurrender, setShowCashSurrender] = useState(true);
+  const [showDeathBenefit, setShowDeathBenefit] = useState(true);
+
+  // Toggle for X-axis display (year vs age)
+  const [showAge, setShowAge] = useState(false); // false = Policy Year, true = Age
 
   // Reset to default parameters
   const resetParameters = () => {
@@ -113,44 +121,64 @@ const IllustrationWorkflowScreen = ({
   // Generate chart data with adjustable parameters
   const generateChartData = () => {
     const data = [];
-    let value = params.currentValue;
+    let accountValue = params.currentValue;
     const annualWithdrawal = params.monthlyWithdrawal * 12;
     const annualPremium = params.monthlyPremium * 12;
     const netGrowthRate = (params.growthRate - params.annualFees) / 100;
+    const initialDeathBenefit = params.currentValue * 2.5; // Initial death benefit multiplier
 
+    // Start chart from client's current age to show full accumulation and withdrawal phases
     for (let age = clientData.age; age <= 95; age++) {
       const isWithdrawing = age >= params.withdrawalStartAge;
+      const yearsSinceStart = age - clientData.age;
+
+      // Calculate surrender charge (decreases over time, typically 10 years)
+      let surrenderChargeRate = 0;
+      if (yearsSinceStart < 10) {
+        surrenderChargeRate = Math.max(0, (10 - yearsSinceStart) * 0.01); // 10% decreasing to 0%
+      }
+      const surrenderCharge = accountValue * surrenderChargeRate;
+      const cashSurrenderValue = Math.max(0, accountValue - surrenderCharge);
+
+      // Calculate death benefit (guaranteed minimum plus account value growth)
+      const deathBenefit = Math.max(initialDeathBenefit, accountValue * 1.1);
 
       data.push({
         age,
-        value: Math.round(value),
+        year: yearsSinceStart,
+        accountValue: Math.round(accountValue),
+        cashSurrenderValue: Math.round(cashSurrenderValue),
+        deathBenefit: Math.round(deathBenefit),
         withdrawal: isWithdrawing ? annualWithdrawal : 0,
         premium: !isWithdrawing ? annualPremium : 0,
       });
 
       // Apply growth
-      value = value * (1 + netGrowthRate);
+      accountValue = accountValue * (1 + netGrowthRate);
 
       // Add premiums before withdrawal age
       if (!isWithdrawing) {
-        value += annualPremium;
+        accountValue += annualPremium;
       }
 
       // Subtract withdrawals after withdrawal age
       if (isWithdrawing) {
-        value -= annualWithdrawal;
+        accountValue -= annualWithdrawal;
       }
 
-      if (value < 0) value = 0;
+      if (accountValue < 0) accountValue = 0;
     }
     return data;
   };
 
   const chartData = generateChartData();
-  const projectedAt85 = chartData.find(d => d.age === 85)?.value || 0;
+  const projectedAt85 = chartData.find(d => d.age === 85)?.accountValue || 0;
+  const finalValue = chartData[chartData.length - 1]?.accountValue || 0;
+  const totalGrowth = finalValue - params.currentValue;
+  const growthPercentage = ((totalGrowth / params.currentValue) * 100).toFixed(1);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: colors.paleAqua, pb: 4 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
       {/* Simple Header */}
       <Paper
         elevation={0}
@@ -182,74 +210,237 @@ const IllustrationWorkflowScreen = ({
         <Fade in={currentStep >= 1} timeout={800}>
           <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <ShowChart sx={{ fontSize: 28, color: colors.blue, mr: 1.5 }} />
-                <Typography variant="h6" fontWeight={700}>
-                  Policy Projection
-                </Typography>
+              {/* Header with Title and Toggle Buttons */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                  <Typography variant="h6" fontWeight={700} sx={{ mb: 0.5 }}>
+                    Policy Value Projection
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Universal Life Insurance • {chartData.length - 1} Year Projection
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowAccountValue(!showAccountValue)}
+                    sx={{
+                      bgcolor: showAccountValue ? alpha(colors.blue, 0.1) : 'transparent',
+                      border: `2px solid ${colors.blue}`,
+                      '&:hover': { bgcolor: alpha(colors.blue, 0.2) }
+                    }}
+                  >
+                    <ShowChart sx={{ fontSize: 20, color: colors.blue }} />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowCashSurrender(!showCashSurrender)}
+                    sx={{
+                      bgcolor: showCashSurrender ? alpha(colors.lightGreen, 0.1) : 'transparent',
+                      border: `2px solid ${colors.lightGreen}`,
+                      '&:hover': { bgcolor: alpha(colors.lightGreen, 0.2) }
+                    }}
+                  >
+                    <AttachMoneyOutlined sx={{ fontSize: 20, color: colors.lightGreen }} />
+                  </IconButton>
+                </Box>
               </Box>
 
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Projected account value with ${params.monthlyWithdrawal.toLocaleString()}/month withdrawals starting at age {params.withdrawalStartAge}
-              </Typography>
+              {/* Key Metrics Header */}
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                <Grid item xs={4}>
+                  <Typography variant="caption" color="text.secondary">Current Value</Typography>
+                  <Typography variant="h5" fontWeight={700} color={colors.blue}>
+                    ${(params.currentValue / 1000).toFixed(0)}K
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="caption" color="text.secondary">Total Growth</Typography>
+                  <Typography variant="h5" fontWeight={700} color={colors.lightGreen}>
+                    ${(totalGrowth / 1000).toFixed(0)}K
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="caption" color="text.secondary">Growth Rate</Typography>
+                  <Typography variant="h5" fontWeight={700} color={colors.lightGreen}>
+                    +{growthPercentage}%
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              {/* Toggle Pills */}
+              <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Chip
+                    label="Account Value"
+                    onClick={() => setShowAccountValue(!showAccountValue)}
+                    sx={{
+                      bgcolor: showAccountValue ? alpha(colors.blue, 0.15) : alpha('#000', 0.05),
+                      color: colors.blue,
+                      fontWeight: 600,
+                      border: `2px solid ${showAccountValue ? colors.blue : 'transparent'}`,
+                      cursor: 'pointer'
+                    }}
+                  />
+                  <Chip
+                    label="Cash Surrender Value"
+                    onClick={() => setShowCashSurrender(!showCashSurrender)}
+                    sx={{
+                      bgcolor: showCashSurrender ? alpha(colors.lightGreen, 0.15) : alpha('#000', 0.05),
+                      color: colors.lightGreen,
+                      fontWeight: 600,
+                      border: `2px solid ${showCashSurrender ? colors.lightGreen : 'transparent'}`,
+                      cursor: 'pointer'
+                    }}
+                  />
+                  <Chip
+                    label="Death Benefit"
+                    onClick={() => setShowDeathBenefit(!showDeathBenefit)}
+                    sx={{
+                      bgcolor: showDeathBenefit ? alpha(colors.orange, 0.15) : alpha('#000', 0.05),
+                      color: colors.orange,
+                      fontWeight: 600,
+                      border: `2px solid ${showDeathBenefit ? colors.orange : 'transparent'}`,
+                      cursor: 'pointer'
+                    }}
+                  />
+                </Box>
+
+                {/* X-axis Toggle */}
+                <Box sx={{ display: 'flex', gap: 0.5, bgcolor: alpha('#000', 0.05), borderRadius: 1, p: 0.5 }}>
+                  <Button
+                    size="small"
+                    onClick={() => setShowAge(false)}
+                    sx={{
+                      minWidth: 'auto',
+                      px: 1.5,
+                      py: 0.5,
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      bgcolor: !showAge ? '#fff' : 'transparent',
+                      color: !showAge ? colors.blue : 'text.secondary',
+                      boxShadow: !showAge ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                      '&:hover': {
+                        bgcolor: !showAge ? '#fff' : alpha('#000', 0.05),
+                      }
+                    }}
+                  >
+                    Year
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={() => setShowAge(true)}
+                    sx={{
+                      minWidth: 'auto',
+                      px: 1.5,
+                      py: 0.5,
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      bgcolor: showAge ? '#fff' : 'transparent',
+                      color: showAge ? colors.blue : 'text.secondary',
+                      boxShadow: showAge ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                      '&:hover': {
+                        bgcolor: showAge ? '#fff' : alpha('#000', 0.05),
+                      }
+                    }}
+                  >
+                    Age
+                  </Button>
+                </Box>
+              </Box>
 
               {/* Chart */}
-              <Box sx={{ bgcolor: '#fff', borderRadius: 2, p: 2 }}>
-                <ResponsiveContainer width="100%" height={280}>
+              <Box sx={{ bgcolor: '#fff', borderRadius: 2, p: 2, mb: 2 }}>
+                <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                     <XAxis
-                      dataKey="age"
+                      dataKey={showAge ? "age" : "year"}
                       stroke="#666"
                       style={{ fontSize: '12px' }}
+                      label={{ value: showAge ? 'Age' : 'Policy Year', position: 'insideBottom', offset: -5, style: { fontSize: '12px', fill: '#666' } }}
                     />
                     <YAxis
                       stroke="#666"
                       style={{ fontSize: '12px' }}
-                      tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                      tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
                     />
                     <ChartTooltip
-                      formatter={(value) => [`$${value.toLocaleString()}`, 'Account Value']}
+                      formatter={(value, name) => {
+                        const displayName = name === 'accountValue' ? 'Account Value'
+                          : name === 'cashSurrenderValue' ? 'Cash Surrender Value'
+                          : 'Death Benefit';
+                        return [`$${value.toLocaleString()}`, displayName];
+                      }}
                       contentStyle={{ borderRadius: '8px', border: `1px solid ${colors.lightBlue}` }}
                     />
-                    <Area
-                      type="monotone"
-                      dataKey="value"
-                      stroke={colors.blue}
-                      fill={colors.lightBlue}
-                      fillOpacity={0.2}
-                    />
+                    {showAccountValue && (
+                      <Area
+                        type="monotone"
+                        dataKey="accountValue"
+                        stroke={colors.blue}
+                        fill={colors.blue}
+                        fillOpacity={0.3}
+                        strokeWidth={2}
+                      />
+                    )}
+                    {showCashSurrender && (
+                      <Area
+                        type="monotone"
+                        dataKey="cashSurrenderValue"
+                        stroke={colors.lightGreen}
+                        fill={colors.lightGreen}
+                        fillOpacity={0.2}
+                        strokeWidth={2}
+                      />
+                    )}
+                    {showDeathBenefit && (
+                      <Area
+                        type="monotone"
+                        dataKey="deathBenefit"
+                        stroke={colors.orange}
+                        fill={colors.orange}
+                        fillOpacity={0.1}
+                        strokeWidth={2}
+                      />
+                    )}
                   </AreaChart>
                 </ResponsiveContainer>
               </Box>
 
-              {/* Key Metrics */}
-              <Stack direction="row" spacing={2} sx={{ mt: 3, flexWrap: 'wrap' }}>
-                <Box sx={{ flex: 1, minWidth: 150 }}>
-                  <Typography variant="caption" color="text.secondary">Current Value</Typography>
-                  <Typography variant="h6" fontWeight={700} color={colors.blue}>
-                    ${params.currentValue.toLocaleString()}
-                  </Typography>
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 150 }}>
-                  <Typography variant="caption" color="text.secondary">Monthly Premium</Typography>
-                  <Typography variant="h6" fontWeight={700} color={colors.lightGreen}>
-                    ${params.monthlyPremium.toLocaleString()}
-                  </Typography>
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 150 }}>
-                  <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
-                  <Typography variant="h6" fontWeight={700} color={colors.orange}>
-                    ${params.monthlyWithdrawal.toLocaleString()}
-                  </Typography>
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 150 }}>
-                  <Typography variant="caption" color="text.secondary">Projected at 85</Typography>
-                  <Typography variant="h6" fontWeight={700} color={projectedAt85 > 0 ? colors.lightGreen : colors.orange}>
-                    ${projectedAt85.toLocaleString()}
-                  </Typography>
-                </Box>
-              </Stack>
+              {/* Professional Disclaimer */}
+              <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', display: 'block', mb: 2 }}>
+                * Projected values are based on current assumptions and are not guaranteed. Actual results may vary.
+              </Typography>
+
+              {/* Projected Values at Age 85 */}
+              <Box sx={{ bgcolor: alpha(colors.paleAqua, 0.5), borderRadius: 2, p: 2, mb: 2 }}>
+                <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 2 }}>
+                  Projected Values at Age 85
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Account Value</Typography>
+                    <Typography variant="h6" fontWeight={700} color={colors.blue}>
+                      ${(chartData.find(d => d.age === 85)?.accountValue || 0).toLocaleString()}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Cash Surrender</Typography>
+                    <Typography variant="h6" fontWeight={700} color={colors.lightGreen}>
+                      ${(chartData.find(d => d.age === 85)?.cashSurrenderValue || 0).toLocaleString()}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Death Benefit</Typography>
+                    <Typography variant="h6" fontWeight={700} color={colors.orange}>
+                      ${(chartData.find(d => d.age === 85)?.deathBenefit || 0).toLocaleString()}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
 
               {/* Compact Parameter Adjusters - Directly Below Metrics */}
               <Box sx={{ mt: 3, pt: 2, borderTop: `1px solid ${alpha(colors.lightBlue, 0.2)}` }}>
@@ -606,7 +797,11 @@ const IllustrationWorkflowScreen = ({
             }}
             onClick={() => {
               if (onNavigateToEngagement) {
-                onNavigateToEngagement(customerName);
+                onNavigateToEngagement({
+                  name: customerName,
+                  age: 65, // Fixed milestone birthday
+                  milestone: 'birthday'
+                });
               }
             }}
           >
@@ -620,7 +815,7 @@ const IllustrationWorkflowScreen = ({
                         Upcoming Milestone Detected
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {customerName} turns {params.withdrawalStartAge} in 2 weeks
+                        {customerName} turns 65 in 2 weeks
                       </Typography>
                     </Box>
                   </Box>

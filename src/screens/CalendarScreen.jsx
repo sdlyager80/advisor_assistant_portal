@@ -54,11 +54,12 @@ const CalendarScreen = () => {
   // Appointments with dates
   const [appointments, setAppointments] = useState([
     { id: 1, date: new Date().toDateString(), time: '2:00 PM', title: 'Policy Review - Sarah Johnson', type: 'in-person', duration: '30 min', client: 'Sarah Johnson', status: 'confirmed' },
-    { id: 2, date: new Date().toDateString(), time: '3:30 PM', title: 'New Client Meeting - David Lee', type: 'video', duration: '45 min', client: 'David Lee', status: 'confirmed' },
-    { id: 3, date: new Date().toDateString(), time: '4:30 PM', title: 'Claims Discussion - Robert Martinez', type: 'in-person', duration: '30 min', client: 'Robert Martinez', status: 'pending' },
-    { id: 4, date: new Date(Date.now() + 86400000).toDateString(), time: '10:00 AM', title: 'Insurance Review - Emma Wilson', type: 'video', duration: '30 min', client: 'Emma Wilson', status: 'confirmed' },
-    { id: 5, date: new Date(Date.now() + 86400000).toDateString(), time: '2:30 PM', title: 'Claim Processing - Tom Anderson', type: 'in-person', duration: '45 min', client: 'Tom Anderson', status: 'pending' },
-    { id: 6, date: new Date(Date.now() + 172800000).toDateString(), time: '11:00 AM', title: 'New Policy Discussion - Lisa Chen', type: 'video', duration: '60 min', client: 'Lisa Chen', status: 'confirmed' },
+    { id: 2, date: new Date().toDateString(), time: '2:30 PM', title: 'Policy Review - Sam Wright', type: 'in-person', duration: '45 min', client: 'Sam Wright', status: 'confirmed' },
+    { id: 3, date: new Date().toDateString(), time: '3:30 PM', title: 'New Client Meeting - David Lee', type: 'video', duration: '45 min', client: 'David Lee', status: 'confirmed' },
+    { id: 4, date: new Date().toDateString(), time: '4:30 PM', title: 'Claims Discussion - Robert Martinez', type: 'in-person', duration: '30 min', client: 'Robert Martinez', status: 'pending' },
+    { id: 5, date: new Date(Date.now() + 86400000).toDateString(), time: '10:00 AM', title: 'Insurance Review - Emma Wilson', type: 'video', duration: '30 min', client: 'Emma Wilson', status: 'confirmed' },
+    { id: 6, date: new Date(Date.now() + 86400000).toDateString(), time: '2:30 PM', title: 'Claim Processing - Tom Anderson', type: 'in-person', duration: '45 min', client: 'Tom Anderson', status: 'pending' },
+    { id: 7, date: new Date(Date.now() + 172800000).toDateString(), time: '11:00 AM', title: 'New Policy Discussion - Lisa Chen', type: 'video', duration: '60 min', client: 'Lisa Chen', status: 'confirmed' },
   ]);
 
   // Filter appointments by selected date
@@ -251,7 +252,7 @@ const CalendarScreen = () => {
           mb: 4,
           borderRadius: 3,
           border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
-          background: `linear-gradient(135deg, ${alpha(colors.lightBlue, 0.05)} 0%, ${alpha(colors.blue, 0.02)} 100%)`,
+          background: '#FFFFFF',
         }}
       >
         <CardContent sx={{ p: 3 }}>

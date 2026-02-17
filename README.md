@@ -4,7 +4,7 @@ A modern React-based portal for the Advisor Assistant application, built with Ha
 
 ## Overview
 
-The Advisor Assistant is a suite of Smart Apps that provides insurance advisors, producers, and field managers with an AI-powered daily workbench. This React portal recreates the ServiceNow Service Portal widget functionality with a modern, responsive interface using Halstack components.
+The Advisor Assistant is a suite of Advanced Apps that provides insurance advisors, producers, and field managers with a data-driven daily workbench. This React portal recreates the ServiceNow Service Portal widget functionality with a modern, responsive interface using Halstack components.
 
 ## Features
 

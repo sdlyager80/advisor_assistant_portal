@@ -149,8 +149,9 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
 
   const mockAppointments = [
     { id: 1, client: 'Sarah Johnson', type: 'Policy Review', time: '2:00 PM', duration: '30 min', status: 'confirmed' },
-    { id: 2, client: 'David Lee', type: 'New Client Meeting', time: '3:30 PM', duration: '45 min', status: 'confirmed' },
-    { id: 3, client: 'Robert Martinez', type: 'Claims Discussion', time: '4:30 PM', duration: '30 min', status: 'pending' },
+    { id: 2, client: 'Sam Wright', type: 'Policy Review', time: '2:30 PM', duration: '45 min', status: 'confirmed' },
+    { id: 3, client: 'David Lee', type: 'New Client Meeting', time: '3:30 PM', duration: '45 min', status: 'confirmed' },
+    { id: 4, client: 'Robert Martinez', type: 'Claims Discussion', time: '4:30 PM', duration: '30 min', status: 'pending' },
   ];
 
   const mockLeads = [
@@ -777,7 +778,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', py: 3 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', py: 3 }}>
       <Container maxWidth="lg">
         {/* Welcome Header */}
         <Box sx={{ mb: 4 }}>
@@ -1083,14 +1084,14 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
           </Grid>
         </Grid>
 
-        {/* Smart Search & Command Card */}
+        {/* Search & Command Card */}
         <Card
           elevation={0}
           sx={{
             mb: 4,
             borderRadius: 4,
             border: `2px solid ${alpha(colors.blue, 0.3)}`,
-            background: `linear-gradient(135deg, ${alpha(colors.lightBlue, 0.03)} 0%, ${alpha(colors.blue, 0.01)} 100%)`,
+            background: '#FFFFFF',
           }}
         >
           <CardContent sx={{ p: 4 }}>
@@ -1100,7 +1101,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                   width: 48,
                   height: 48,
                   borderRadius: 2,
-                  bgcolor: alpha(colors.lightBlue, 0.15),
+                  bgcolor: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1124,7 +1125,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={handleSearchSubmit}
-              placeholder="Type your request or click the mic to speak... (e.g., 'Prep me for John Smith at 2:30' or 'Client review for Sarah Johnson')"
+              placeholder="Type your request or click the mic to speak... (e.g., 'Prep me for John Smith meeting at 4' or 'Client review for David')"
               variant="outlined"
               sx={{
                 '& .MuiOutlinedInput-root': {
@@ -1233,7 +1234,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 Proactive Insights
               </Typography>
               <Chip
-                label="AI-Driven"
+                label="Data-Driven"
                 size="small"
                 sx={{
                   ml: 1.5,

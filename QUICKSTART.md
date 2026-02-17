@@ -192,7 +192,7 @@ Want to extend the portal? Consider adding:
 - [ ] Mobile-optimized views
 - [ ] Offline support
 - [ ] Voice commands
-- [ ] AI-powered recommendations
+- [ ] Data-driven recommendations
 - [ ] Document management
 - [ ] Task automation workflows
 
