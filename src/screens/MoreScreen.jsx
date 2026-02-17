@@ -61,7 +61,7 @@ const MoreScreen = ({ userData, onNavigateToDemo }) => {
         More Options
       </Typography>
 
-      {/* Smart Engagement Feature Card */}
+      {/* Advanced Engagement Feature Card */}
       <Card
         sx={{
           mb: 3,
@@ -78,7 +78,7 @@ const MoreScreen = ({ userData, onNavigateToDemo }) => {
             boxShadow: `0 10px 32px ${alpha(colors.lightBlue, 0.5)}`,
           },
         }}
-        onClick={onNavigateToDemo}
+        onClick={() => onNavigateToDemo('Sam Wright')}
       >
         <Box
           sx={{
@@ -109,10 +109,10 @@ const MoreScreen = ({ userData, onNavigateToDemo }) => {
             </Box>
             <Box sx={{ flex: 1 }}>
               <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700, mb: 0.5 }}>
-                Smart Engagement
+                Advanced Engagement
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.95, fontSize: '0.9375rem' }}>
-                AI-powered customer outreach assistant
+                Data-driven customer outreach assistant
               </Typography>
             </Box>
             <Chip

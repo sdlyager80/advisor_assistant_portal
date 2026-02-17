@@ -55,7 +55,6 @@ const CustomersScreen = () => {
 
   const [customers, setCustomers] = useState([
     { id: 1, name: 'John Smith', status: 'Active', policies: 3, lastContact: '2 days ago', notes: [] },
-    { id: 2, name: 'Sarah Johnson', status: 'Prospect', policies: 0, lastContact: '1 week ago', notes: [] },
     { id: 3, name: 'Michael Chen', status: 'Active', policies: 2, lastContact: 'Today', notes: [] },
   ]);
 
@@ -160,7 +159,7 @@ const CustomersScreen = () => {
     setNoteText('');
     setVoiceText('');
 
-    // Voice confirmation - AI-like responses
+    // Voice confirmation - automated responses
     const categoryText = noteCategory === 'follow-up' ? 'and marked for follow-up' : '';
     const totalNotes = (selectedCustomer.notes || []).length + 1;
 

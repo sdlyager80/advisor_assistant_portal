@@ -49,10 +49,22 @@ const colors = {
 const CalendarScreen = () => {
   const { speak, getRandomResponse } = useSpeech();
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Appointments with dates
   const [appointments, setAppointments] = useState([
-    { id: 1, time: '2:30 PM', title: 'Client Meeting - John Smith', type: 'in-person', duration: '30 min' },
-    { id: 2, time: '4:00 PM', title: 'Policy Review - Sarah Johnson', type: 'video', duration: '45 min' },
+    { id: 1, date: new Date().toDateString(), time: '2:00 PM', title: 'Policy Review - Sarah Johnson', type: 'in-person', duration: '30 min', client: 'Sarah Johnson', status: 'confirmed' },
+    { id: 2, date: new Date().toDateString(), time: '3:30 PM', title: 'New Client Meeting - David Lee', type: 'video', duration: '45 min', client: 'David Lee', status: 'confirmed' },
+    { id: 3, date: new Date().toDateString(), time: '4:30 PM', title: 'Claims Discussion - Robert Martinez', type: 'in-person', duration: '30 min', client: 'Robert Martinez', status: 'pending' },
+    { id: 4, date: new Date(Date.now() + 86400000).toDateString(), time: '10:00 AM', title: 'Insurance Review - Emma Wilson', type: 'video', duration: '30 min', client: 'Emma Wilson', status: 'confirmed' },
+    { id: 5, date: new Date(Date.now() + 86400000).toDateString(), time: '2:30 PM', title: 'Claim Processing - Tom Anderson', type: 'in-person', duration: '45 min', client: 'Tom Anderson', status: 'pending' },
+    { id: 6, date: new Date(Date.now() + 172800000).toDateString(), time: '11:00 AM', title: 'New Policy Discussion - Lisa Chen', type: 'video', duration: '60 min', client: 'Lisa Chen', status: 'confirmed' },
   ]);
+
+  // Filter appointments by selected date
+  const filteredAppointments = appointments.filter(
+    apt => apt.date === selectedDate.toDateString()
+  );
 
   const [openVoiceDialog, setOpenVoiceDialog] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -154,7 +166,7 @@ const CalendarScreen = () => {
     setAppointmentTime('');
     setVoiceText('');
 
-    // Voice confirmation - AI-like responses
+    // Voice confirmation - automated responses
     const meetingType = appointmentType === 'video' ? 'video call' : 'in-person meeting';
     const formattedTime = new Date(`2000-01-01T${appointmentTime}`).toLocaleTimeString('en-US', {
       hour: 'numeric',
@@ -193,7 +205,7 @@ const CalendarScreen = () => {
             color: colors.blue
           }}
         >
-          Today's Appointments
+          Appointments
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <IconButton
@@ -232,7 +244,63 @@ const CalendarScreen = () => {
         </Box>
       </Box>
 
-      {appointments.map(apt => (
+      {/* Date Picker Card */}
+      <Card
+        elevation={0}
+        sx={{
+          mb: 4,
+          borderRadius: 3,
+          border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+          background: `linear-gradient(135deg, ${alpha(colors.lightBlue, 0.05)} 0%, ${alpha(colors.blue, 0.02)} 100%)`,
+        }}
+      >
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <Event sx={{ color: colors.lightBlue, fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={700}>
+              Select Date
+            </Typography>
+          </Box>
+          <TextField
+            type="date"
+            fullWidth
+            value={selectedDate.toISOString().split('T')[0]}
+            onChange={(e) => setSelectedDate(new Date(e.target.value + 'T00:00:00'))}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                color: colors.blue,
+                '&:hover fieldset': {
+                  borderColor: colors.lightBlue,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: colors.blue,
+                  borderWidth: 2,
+                },
+              },
+            }}
+          />
+          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Chip
+              label={`${filteredAppointments.length} appointment${filteredAppointments.length !== 1 ? 's' : ''}`}
+              sx={{
+                bgcolor: alpha(colors.green, 0.15),
+                color: colors.green,
+                fontWeight: 600,
+              }}
+            />
+            <Typography variant="body2" color="text.secondary">
+              on {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Appointments List */}
+      {filteredAppointments.length > 0 ? (
+        filteredAppointments.map(apt => (
         <Card
           elevation={0}
           key={apt.id}
@@ -299,7 +367,27 @@ const CalendarScreen = () => {
             </Box>
           </CardContent>
         </Card>
-      ))}
+      ))
+      ) : (
+        <Card
+          elevation={0}
+          sx={{
+            borderRadius: 3,
+            border: `2px dashed ${alpha(colors.lightBlue, 0.3)}`,
+            background: alpha(colors.paleAqua, 0.3),
+          }}
+        >
+          <CardContent sx={{ p: 4, textAlign: 'center' }}>
+            <Event sx={{ fontSize: 64, color: alpha(colors.lightBlue, 0.4), mb: 2 }} />
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              No appointments scheduled
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              You don't have any appointments on this date.
+            </Typography>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Voice Input Dialog */}
       <Dialog

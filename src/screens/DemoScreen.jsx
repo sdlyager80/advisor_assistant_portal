@@ -14,6 +14,7 @@ import {
   useTheme,
   Fade,
   Stack,
+  Grid,
 } from '@mui/material';
 import {
   Cake,
@@ -37,6 +38,7 @@ import {
   CardGiftcard,
   ArrowForward,
   Stars,
+  AccountCircle,
 } from '@mui/icons-material';
 
 // Color Palette
@@ -51,12 +53,80 @@ const colors = {
   paleAqua: '#F2F7F6',
 };
 
-const DemoScreen = () => {
+const DemoScreen = ({ customerName = 'Sam Wright' }) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
+
+  // Extract first name and generate initials
+  const firstName = customerName.split(' ')[0];
+  const initials = customerName.split(' ').map(n => n.charAt(0).toUpperCase()).join('');
+
+  // Generate random but realistic customer data
+  const [customerData] = useState(() => {
+    // Random age between 55-75 (milestone birthdays)
+    const age = Math.floor(Math.random() * 21) + 55;
+
+    // Random policy value between $85K - $450K
+    const policyValue = Math.floor(Math.random() * 366) + 85;
+
+    // Random years as customer between 3-15
+    const yearsAsCustomer = Math.floor(Math.random() * 13) + 3;
+
+    // Random engagement level
+    const engagementLevels = ['High Engagement', 'Very High Engagement', 'Excellent Engagement', 'Strong Engagement'];
+    const engagement = engagementLevels[Math.floor(Math.random() * engagementLevels.length)];
+
+    // Random contact time
+    const contactTimes = [
+      'Morning (8-11 AM)',
+      'Afternoon (1-4 PM)',
+      'Late Morning (10 AM-12 PM)',
+      'Early Afternoon (12-3 PM)'
+    ];
+    const bestContactTime = contactTimes[Math.floor(Math.random() * contactTimes.length)];
+
+    // Random follow-up date (2-5 days from now)
+    const daysOffset = Math.floor(Math.random() * 4) + 2;
+    const followUpDate = new Date();
+    followUpDate.setDate(followUpDate.getDate() + daysOffset);
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const followUpDateString = `${monthNames[followUpDate.getMonth()]} ${followUpDate.getDate()}, 2026`;
+
+    // Random time for follow-up
+    const hours = Math.floor(Math.random() * 5) + 8; // 8 AM - 12 PM
+    const minutes = Math.random() < 0.5 ? '00' : '30';
+    const followUpTime = `${hours}:${minutes} AM`;
+
+    // Random card delivery time
+    const cardDays = Math.floor(Math.random() * 3) + 3; // 3-5 days
+
+    // Random language
+    const languages = ['English', 'Spanish', 'English', 'English']; // Weight English more
+    const language = languages[Math.floor(Math.random() * languages.length)];
+
+    // Random advisor name
+    const advisorNames = ['Michael', 'Jennifer', 'David', 'Sarah', 'Robert'];
+    const advisorName = advisorNames[Math.floor(Math.random() * advisorNames.length)];
+
+    return {
+      age,
+      policyValue: `$${policyValue}K`,
+      policyValueFull: `$${policyValue},000`,
+      yearsAsCustomer,
+      engagement,
+      bestContactTime,
+      followUpDate: followUpDateString,
+      followUpTime,
+      followUpDateTime: `${followUpDateString} @ ${followUpTime}`,
+      cardDelivery: `${cardDays}-${cardDays + 2} days`,
+      language,
+      advisorName
+    };
+  });
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -69,7 +139,97 @@ const DemoScreen = () => {
 
   const handleRestart = () => {
     setCurrentStep(0);
+    setEmailSent(false);
   };
+
+  const handleSendEmail = () => {
+    setEmailSent(true);
+    // Reset after 3 seconds
+    setTimeout(() => {
+      setEmailSent(false);
+    }, 3000);
+  };
+
+  // Step 0: Voice Command Trigger
+  const Step0 = () => (
+    <Fade in timeout={600}>
+      <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        {/* Voice Command Visualization */}
+        <Card
+          sx={{
+            mb: 3,
+            background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
+            color: 'white',
+            borderRadius: 4,
+            overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(55, 165, 38, 0.3)',
+          }}
+        >
+          <CardContent sx={{ p: 4, textAlign: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+              <Box
+                sx={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: '50%',
+                  bgcolor: alpha('#FFFFFF', 0.25),
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  animation: 'pulse 2s ease-in-out infinite',
+                  '@keyframes pulse': {
+                    '0%, 100%': { transform: 'scale(1)', opacity: 1 },
+                    '50%': { transform: 'scale(1.05)', opacity: 0.9 },
+                  },
+                }}
+              >
+                <AutoAwesome sx={{ fontSize: 50 }} />
+              </Box>
+            </Box>
+            <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700, fontStyle: 'italic' }}>
+              "Send birthday wishes to {customerName}"
+            </Typography>
+            <Divider sx={{ my: 3, borderColor: alpha('#FFFFFF', 0.3) }} />
+            <Typography variant="body1" sx={{ opacity: 0.95, fontSize: '1.1rem' }}>
+              Your digital assistant analyzes customer data, determines the best engagement strategy, and prepares a personalized outreach campaign - all automatically.
+            </Typography>
+          </CardContent>
+        </Card>
+
+        {/* What Gets Prepared */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            borderRadius: 3,
+            border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+            background: '#FFFFFF',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Psychology sx={{ fontSize: 32, color: colors.blue, mr: 2 }} />
+            <Typography variant="h6" fontWeight={700} sx={{ fontFamily: 'Roboto Slab, serif' }}>
+              What Gets Prepared Automatically:
+            </Typography>
+          </Box>
+          <Stack spacing={2}>
+            {[
+              'Analyze customer communication preferences and consent history',
+              'Study age-based engagement patterns from similar customers',
+              'Determine optimal outreach channels (digital vs. physical)',
+              'Generate personalized, compliant messaging',
+              'Schedule appropriate follow-up tasks and touchpoints',
+            ].map((item, index) => (
+              <Box key={index} sx={{ display: 'flex', alignItems: 'start' }}>
+                <CheckCircle sx={{ color: colors.green, mr: 2, mt: 0.5, fontSize: 20 }} />
+                <Typography variant="body1">{item}</Typography>
+              </Box>
+            ))}
+          </Stack>
+        </Paper>
+      </Box>
+    </Fade>
+  );
 
   // Step 1: Customer Insight Trigger
   const Step1 = () => (
@@ -130,7 +290,7 @@ const DemoScreen = () => {
                 Customer Milestone Alert
               </Typography>
               <Typography variant="caption" sx={{ opacity: 0.9, display: 'block' }}>
-                AI-Powered Engagement Opportunity
+                Data-Driven Engagement Opportunity
               </Typography>
             </Box>
           </Box>
@@ -150,7 +310,7 @@ const DemoScreen = () => {
                 boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
               }}
             >
-              SJ
+              {initials}
             </Avatar>
             <Box sx={{ flex: 1 }}>
               <Typography
@@ -165,13 +325,13 @@ const DemoScreen = () => {
                 Upcoming Birthday
               </Typography>
               <Typography variant="h5" sx={{ mb: 2, fontWeight: 500, opacity: 0.95 }}>
-                Sarah Johnson turns <Box component="span" sx={{ fontWeight: 700, fontSize: '1.5em' }}>65</Box> tomorrow
+                {customerName} turns <Box component="span" sx={{ fontWeight: 700, fontSize: '1.5em' }}>{customerData.age}</Box> tomorrow
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
                 <Chip
                   icon={<AttachMoney sx={{ color: 'white !important' }} />}
-                  label="$185K Policy Value"
+                  label={`${customerData.policyValue} Policy Value`}
                   sx={{
                     bgcolor: colors.green,
                     color: 'white',
@@ -182,7 +342,7 @@ const DemoScreen = () => {
                 />
                 <Chip
                   icon={<Schedule sx={{ color: 'white !important' }} />}
-                  label="8 Years Customer"
+                  label={`${customerData.yearsAsCustomer} Years Customer`}
                   sx={{
                     bgcolor: colors.lightGreen,
                     color: 'white',
@@ -192,7 +352,7 @@ const DemoScreen = () => {
                 />
                 <Chip
                   icon={<Stars sx={{ color: 'white !important' }} />}
-                  label="High Engagement"
+                  label={customerData.engagement}
                   sx={{
                     bgcolor: colors.orange,
                     color: 'white',
@@ -211,46 +371,75 @@ const DemoScreen = () => {
   // Step 2: Communication Preferences
   const Step2 = () => (
     <Fade in timeout={600}>
-      <Card
-        sx={{
-          maxWidth: 800,
-          mx: 'auto',
-          background: colors.paleAqua,
-          boxShadow: '0 8px 32px rgba(0, 173, 238, 0.15)',
-        }}
-      >
-        <Box
+      <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        {/* Analysis Badge */}
+        <Paper
+          elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
-            p: 3,
-            color: 'white',
+            mb: 2,
+            p: 2,
+            background: `linear-gradient(135deg, ${alpha(colors.blue, 0.1)} 0%, ${alpha(colors.lightBlue, 0.05)} 100%)`,
+            border: `2px solid ${colors.lightBlue}`,
+            borderRadius: 3,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box
-              sx={{
-                width: 56,
-                height: 56,
-                borderRadius: 3,
-                bgcolor: alpha('#FFFFFF', 0.2),
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mr: 2,
-              }}
-            >
-              <Email sx={{ fontSize: 32 }} />
-            </Box>
-            <Box>
-              <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
-                Communication Preferences
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                Retrieved from customer profile & consent management
-              </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+            <Psychology sx={{ color: colors.blue, fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={700} color={colors.blue}>
+              Retrieving: Customer Communication Preferences
+            </Typography>
+          </Box>
+        </Paper>
+
+        <Card
+          sx={{
+            background: colors.paleAqua,
+            boxShadow: '0 8px 32px rgba(0, 173, 238, 0.15)',
+          }}
+        >
+          <Box
+            sx={{
+              background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+              p: 3,
+              color: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 3,
+                    bgcolor: alpha('#FFFFFF', 0.2),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                  }}
+                >
+                  <Email sx={{ fontSize: 32 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
+                    Communication Preferences
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                    Retrieved from customer profile & consent management
+                  </Typography>
+                </Box>
+              </Box>
+              <Chip
+                icon={<AutoAwesome sx={{ color: 'white !important' }} />}
+                label="Auto-Retrieved"
+                sx={{
+                  bgcolor: alpha('#FFFFFF', 0.25),
+                  color: 'white',
+                  fontWeight: 700,
+                }}
+              />
             </Box>
           </Box>
-        </Box>
 
         <CardContent sx={{ p: 4 }}>
           <Stack spacing={3}>
@@ -259,7 +448,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.green, 0.1)} 0%, ${alpha(colors.lightGreen, 0.1)} 100%)`,
+                background: '#FFFFFF',
                 border: `2px solid ${colors.lightGreen}`,
                 borderRadius: 3,
               }}
@@ -299,7 +488,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: alpha(colors.red, 0.08),
+                background: '#FFFFFF',
                 border: `2px solid ${alpha(colors.red, 0.3)}`,
                 borderRadius: 3,
               }}
@@ -343,7 +532,7 @@ const DemoScreen = () => {
                 sx={{
                   flex: 1,
                   p: 3,
-                  background: alpha(colors.orange, 0.1),
+                  background: '#FFFFFF',
                   border: `2px solid ${alpha(colors.orange, 0.3)}`,
                   borderRadius: 3,
                 }}
@@ -355,7 +544,7 @@ const DemoScreen = () => {
                   </Typography>
                 </Box>
                 <Typography variant="h6" fontWeight={700} sx={{ ml: 5 }}>
-                  Morning (8-11 AM)
+                  {customerData.bestContactTime}
                 </Typography>
               </Paper>
 
@@ -364,7 +553,7 @@ const DemoScreen = () => {
                 sx={{
                   flex: 1,
                   p: 3,
-                  background: alpha(colors.blue, 0.1),
+                  background: '#FFFFFF',
                   border: `2px solid ${alpha(colors.blue, 0.3)}`,
                   borderRadius: 3,
                 }}
@@ -376,7 +565,7 @@ const DemoScreen = () => {
                   </Typography>
                 </Box>
                 <Typography variant="h6" fontWeight={700} sx={{ ml: 5 }}>
-                  English
+                  {customerData.language}
                 </Typography>
               </Paper>
             </Box>
@@ -386,7 +575,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.green, 0.15)} 0%, ${alpha(colors.lightGreen, 0.15)} 100%)`,
+                background: '#FFFFFF',
                 border: `2px solid ${colors.green}`,
                 borderRadius: 3,
               }}
@@ -405,65 +594,84 @@ const DemoScreen = () => {
             </Paper>
           </Stack>
         </CardContent>
-      </Card>
+        </Card>
+      </Box>
     </Fade>
   );
 
   // Step 3: Age-Based Engagement Patterns
   const Step3 = () => (
     <Fade in timeout={600}>
-      <Card
-        sx={{
-          maxWidth: 800,
-          mx: 'auto',
-          background: colors.paleAqua,
-          boxShadow: '0 8px 32px rgba(246, 146, 30, 0.2)',
-        }}
-      >
-        <Box
+      <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        {/* Analysis Badge */}
+        <Paper
+          elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.yellow} 100%)`,
-            p: 3,
-            color: 'white',
+            mb: 2,
+            p: 2,
+            background: '#FFFFFF',
+            border: `2px solid ${colors.orange}`,
+            borderRadius: 3,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 3,
-                  bgcolor: alpha('#FFFFFF', 0.25),
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mr: 2,
-                }}
-              >
-                <Psychology sx={{ fontSize: 32 }} />
-              </Box>
-              <Box>
-                <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
-                  Age-Based Engagement Insights
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.95 }}>
-                  AI-powered behavioral analysis
-                </Typography>
-              </Box>
-            </Box>
-            <Chip
-              icon={<AutoAwesome sx={{ color: 'white !important' }} />}
-              label="AI Insight"
-              sx={{
-                bgcolor: alpha('#FFFFFF', 0.25),
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '0.875rem',
-              }}
-            />
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+            <TrendingUp sx={{ color: colors.orange, fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={700} color={colors.orange}>
+              Analyzing: Age-Based Engagement Patterns
+            </Typography>
           </Box>
-        </Box>
+        </Paper>
+
+        <Card
+          sx={{
+            background: colors.paleAqua,
+            boxShadow: '0 8px 32px rgba(246, 146, 30, 0.2)',
+          }}
+        >
+          <Box
+            sx={{
+              background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.yellow} 100%)`,
+              p: 3,
+              color: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 3,
+                    bgcolor: alpha('#FFFFFF', 0.25),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                  }}
+                >
+                  <Psychology sx={{ fontSize: 32 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
+                    Age-Based Engagement Insights
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                    ML-powered behavioral analysis from 10,000+ similar customers
+                  </Typography>
+                </Box>
+              </Box>
+              <Chip
+                icon={<AutoAwesome sx={{ color: 'white !important' }} />}
+                label="Advanced Analysis"
+                sx={{
+                  bgcolor: alpha('#FFFFFF', 0.25),
+                  color: 'white',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                }}
+              />
+            </Box>
+          </Box>
 
         <CardContent sx={{ p: 4 }}>
           <Stack spacing={3}>
@@ -471,7 +679,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.blue, 0.1)} 0%, ${alpha(colors.lightBlue, 0.1)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.lightBlue}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.blue}`,
@@ -481,7 +689,7 @@ const DemoScreen = () => {
                 <Lightbulb sx={{ color: colors.blue, mr: 2, fontSize: 28, mt: 0.5 }} />
                 <Box>
                   <Typography variant="h6" fontWeight={700} color={colors.blue} gutterBottom>
-                    Customers 60+ prefer personalized & human tone
+                    Customers {customerData.age >= 60 ? '60+' : '50+'} prefer personalized & human tone
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     Avoid generic automated messaging. Personal touch increases response by{' '}
@@ -495,7 +703,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.lightGreen, 0.15)} 0%, ${alpha(colors.green, 0.15)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.lightGreen}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.green}`,
@@ -520,7 +728,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.orange, 0.15)} 0%, ${alpha(colors.yellow, 0.15)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.orange}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.orange}`,
@@ -555,7 +763,7 @@ const DemoScreen = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Verified sx={{ mr: 1.5, fontSize: 32 }} />
                   <Typography variant="h6" fontWeight={700}>
-                    AI Confidence Score
+                    Confidence Score
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -582,53 +790,83 @@ const DemoScreen = () => {
             </Paper>
           </Stack>
         </CardContent>
-      </Card>
+        </Card>
+      </Box>
     </Fade>
   );
 
   // Step 4: Outreach Strategy Decision
   const Step4 = () => (
     <Fade in timeout={600}>
-      <Card
-        sx={{
-          maxWidth: 800,
-          mx: 'auto',
-          background: colors.paleAqua,
-          boxShadow: '0 8px 32px rgba(27, 117, 187, 0.2)',
-        }}
-      >
-        <Box
+      <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        {/* Recommendation Badge */}
+        <Paper
+          elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-            p: 3,
-            color: 'white',
+            mb: 2,
+            p: 2,
+            background: `linear-gradient(135deg, ${alpha(colors.green, 0.15)} 0%, ${alpha(colors.lightGreen, 0.1)} 100%)`,
+            border: `2px solid ${colors.green}`,
+            borderRadius: 3,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box
-              sx={{
-                width: 56,
-                height: 56,
-                borderRadius: 3,
-                bgcolor: alpha('#FFFFFF', 0.25),
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mr: 2,
-              }}
-            >
-              <AutoAwesome sx={{ fontSize: 32 }} />
-            </Box>
-            <Box>
-              <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
-                Smart Outreach Strategy
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.95 }}>
-                AI-recommended multi-channel approach
-              </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+            <AutoAwesome sx={{ color: colors.green, fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={700} color={colors.green}>
+              Recommended: Digital & Physical Outreach Strategy
+            </Typography>
+          </Box>
+        </Paper>
+
+        <Card
+          sx={{
+            background: colors.paleAqua,
+            boxShadow: '0 8px 32px rgba(27, 117, 187, 0.2)',
+          }}
+        >
+          <Box
+            sx={{
+              background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
+              p: 3,
+              color: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 3,
+                    bgcolor: alpha('#FFFFFF', 0.25),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mr: 2,
+                  }}
+                >
+                  <AutoAwesome sx={{ fontSize: 32 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
+                    Data-Driven Outreach Strategy
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                    Multi-channel approach optimized for customer segment
+                  </Typography>
+                </Box>
+              </Box>
+              <Chip
+                icon={<Stars sx={{ color: 'white !important' }} />}
+                label="Optimized"
+                sx={{
+                  bgcolor: alpha('#FFFFFF', 0.25),
+                  color: 'white',
+                  fontWeight: 700,
+                }}
+              />
             </Box>
           </Box>
-        </Box>
 
         <CardContent sx={{ p: 4 }}>
           <Paper
@@ -637,7 +875,7 @@ const DemoScreen = () => {
               mb: 4,
               p: 3,
               borderRadius: 3,
-              background: `linear-gradient(135deg, ${alpha(colors.lightGreen, 0.2)} 0%, ${alpha(colors.green, 0.2)} 100%)`,
+              background: '#FFFFFF',
               border: `3px solid ${colors.lightGreen}`,
             }}
           >
@@ -654,7 +892,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.blue, 0.1)} 0%, ${alpha(colors.lightBlue, 0.05)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.blue}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.blue}`,
@@ -676,7 +914,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.lightGreen, 0.15)} 0%, ${alpha(colors.green, 0.05)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.lightGreen}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.green}`,
@@ -698,7 +936,7 @@ const DemoScreen = () => {
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.orange, 0.15)} 0%, ${alpha(colors.yellow, 0.1)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.orange}`,
                 borderRadius: 3,
                 borderLeft: `8px solid ${colors.orange}`,
@@ -712,7 +950,7 @@ const DemoScreen = () => {
                 </Typography>
               </Box>
               <Typography variant="body1" color="text.secondary" sx={{ ml: 8, fontWeight: 500 }}>
-                Premium 65th birthday card to arrive within 3-5 business days
+                Premium {customerData.age}th birthday card to arrive within {customerData.cardDelivery}
               </Typography>
             </Paper>
           </Stack>
@@ -741,25 +979,23 @@ const DemoScreen = () => {
           </Paper>
         </CardContent>
       </Card>
+      </Box>
     </Fade>
   );
 
-  // Step 5: Generated Message
+  // Step 5: Advisor Action Items
   const Step5 = () => (
     <Fade in timeout={600}>
-      <Card
-        sx={{
-          maxWidth: 800,
-          mx: 'auto',
-          background: colors.paleAqua,
-          boxShadow: '0 8px 32px rgba(139, 197, 63, 0.2)',
-        }}
-      >
-        <Box
+      <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+        {/* Header */}
+        <Paper
+          elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.lightGreen} 0%, ${colors.green} 100%)`,
+            mb: 3,
             p: 3,
+            background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
             color: 'white',
+            borderRadius: 4,
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -776,20 +1012,20 @@ const DemoScreen = () => {
                   mr: 2,
                 }}
               >
-                <SendOutlined sx={{ fontSize: 32 }} />
+                <TaskAlt sx={{ fontSize: 32 }} />
               </Box>
               <Box>
                 <Typography variant="h5" sx={{ fontFamily: 'Roboto Slab, serif', fontWeight: 700 }}>
-                  Personalized Message
+                  Ready to Send
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.95 }}>
-                  AI-generated, compliance-approved
+                  Everything prepared for your review
                 </Typography>
               </Box>
             </Box>
             <Chip
               icon={<Verified sx={{ color: 'white !important' }} />}
-              label="Approved"
+              label="Approved & Ready"
               sx={{
                 bgcolor: alpha('#FFFFFF', 0.25),
                 color: 'white',
@@ -798,91 +1034,215 @@ const DemoScreen = () => {
               }}
             />
           </Box>
-        </Box>
+        </Paper>
 
-        <CardContent sx={{ p: 4 }}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 4,
-              bgcolor: 'white',
-              border: `3px solid ${colors.lightBlue}`,
-              borderRadius: 3,
-              mb: 3,
-              boxShadow: '0 4px 16px rgba(0, 173, 238, 0.1)',
-            }}
-          >
-            <Typography
-              variant="body1"
+        {/* Customer Quick Summary */}
+        <Card sx={{ mb: 3, background: colors.paleAqua }}>
+          <Box sx={{ p: 3, background: alpha(colors.blue, 0.1), borderBottom: `3px solid ${colors.blue}` }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <AccountCircle sx={{ color: colors.blue, mr: 1.5, fontSize: 28 }} />
+              <Typography variant="h6" fontWeight={700}>
+                Customer Summary
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary" fontWeight={500}>
+              Quick context before you send
+            </Typography>
+          </Box>
+          <CardContent sx={{ p: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                  Customer
+                </Typography>
+                <Typography variant="body1" fontWeight={700}>
+                  {customerName}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                  Milestone
+                </Typography>
+                <Typography variant="body1" fontWeight={700}>
+                  {customerData.age}th Birthday (Tomorrow)
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                  Relationship
+                </Typography>
+                <Typography variant="body1" fontWeight={700}>
+                  {customerData.yearsAsCustomer} Years
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                  Policy Value
+                </Typography>
+                <Typography variant="body1" fontWeight={700} color={colors.green}>
+                  {customerData.policyValueFull}
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+
+        {/* Email Preview */}
+        <Card sx={{
+          mb: 3,
+          background: colors.paleAqua,
+          border: emailSent ? `3px solid ${colors.green}` : 'none',
+          transition: 'all 0.3s ease'
+        }}>
+          <Box sx={{
+            p: 3,
+            background: emailSent
+              ? alpha(colors.green, 0.15)
+              : alpha(colors.lightBlue, 0.1),
+            borderBottom: `3px solid ${emailSent ? colors.green : colors.lightBlue}`,
+            transition: 'all 0.3s ease'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Email sx={{ color: colors.lightBlue, mr: 1.5, fontSize: 28 }} />
+                <Typography variant="h6" fontWeight={700}>
+                  Email Ready to Send
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={emailSent ? <CheckCircle /> : <SendOutlined />}
+                onClick={handleSendEmail}
+                disabled={emailSent}
+                sx={{
+                  background: emailSent
+                    ? `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`
+                    : `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {emailSent ? 'Sent!' : 'Send Now'}
+              </Button>
+            </Box>
+          </Box>
+          <CardContent sx={{ p: 4 }}>
+            <Paper
+              elevation={0}
               sx={{
-                fontFamily: 'Roboto, sans-serif',
-                lineHeight: 1.9,
-                fontSize: '1.1rem',
-                whiteSpace: 'pre-line',
-                color: 'text.primary',
+                p: 3,
+                bgcolor: 'white',
+                border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+                borderRadius: 2,
               }}
             >
-              {`Dear Sarah,
+              <Typography
+                variant="body1"
+                sx={{
+                  fontFamily: 'Roboto, sans-serif',
+                  lineHeight: 1.8,
+                  fontSize: '1rem',
+                  whiteSpace: 'pre-line',
+                  color: 'text.primary',
+                }}
+              >
+                {`Dear ${firstName},
 
-Wishing you a wonderful 65th birthday! It has been our privilege to support you over the years. If there is anything you need as you celebrate this milestone, I'm here to help.
+Wishing you a wonderful ${customerData.age}th birthday! It has been our privilege to support you over the past ${customerData.yearsAsCustomer} years. If there is anything you need as you celebrate this milestone, I'm here to help.
 
 Warm regards,
-Michael
+${customerData.advisorName}
 Senior Advisor`}
-            </Typography>
-          </Paper>
-
-          <Stack spacing={2}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                background: alpha(colors.blue, 0.08),
-                border: `2px solid ${alpha(colors.blue, 0.3)}`,
-                borderRadius: 3,
-                borderLeft: `6px solid ${colors.blue}`,
-              }}
-            >
-              <Typography variant="body1" fontWeight={600}>
-                <Box component="span" sx={{ color: colors.blue, fontWeight: 700 }}>Personalization:</Box>{' '}
-                Uses customer first name, milestone age, and relationship duration
               </Typography>
             </Paper>
+          </CardContent>
+        </Card>
 
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                background: alpha(colors.lightGreen, 0.08),
-                border: `2px solid ${alpha(colors.lightGreen, 0.3)}`,
-                borderRadius: 3,
-                borderLeft: `6px solid ${colors.lightGreen}`,
-              }}
-            >
-              <Typography variant="body1" fontWeight={600}>
-                <Box component="span" sx={{ color: colors.lightGreen, fontWeight: 700 }}>Tone:</Box>{' '}
-                Warm, professional, and human (not promotional)
+        {/* Next Steps for Advisor */}
+        <Card sx={{ background: colors.paleAqua }}>
+          <Box sx={{ p: 3, background: alpha(colors.orange, 0.1), borderBottom: `3px solid ${colors.orange}` }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Lightbulb sx={{ color: colors.orange, mr: 1.5, fontSize: 28 }} />
+              <Typography variant="h6" fontWeight={700}>
+                Your Next Actions
               </Typography>
-            </Paper>
+            </Box>
+          </Box>
+          <CardContent sx={{ p: 3 }}>
+            <Stack spacing={2}>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  background: '#FFFFFF',
+                  border: `2px solid ${colors.green}`,
+                  borderRadius: 2,
+                  borderLeft: `6px solid ${colors.green}`,
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <CheckCircle sx={{ color: colors.green, mr: 2, mt: 0.3 }} />
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+                      Follow-up call scheduled
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {customerData.followUpDateTime} - Call prepared in your calendar
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
 
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                background: alpha(colors.green, 0.08),
-                border: `2px solid ${alpha(colors.green, 0.3)}`,
-                borderRadius: 3,
-                borderLeft: `6px solid ${colors.green}`,
-              }}
-            >
-              <Typography variant="body1" fontWeight={600}>
-                <Box component="span" sx={{ color: colors.green, fontWeight: 700 }}>Compliance:</Box>{' '}
-                No sales language, TCPA compliant, consent verified
-              </Typography>
-            </Paper>
-          </Stack>
-        </CardContent>
-      </Card>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  background: '#FFFFFF',
+                  border: `2px solid ${colors.lightBlue}`,
+                  borderRadius: 2,
+                  borderLeft: `6px solid ${colors.lightBlue}`,
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <Phone sx={{ color: colors.lightBlue, mr: 2, mt: 0.3 }} />
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+                      Call talking points ready
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      • Birthday wishes • Policy review opportunity {customerData.age === 65 ? '• Medicare transition at 65' : customerData.age > 65 ? '• Medicare supplement review' : '• Coverage optimization'}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 2.5,
+                  background: '#FFFFFF',
+                  border: `2px solid ${colors.orange}`,
+                  borderRadius: 2,
+                  borderLeft: `6px solid ${colors.orange}`,
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <CardGiftcard sx={{ color: colors.orange, mr: 2, mt: 0.3 }} />
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom>
+                      Physical card being sent
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Premium {customerData.age}th milestone card - arrives in {customerData.cardDelivery}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
     </Fade>
   );
 
@@ -925,7 +1285,7 @@ Senior Advisor`}
                   Automated Follow-Up
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.95 }}>
-                  Smart task scheduling complete
+                  Automated task scheduling complete
                 </Typography>
               </Box>
             </Box>
@@ -948,7 +1308,7 @@ Senior Advisor`}
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.blue, 0.1)} 0%, ${alpha(colors.lightBlue, 0.05)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.blue}`,
                 borderRadius: 3,
               }}
@@ -960,16 +1320,16 @@ Senior Advisor`}
                     Advisor Call Scheduled
                   </Typography>
                   <Typography variant="body1" color="text.secondary" gutterBottom fontWeight={500}>
-                    Personal follow-up call with Sarah Johnson
+                    Personal follow-up call with {customerName}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
                     <Chip
                       icon={<Schedule sx={{ color: 'white !important' }} />}
-                      label="Feb 18, 2026 @ 9:30 AM"
+                      label={customerData.followUpDateTime}
                       sx={{ bgcolor: colors.lightBlue, color: 'white', fontWeight: 600 }}
                     />
                     <Chip
-                      label="Michael (Advisor)"
+                      label={`${customerData.advisorName} (Advisor)`}
                       sx={{ bgcolor: colors.blue, color: 'white', fontWeight: 600 }}
                     />
                   </Box>
@@ -981,7 +1341,7 @@ Senior Advisor`}
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.orange, 0.15)} 0%, ${alpha(colors.yellow, 0.1)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.orange}`,
                 borderRadius: 3,
               }}
@@ -993,12 +1353,12 @@ Senior Advisor`}
                     Printed Card Request Sent
                   </Typography>
                   <Typography variant="body1" color="text.secondary" gutterBottom fontWeight={500}>
-                    Premium 65th birthday milestone card
+                    Premium {customerData.age}th birthday milestone card
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
                     <Chip
                       icon={<CardGiftcard sx={{ color: 'white !important' }} />}
-                      label="Delivery: 3-5 days"
+                      label={`Delivery: ${customerData.cardDelivery}`}
                       sx={{ bgcolor: colors.orange, color: 'white', fontWeight: 600 }}
                     />
                     <Chip
@@ -1014,7 +1374,7 @@ Senior Advisor`}
               elevation={0}
               sx={{
                 p: 3,
-                background: `linear-gradient(135deg, ${alpha(colors.lightGreen, 0.15)} 0%, ${alpha(colors.green, 0.1)} 100%)`,
+                background: '#FFFFFF',
                 border: `3px solid ${colors.lightGreen}`,
                 borderRadius: 3,
               }}
@@ -1088,19 +1448,20 @@ Senior Advisor`}
   );
 
   const steps = [
+    { component: <Step0 />, title: 'Voice Command' },
     { component: <Step1 />, title: 'Customer Milestone' },
-    { component: <Step2 />, title: 'Communication Preferences' },
+    { component: <Step2 />, title: 'Comm Preferences' },
     { component: <Step3 />, title: 'Engagement Insights' },
     { component: <Step4 />, title: 'Strategy Decision' },
-    { component: <Step5 />, title: 'Personalized Message' },
-    { component: <Step6 />, title: 'Follow-Up Automation' },
+    { component: <Step5 />, title: 'Message' },
+    { component: <Step6 />, title: 'Follow-Up' },
   ];
 
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        background: `linear-gradient(180deg, ${alpha(colors.lightBlue, 0.15)} 0%, ${alpha(colors.paleAqua, 0.5)} 50%, ${alpha(colors.lightBlue, 0.15)} 100%)`,
+        background: '#FFFFFF',
         py: 4,
       }}
     >
@@ -1108,26 +1469,16 @@ Senior Advisor`}
         {/* Feature Header */}
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Typography
-            variant="h2"
+            variant="h3"
             gutterBottom
             sx={{
               fontFamily: 'Roboto Slab, serif',
-              fontWeight: 800,
-              background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 1,
+              fontWeight: 700,
+              color: colors.blue,
+              mb: 3,
             }}
           >
-            Smart Customer Engagement
-          </Typography>
-          <Typography variant="h5" color="text.secondary" gutterBottom fontWeight={600}>
-            AI-Powered Birthday Outreach
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 700, mx: 'auto', fontSize: '1.1rem' }}>
-            Your AI assistant analyzes customer preferences and creates personalized engagement
-            strategies automatically
+            Customer Birthday Outreach
           </Typography>
         </Box>
 
@@ -1150,16 +1501,18 @@ Senior Advisor`}
                     sx={{
                       position: 'absolute',
                       top: 20,
-                      left: '50%',
-                      width: '100%',
+                      left: 'calc(50% + 20px)',
+                      width: 'calc(100% - 40px)',
                       height: 4,
                       bgcolor: index < currentStep ? colors.green : alpha(colors.lightBlue, 0.3),
                       transition: 'all 0.3s ease',
                       borderRadius: 2,
+                      zIndex: 0,
                     }}
                   />
                 )}
                 <Box
+                  onClick={() => setCurrentStep(index)}
                   sx={{
                     width: 40,
                     height: 40,
@@ -1180,6 +1533,12 @@ Senior Advisor`}
                     border: `3px solid ${index <= currentStep ? colors.green : alpha(colors.lightBlue, 0.3)}`,
                     boxShadow: index <= currentStep ? `0 4px 12px ${alpha(colors.green, 0.4)}` : 'none',
                     transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                      boxShadow: `0 6px 16px ${alpha(index <= currentStep ? colors.green : colors.lightBlue, 0.5)}`,
+                      border: `3px solid ${index <= currentStep ? colors.lightGreen : colors.lightBlue}`,
+                    },
                   }}
                 >
                   {index < currentStep ? <CheckCircle sx={{ fontSize: 24 }} /> : index + 1}
@@ -1188,10 +1547,18 @@ Senior Advisor`}
                   variant="caption"
                   color={index <= currentStep ? 'text.primary' : 'text.secondary'}
                   fontWeight={index === currentStep ? 700 : 500}
+                  onClick={() => setCurrentStep(index)}
                   sx={{
                     display: { xs: 'none', md: 'block' },
                     textAlign: 'center',
                     fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      color: index <= currentStep ? colors.green : colors.lightBlue,
+                      fontWeight: 700,
+                      transform: 'scale(1.05)',
+                    },
                   }}
                 >
                   {step.title}

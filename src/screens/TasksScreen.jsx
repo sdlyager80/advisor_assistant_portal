@@ -40,9 +40,18 @@ const TasksScreen = () => {
   const { speak, getRandomResponse } = useSpeech();
 
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Follow up with John Smith', priority: 'high', status: 'pending', dueDate: 'Today' },
-    { id: 2, title: 'Prepare quote for Sarah Johnson', priority: 'medium', status: 'in_progress', dueDate: 'Tomorrow' },
-    { id: 3, title: 'Review policy documents', priority: 'low', status: 'pending', dueDate: 'This week' },
+    { id: 1, title: 'Follow up with John Smith', priority: 'high', dueDate: 'Today, 2:00 PM', status: 'pending' },
+    { id: 2, title: 'Prepare quote for Sarah Johnson', priority: 'high', dueDate: 'Today, 3:30 PM', status: 'pending' },
+    { id: 3, title: 'Review policy documents for Michael Chen', priority: 'medium', dueDate: 'Today, 4:00 PM', status: 'pending' },
+    { id: 4, title: 'Send birthday wishes', priority: 'medium', dueDate: 'Today, 5:00 PM', status: 'pending' },
+    { id: 5, title: 'Update CRM records', priority: 'low', dueDate: 'Today, End of day', status: 'in_progress' },
+    { id: 6, title: 'Call Emma Wilson - policy renewal', priority: 'high', dueDate: 'Today, 6:00 PM', status: 'pending' },
+    { id: 7, title: 'Process insurance claim for Robert Taylor', priority: 'high', dueDate: 'Today, 7:00 PM', status: 'pending' },
+    { id: 8, title: 'Send policy renewal reminder to clients', priority: 'medium', dueDate: 'Today, 8:00 PM', status: 'pending' },
+    { id: 9, title: 'Review new applications', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
+    { id: 10, title: 'Update pipeline in CRM', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
+    { id: 11, title: 'Prepare presentation for team meeting', priority: 'medium', dueDate: 'Today, End of day', status: 'pending' },
+    { id: 12, title: 'Review compliance documents', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
   ]);
 
   const [openVoiceDialog, setOpenVoiceDialog] = useState(false);
@@ -142,7 +151,7 @@ const TasksScreen = () => {
     setTaskTitle('');
     setVoiceText('');
 
-    // Voice confirmation - AI-like responses
+    // Voice confirmation - automated responses
     const responses = [
       `Got it! I've added "${newTask.title}" to your task list`,
       `Perfect! I've created that task for you. It's marked as ${newTask.priority} priority`,
@@ -173,7 +182,7 @@ const TasksScreen = () => {
         : t
     ));
 
-    // Voice confirmation - AI-like responses
+    // Voice confirmation - automated responses
     if (newStatus === 'completed') {
       const remainingTasks = tasks.filter(t => t.status !== 'completed').length - 1;
       const completionResponses = [

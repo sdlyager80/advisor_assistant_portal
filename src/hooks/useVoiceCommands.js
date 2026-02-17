@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import useSpeech from './useSpeech';
 
 /**
- * Voice command processor for conversational AI
+ * Voice command processor for conversational interface
  * Listens for commands after speaking and executes actions
  */
 export const useVoiceCommands = (onCommand) => {
@@ -22,6 +22,7 @@ export const useVoiceCommands = (onCommand) => {
 
       recognitionRef.current.onresult = (event) => {
         const command = event.results[0][0].transcript.toLowerCase();
+        console.log('🎯 Voice recognition result:', command);
         setIsListening(false);
         processCommand(command);
       };
@@ -52,10 +53,11 @@ export const useVoiceCommands = (onCommand) => {
   const startListening = () => {
     if (recognitionRef.current && !isListening) {
       setIsListening(true);
+      console.log('🎤 Started listening for voice commands...');
       try {
         recognitionRef.current.start();
       } catch (error) {
-        console.error('Error starting voice recognition:', error);
+        console.error('❌ Error starting voice recognition:', error);
         setIsListening(false);
       }
     }
@@ -76,6 +78,7 @@ export const useVoiceCommands = (onCommand) => {
    */
   const speakAndListen = (message, delay = 1000) => {
     speak(message);
+    console.log('💬 Speaking:', message);
 
     // After speaking, ask what the user needs
     setTimeout(() => {
@@ -86,10 +89,13 @@ export const useVoiceCommands = (onCommand) => {
         "What do you need?",
         "What's next?"
       ];
-      speak(getRandomResponse(followUps));
+      const followUp = getRandomResponse(followUps);
+      speak(followUp);
+      console.log('💬 Follow-up:', followUp);
 
       // Start listening after the follow-up question
       setTimeout(() => {
+        console.log('⏰ Starting listening in 2 seconds...');
         startListening();
       }, 2000);
     }, delay);
@@ -99,7 +105,8 @@ export const useVoiceCommands = (onCommand) => {
    * Process voice command and determine intent
    */
   const processCommand = (command) => {
-    console.log('Processing command:', command);
+    console.log('🎤 Processing voice command:', command);
+    console.log('🔍 Checking for demo triggers...');
 
     // Task-related commands
     if (command.includes('create task') || command.includes('add task') || command.includes('new task')) {
@@ -150,6 +157,51 @@ export const useVoiceCommands = (onCommand) => {
       return;
     }
 
+    // Specific engagement command (triggers demo) - Check this FIRST for specific intent
+    const hasBirthdayIntent = command.includes('send birthday') || command.includes('birthday wishes') || command.includes('birthday message');
+
+    console.log('🎂 Birthday intent detected:', hasBirthdayIntent);
+
+    if (hasBirthdayIntent) {
+      // Extract customer name from the command
+      let customerName = 'Sam Wright'; // Default fallback
+
+      // Try to extract name after "to" keyword
+      const patterns = [
+        /(?:send birthday (?:wishes|message) to |birthday (?:wishes|message) to )(.+)/i,
+        /(?:send (?:a )?birthday to )(.+)/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = command.match(pattern);
+        if (match && match[1]) {
+          customerName = match[1].trim();
+          // Capitalize first letter of each word
+          customerName = customerName.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+          break;
+        }
+      }
+
+      console.log('👤 Extracted customer name:', customerName);
+      console.log('✅ DEMO TRIGGERED: Birthday command for', customerName);
+
+      onCommand({ type: 'SHOW_DEMO', customerName: customerName });
+      speak(`Preparing birthday outreach for ${customerName}. Opening the customer engagement workflow.`);
+      return;
+    }
+
+    // General demo commands
+    if (command.includes('advanced engagement') || command.includes('intelligent engagement') ||
+        command.includes('show demo') || command.includes('birthday demo') ||
+        command.includes('customer engagement demo') || command.includes('show me how it works')) {
+      console.log('✅ DEMO TRIGGERED: General demo command');
+      onCommand({ type: 'SHOW_DEMO' });
+      speak("Opening customer engagement workflow. Everything is prepared and ready for you.");
+      return;
+    }
+
     // Navigation commands
     if (command.includes('go home') || command.includes('home screen') || command.includes('dashboard')) {
       onCommand({ type: 'NAVIGATE', screen: 0 });
@@ -171,12 +223,20 @@ export const useVoiceCommands = (onCommand) => {
 
     // Help command
     if (command.includes('help') || command.includes('what can you do')) {
-      const helpMessage = "I can help you create tasks, schedule appointments, add customer notes, read your tasks and appointments, provide daily summaries, and navigate the app. Just tell me what you need!";
+      const helpMessage = "I can help you create tasks, schedule appointments, add customer notes, read your tasks and appointments, provide daily summaries, show you intelligent customer engagement demos, and navigate the app. Try saying 'show demo' or 'send birthday wishes to Sam Wright' to see it in action!";
       speak(helpMessage);
       setTimeout(() => {
         speak("What would you like to do?");
         setTimeout(startListening, 1500);
-      }, 8000);
+      }, 10000);
+      return;
+    }
+
+    // Simple test command for demo
+    if (command.includes('test demo') || command.includes('demo test')) {
+      console.log('✅ DEMO TRIGGERED: Test command');
+      onCommand({ type: 'SHOW_DEMO' });
+      speak("Opening customer outreach workflow.");
       return;
     }
 

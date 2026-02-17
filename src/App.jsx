@@ -13,7 +13,17 @@ import {
   Badge,
   Typography,
   Fab,
-  alpha
+  alpha,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Divider,
+  Chip,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -23,7 +33,13 @@ import {
   MoreVert as MoreIcon,
   Notifications as NotificationsIcon,
   Search as SearchIcon,
-  Mic as VoiceIcon
+  Mic as VoiceIcon,
+  Close as CloseIcon,
+  Circle as CircleIcon,
+  CheckCircle as CheckCircleIcon,
+  Warning as WarningIcon,
+  Info as InfoIcon,
+  TrendingUp
 } from '@mui/icons-material';
 
 // Import screens
@@ -157,9 +173,13 @@ function App() {
   const [activeScreen, setActiveScreen] = useState(0);
   const [notificationCount, setNotificationCount] = useState(3);
   const [showDemo, setShowDemo] = useState(false);
+  const [demoCustomerName, setDemoCustomerName] = useState('Sam Wright');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [toastNotification, setToastNotification] = useState(null);
   const homeScreenRef = useRef(null);
   const tasksScreenRef = useRef(null);
   const calendarScreenRef = useRef(null);
+  const notificationIdRef = useRef(5); // Start from 5 since we have 4 mock notifications
 
   // Mock data - will be replaced with ServiceNow API
   const [userData, setUserData] = useState({
@@ -167,6 +187,112 @@ function App() {
     role: 'Senior Insurance Advisor',
     avatar: null
   });
+
+  // Mock notifications data
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      type: 'task',
+      title: 'Policy renewal due',
+      message: 'John Smith\'s policy renews in 3 days',
+      time: '10 min ago',
+      read: false,
+      priority: 'high'
+    },
+    {
+      id: 2,
+      type: 'opportunity',
+      title: 'New lead assigned',
+      message: 'Michael Chen - Life Insurance inquiry',
+      time: '1 hour ago',
+      read: false,
+      priority: 'medium'
+    },
+    {
+      id: 3,
+      type: 'info',
+      title: 'Meeting reminder',
+      message: 'Client review with Sarah Johnson at 2:00 PM',
+      time: '2 hours ago',
+      read: false,
+      priority: 'medium'
+    },
+    {
+      id: 4,
+      type: 'success',
+      title: 'Quote approved',
+      message: 'Emma Wilson accepted your quote',
+      time: '1 day ago',
+      read: true,
+      priority: 'low'
+    }
+  ]);
+
+  const handleNotificationClick = () => {
+    setShowNotifications(true);
+  };
+
+  const handleCloseNotifications = () => {
+    setShowNotifications(false);
+  };
+
+  const handleMarkAsRead = (notificationId) => {
+    setNotifications(notifications.map(notif =>
+      notif.id === notificationId ? { ...notif, read: true } : notif
+    ));
+    // Update unread count
+    const unreadCount = notifications.filter(n => !n.read && n.id !== notificationId).length;
+    setNotificationCount(unreadCount);
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(notifications.map(notif => ({ ...notif, read: true })));
+    setNotificationCount(0);
+  };
+
+  const handleCloseToast = () => {
+    setToastNotification(null);
+  };
+
+  // Function to add new notification
+  const addNotification = (type, title, message, priority = 'medium', showToast = true) => {
+    setNotifications(prev => {
+      // Check for duplicates - don't add if same title and message already exists
+      const isDuplicate = prev.some(
+        notif => notif.title === title && notif.message === message
+      );
+
+      if (isDuplicate) {
+        console.log('Duplicate notification prevented:', title);
+        return prev; // Return unchanged
+      }
+
+      const newNotification = {
+        id: notificationIdRef.current++,
+        type,
+        title,
+        message,
+        time: 'Just now',
+        read: false,
+        priority
+      };
+
+      // Update count
+      setNotificationCount(count => count + 1);
+
+      // Show toast notification
+      if (showToast) {
+        setToastNotification({
+          type,
+          title,
+          message,
+          priority
+        });
+      }
+
+      return [newNotification, ...prev];
+    });
+  };
 
   const screens = [
     { label: 'Home', icon: HomeIcon, component: HomeScreen },
@@ -178,7 +304,8 @@ function App() {
 
   const ActiveScreenComponent = screens[activeScreen].component;
 
-  const handleNavigateToDemo = () => {
+  const handleNavigateToDemo = (customerName = 'Sam Wright') => {
+    setDemoCustomerName(customerName);
     setShowDemo(true);
   };
 
@@ -188,16 +315,31 @@ function App() {
 
   // Handle voice commands
   const handleCommand = (command) => {
-    console.log('Received command:', command);
+    console.log('📥 App received command:', command);
 
     switch (command.type) {
       case 'CREATE_TASK':
         setActiveScreen(1); // Navigate to Tasks screen
-        // The task description is in command.data
+        // Add notification for task creation
+        if (command.data) {
+          addNotification(
+            'task',
+            'Task created',
+            `New task: ${command.data}`,
+            'medium'
+          );
+        }
         break;
 
       case 'SCHEDULE_APPOINTMENT':
         setActiveScreen(3); // Navigate to Calendar screen
+        addNotification(
+          'info',
+          'Calendar opened',
+          'Ready to schedule your appointment',
+          'low',
+          false
+        );
         break;
 
       case 'VIEW_CUSTOMERS':
@@ -220,6 +362,14 @@ function App() {
         if (homeScreenRef.current?.speakDailySummary) {
           setTimeout(() => homeScreenRef.current.speakDailySummary(), 500);
         }
+        break;
+
+      case 'SHOW_DEMO':
+        // Navigate to demo screen
+        const customerName = command.customerName || 'Sam Wright';
+        console.log('🎬 SHOW_DEMO command received - navigating to demo screen for:', customerName);
+        setDemoCustomerName(customerName);
+        setShowDemo(true);
         break;
 
       case 'NAVIGATE':
@@ -276,20 +426,24 @@ function App() {
             )}
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h6" fontWeight="bold">
-                {showDemo ? 'Smart Engagement' : screens[activeScreen].label}
+                {showDemo ? 'Customer Outreach' : screens[activeScreen].label}
               </Typography>
-              {activeScreen === 0 && !showDemo && (
+              {showDemo ? (
+                <Typography variant="caption" color="text.secondary">
+                  Birthday engagement for {demoCustomerName}
+                </Typography>
+              ) : activeScreen === 0 ? (
                 <Typography variant="caption" color="text.secondary">
                   Good morning, {userData.name.split(' ')[0]}
                 </Typography>
-              )}
+              ) : null}
             </Box>
             {!showDemo && (
               <>
                 <IconButton>
                   <SearchIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={handleNotificationClick}>
                   <Badge badgeContent={notificationCount} color="error">
                     <NotificationsIcon />
                   </Badge>
@@ -303,15 +457,16 @@ function App() {
         <Box sx={{
           flex: 1,
           overflow: 'auto',
-          background: `linear-gradient(180deg, ${colors.paleAqua} 0%, ${alpha(colors.lightBlue, 0.1)} 100%)`,
+          background: '#FFFFFF',
           position: 'relative'
         }}>
           {showDemo ? (
-            <DemoScreen />
+            <DemoScreen customerName={demoCustomerName} />
           ) : (
             <ActiveScreenComponent
               userData={userData}
               onNavigateToDemo={handleNavigateToDemo}
+              addNotification={addNotification}
             />
           )}
         </Box>
@@ -378,6 +533,198 @@ function App() {
             </BottomNavigation>
           </Paper>
         )}
+
+        {/* Toast Notification */}
+        <Snackbar
+          open={!!toastNotification}
+          autoHideDuration={4000}
+          onClose={handleCloseToast}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          sx={{ mt: 8 }}
+        >
+          {toastNotification && (
+            <Alert
+              onClose={handleCloseToast}
+              severity={
+                toastNotification.priority === 'high' ? 'error' :
+                toastNotification.priority === 'medium' ? 'warning' :
+                toastNotification.type === 'success' ? 'success' : 'info'
+              }
+              variant="filled"
+              sx={{ minWidth: 300 }}
+            >
+              <Typography variant="subtitle2" fontWeight="bold">
+                {toastNotification.title}
+              </Typography>
+              <Typography variant="body2">
+                {toastNotification.message}
+              </Typography>
+            </Alert>
+          )}
+        </Snackbar>
+
+        {/* Notifications Drawer */}
+        <Drawer
+          anchor="right"
+          open={showNotifications}
+          onClose={handleCloseNotifications}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: { xs: '100%', sm: 400 },
+              maxWidth: '100%',
+            },
+          }}
+        >
+          <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {/* Header */}
+            <Box
+              sx={{
+                p: 2,
+                background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box>
+                <Typography variant="h6" fontWeight="bold">
+                  Notifications
+                </Typography>
+                <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                  {notificationCount} unread
+                </Typography>
+              </Box>
+              <Box>
+                {notificationCount > 0 && (
+                  <Chip
+                    label="Mark all read"
+                    size="small"
+                    onClick={handleMarkAllAsRead}
+                    sx={{
+                      bgcolor: alpha('#FFFFFF', 0.2),
+                      color: 'white',
+                      fontWeight: 600,
+                      mr: 1,
+                      cursor: 'pointer',
+                      '&:hover': {
+                        bgcolor: alpha('#FFFFFF', 0.3),
+                      },
+                    }}
+                  />
+                )}
+                <IconButton onClick={handleCloseNotifications} sx={{ color: 'white' }}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </Box>
+
+            {/* Notifications List */}
+            <Box sx={{ flex: 1, overflow: 'auto' }}>
+              <List sx={{ p: 0 }}>
+                {notifications.map((notification, index) => {
+                  const getIcon = () => {
+                    switch (notification.type) {
+                      case 'task':
+                        return <TasksIcon sx={{ color: notification.priority === 'high' ? colors.red : colors.blue }} />;
+                      case 'opportunity':
+                        return <TrendingUp sx={{ color: colors.green }} />;
+                      case 'success':
+                        return <CheckCircleIcon sx={{ color: colors.green }} />;
+                      case 'warning':
+                        return <WarningIcon sx={{ color: colors.orange }} />;
+                      default:
+                        return <InfoIcon sx={{ color: colors.lightBlue }} />;
+                    }
+                  };
+
+                  const getPriorityColor = () => {
+                    switch (notification.priority) {
+                      case 'high':
+                        return colors.red;
+                      case 'medium':
+                        return colors.orange;
+                      default:
+                        return colors.lightGreen;
+                    }
+                  };
+
+                  return (
+                    <React.Fragment key={notification.id}>
+                      <ListItem
+                        sx={{
+                          bgcolor: notification.read ? 'transparent' : alpha(colors.lightBlue, 0.05),
+                          borderLeft: notification.read ? 'none' : `4px solid ${getPriorityColor()}`,
+                          cursor: 'pointer',
+                          '&:hover': {
+                            bgcolor: alpha(colors.lightBlue, 0.08),
+                          },
+                          position: 'relative',
+                        }}
+                        onClick={() => handleMarkAsRead(notification.id)}
+                      >
+                        <ListItemAvatar>
+                          <Avatar sx={{ bgcolor: alpha(getPriorityColor(), 0.1) }}>
+                            {getIcon()}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="subtitle2" fontWeight={notification.read ? 500 : 700}>
+                                {notification.title}
+                              </Typography>
+                              {!notification.read && (
+                                <CircleIcon sx={{ fontSize: 8, color: colors.lightBlue }} />
+                              )}
+                            </Box>
+                          }
+                          secondary={
+                            <>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ mt: 0.5, mb: 0.5 }}
+                              >
+                                {notification.message}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {notification.time}
+                              </Typography>
+                            </>
+                          }
+                        />
+                      </ListItem>
+                      {index < notifications.length - 1 && <Divider />}
+                    </React.Fragment>
+                  );
+                })}
+              </List>
+
+              {/* Empty State */}
+              {notifications.length === 0 && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    p: 4,
+                  }}
+                >
+                  <NotificationsIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary" gutterBottom>
+                    No notifications
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    You're all caught up!
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Drawer>
       </Box>
     </ThemeProvider>
   );
