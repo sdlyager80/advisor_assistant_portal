@@ -72,6 +72,10 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
   const { speak, stop, isSpeaking, isEnabled, toggleEnabled, getRandomResponse } = useSpeech();
   const notificationsInitialized = useRef(false);
 
+  // Dynamic greeting based on time of day
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+
   // Modal states
   const [customerModalOpen, setCustomerModalOpen] = React.useState(false);
   const [opportunityModalOpen, setOpportunityModalOpen] = React.useState(false);
@@ -298,9 +302,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
 
   // Speak welcome message on load
   useEffect(() => {
-    if (isEnabled) {
-      const hour = new Date().getHours();
-      const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+    if (isEnabled && !window.__welcomeHasSpoken) {
       const firstName = userData.name.split(' ')[0];
 
       let motivation = '';
@@ -316,7 +318,10 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
       const urgentNote = urgentTasks > 0 ? ` Just a heads up, you have ${urgentTasks} urgent items that need your attention.` : '';
       const welcomeMessage = `${greeting} ${firstName}! ${motivation}You have ${stats.tasksToday} tasks on your plate today, and ${stats.appointmentsToday} appointments scheduled.${urgentNote} Let's make it a productive day!`;
 
-      const timer = setTimeout(() => speak(welcomeMessage), 1500);
+      const timer = setTimeout(() => {
+        speak(welcomeMessage);
+        window.__welcomeHasSpoken = true;
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -791,7 +796,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               mb: 0.5
             }}
           >
-            Good morning, {userData.name.split(' ')[0]}! 👋
+            {greeting}, {userData.name.split(' ')[0]}! 👋
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Here's what's happening with your work today
