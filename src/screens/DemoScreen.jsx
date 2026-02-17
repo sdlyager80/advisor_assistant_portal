@@ -53,7 +53,11 @@ const colors = {
   paleAqua: '#F2F7F6',
 };
 
-const DemoScreen = ({ customerName = 'Sam Wright' }) => {
+const DemoScreen = ({
+  customerName = 'Sam Wright',
+  customerAge = null,
+  customerMilestone = 'birthday'
+}) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [emailSent, setEmailSent] = useState(false);
@@ -64,8 +68,8 @@ const DemoScreen = ({ customerName = 'Sam Wright' }) => {
 
   // Generate random but realistic customer data
   const [customerData] = useState(() => {
-    // Random age between 55-75 (milestone birthdays)
-    const age = Math.floor(Math.random() * 21) + 55;
+    // Use passed age or generate random age between 55-75 (milestone birthdays)
+    const age = customerAge !== null ? customerAge : Math.floor(Math.random() * 21) + 55;
 
     // Random policy value between $85K - $450K
     const policyValue = Math.floor(Math.random() * 366) + 85;
@@ -106,7 +110,7 @@ const DemoScreen = ({ customerName = 'Sam Wright' }) => {
     const language = languages[Math.floor(Math.random() * languages.length)];
 
     // Random advisor name
-    const advisorNames = ['Michael', 'Jennifer', 'David', 'Sarah', 'Robert'];
+    const advisorNames = ['Michael', 'Jennifer', 'David', 'Grace', 'Robert'];
     const advisorName = advisorNames[Math.floor(Math.random() * advisorNames.length)];
 
     return {
@@ -325,7 +329,7 @@ const DemoScreen = ({ customerName = 'Sam Wright' }) => {
                 Upcoming Birthday
               </Typography>
               <Typography variant="h5" sx={{ mb: 2, fontWeight: 500, opacity: 0.95 }}>
-                {customerName} turns <Box component="span" sx={{ fontWeight: 700, fontSize: '1.5em' }}>{customerData.age}</Box> tomorrow
+                {customerName} turns <Box component="span" sx={{ fontWeight: 700, fontSize: '1.5em' }}>{customerData.age}</Box> in 2 weeks
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>

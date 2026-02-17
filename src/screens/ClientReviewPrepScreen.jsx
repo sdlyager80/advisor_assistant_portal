@@ -309,13 +309,13 @@ COMPLIANCE:
     setJoiningMeeting(true);
     // Simulate joining meeting - in real app would open Zoom/Teams/etc
     setTimeout(() => {
-      alert(`Opening meeting for ${clientData.name} at ${clientData.meetingTime}\n\nIn production, this would:\n- Open your video conferencing app\n- Load client context on second screen\n- Start call recording\n- Enable AI assistant for real-time notes`);
+      alert(`Opening meeting for ${clientData.name} at ${clientData.meetingTime}\n\nIn production, this would:\n- Open your video conferencing app\n- Load client context on second screen\n- Start call recording\n- Enable automated assistant for real-time notes`);
       setJoiningMeeting(false);
     }, 1500);
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: colors.paleAqua, pb: 4 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
       {/* Header */}
       <Paper
         elevation={0}
@@ -504,7 +504,7 @@ COMPLIANCE:
               </Box>
 
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                AI-generated agenda optimized for this client's situation
+                Personalized agenda optimized for this client's situation
               </Typography>
 
               <List sx={{ bgcolor: alpha(colors.lightGreen, 0.05), borderRadius: 2, p: 2 }}>

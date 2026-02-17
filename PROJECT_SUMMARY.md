@@ -287,7 +287,7 @@ Potential features to add:
    - Live notifications
    - Collaborative editing
 
-4. **AI Features**
+4. **Advanced Features**
    - Lead scoring
    - Next best action recommendations
    - Automated follow-ups

@@ -274,7 +274,7 @@ Choose one of the following methods:
 2. **Configure Widget:**
    - **Name**: Advisor Assistant
    - **ID**: advisor_assistant
-   - **Description**: AI-powered advisor workbench
+   - **Description**: Data-driven advisor workbench
 
 3. **Add HTML Template:**
    - Copy contents from `dist/index.html`

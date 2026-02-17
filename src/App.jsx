@@ -193,10 +193,11 @@ function App() {
   const [showDemo, setShowDemo] = useState(false);
   const [activeModule, setActiveModule] = useState(null);
   const [demoCustomerName, setDemoCustomerName] = useState('Sam Wright');
+  const [demoCustomerData, setDemoCustomerData] = useState({ name: 'Sam Wright', age: 65, milestone: 'birthday' }); // Sam is 64, turning 65
   const [showNotifications, setShowNotifications] = useState(false);
   const [toastNotification, setToastNotification] = useState(null);
   const [showIllustration, setShowIllustration] = useState(false);
-  const [illustrationParams, setIllustrationParams] = useState({ age: 65, withdrawal: 2000 });
+  const [illustrationParams, setIllustrationParams] = useState({ age: 65, monthlyWithdrawal: 2000 });
   const [showClientReviewPrep, setShowClientReviewPrep] = useState(false);
   const [clientReviewParams, setClientReviewParams] = useState({ clientName: 'Sam Wright', meetingTime: '2:30 PM' });
   const homeScreenRef = useRef(null);
@@ -206,7 +207,7 @@ function App() {
 
   // Mock data - will be replaced with ServiceNow API
   const [userData, setUserData] = useState({
-    name: 'Sarah Anderson',
+    name: 'Grace Wilson',
     role: 'Senior Insurance Advisor',
     avatar: null
   });
@@ -336,8 +337,15 @@ function App() {
 
   const ActiveScreenComponent = screens[activeScreen].component;
 
-  const handleNavigateToDemo = (customerName = 'Sam Wright') => {
-    setDemoCustomerName(customerName);
+  const handleNavigateToDemo = (customerName = 'Sam Wright', age = 65) => {
+    // Handle both string and object parameters
+    if (typeof customerName === 'object') {
+      setDemoCustomerName(customerName.name);
+      setDemoCustomerData({ name: customerName.name, age: customerName.age || 65, milestone: customerName.milestone || 'birthday' });
+    } else {
+      setDemoCustomerName(customerName);
+      setDemoCustomerData({ name: customerName, age: age, milestone: 'birthday' });
+    }
     setShowDemo(true);
     setActiveModule(null);
   };
@@ -348,7 +356,7 @@ function App() {
 
   const handleNavigateToModule = (moduleId, params) => {
     if (moduleId === 'illustration-workflow') {
-      setIllustrationParams(params || { age: 65, withdrawal: 2000 });
+      setIllustrationParams(params || { age: 65, monthlyWithdrawal: 2000 });
       setShowIllustration(true);
       setShowDemo(false);
       setShowClientReviewPrep(false);
@@ -379,9 +387,16 @@ function App() {
     setShowClientReviewPrep(false);
   };
 
-  const handleIllustrationToEngagement = (customerName) => {
+  const handleIllustrationToEngagement = (customerData) => {
     setShowIllustration(false);
-    setDemoCustomerName(customerName);
+    // Handle both old format (string) and new format (object) for backward compatibility
+    if (typeof customerData === 'string') {
+      setDemoCustomerName(customerData);
+      setDemoCustomerData({ name: customerData, age: 65, milestone: 'birthday' });
+    } else {
+      setDemoCustomerName(customerData.name);
+      setDemoCustomerData(customerData);
+    }
     setShowDemo(true);
   };
 
@@ -439,7 +454,7 @@ function App() {
       case 'SHOW_ILLUSTRATION':
         // Navigate to illustration workflow screen
         console.log('📊 SHOW_ILLUSTRATION command received with params:', command.params);
-        setIllustrationParams(command.params || { age: 65, withdrawal: 2000 });
+        setIllustrationParams(command.params || { age: 65, monthlyWithdrawal: 2000 });
         setShowIllustration(true);
         setShowDemo(false);
         setActiveModule(null);
@@ -448,8 +463,10 @@ function App() {
       case 'SHOW_DEMO':
         // Navigate to demo screen
         const customerName = command.customerName || 'Sam Wright';
-        console.log('🎬 SHOW_DEMO command received - navigating to demo screen for:', customerName);
+        const customerAge = command.customerAge || 65;
+        console.log('🎬 SHOW_DEMO command received - navigating to demo screen for:', customerName, 'age:', customerAge);
         setDemoCustomerName(customerName);
+        setDemoCustomerData({ name: customerName, age: customerAge, milestone: 'birthday' });
         setShowDemo(true);
         break;
 
@@ -571,7 +588,11 @@ function App() {
                         }}
                       />
                     ) : showDemo ? (
-                      <DemoScreen customerName={demoCustomerName} />
+                      <DemoScreen
+                        customerName={demoCustomerName}
+                        customerAge={demoCustomerData.age}
+                        customerMilestone={demoCustomerData.milestone}
+                      />
                     ) : activeModule ? (
                       <Suspense fallback={
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
