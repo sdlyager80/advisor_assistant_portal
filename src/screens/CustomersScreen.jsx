@@ -187,7 +187,8 @@ const CustomersScreen = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', py: 3 }}>
+      <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
       <Typography
         variant="h4"
         sx={{
@@ -490,6 +491,7 @@ const CustomersScreen = () => {
         </DialogActions>
       </Dialog>
     </Container>
+    </Box>
   );
 };
 

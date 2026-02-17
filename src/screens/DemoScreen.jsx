@@ -39,6 +39,7 @@ import {
   ArrowForward,
   Stars,
   AccountCircle,
+  Home as HomeIcon,
 } from '@mui/icons-material';
 
 // Color Palette
@@ -56,7 +57,8 @@ const colors = {
 const DemoScreen = ({
   customerName = 'Sam Wright',
   customerAge = null,
-  customerMilestone = 'birthday'
+  customerMilestone = 'birthday',
+  onClose
 }) => {
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
@@ -1599,28 +1601,52 @@ Senior Advisor`}
               Next Step
             </Button>
           ) : (
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleRestart}
-              sx={{
-                borderRadius: 3,
-                px: 5,
-                py: 1.5,
-                fontWeight: 700,
-                fontSize: '1rem',
-                background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
-                boxShadow: `0 4px 16px ${alpha(colors.green, 0.4)}`,
-                '&:hover': {
-                  background: `linear-gradient(135deg, ${colors.green} 20%, ${colors.lightGreen} 100%)`,
-                  boxShadow: `0 6px 20px ${alpha(colors.green, 0.5)}`,
-                  transform: 'translateY(-2px)',
-                },
-                transition: 'all 0.2s ease',
-              }}
-            >
-              Start Over
-            </Button>
+            <>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={handleRestart}
+                sx={{
+                  borderRadius: 3,
+                  px: 4,
+                  py: 1.5,
+                  fontWeight: 600,
+                  borderColor: colors.lightBlue,
+                  color: colors.blue,
+                  borderWidth: 2,
+                  '&:hover': {
+                    borderWidth: 2,
+                    borderColor: colors.blue,
+                    bgcolor: alpha(colors.lightBlue, 0.1),
+                  },
+                }}
+              >
+                Start Over
+              </Button>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<HomeIcon />}
+                onClick={onClose}
+                sx={{
+                  borderRadius: 3,
+                  px: 5,
+                  py: 1.5,
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
+                  boxShadow: `0 4px 16px ${alpha(colors.green, 0.4)}`,
+                  '&:hover': {
+                    background: `linear-gradient(135deg, ${colors.green} 20%, ${colors.lightGreen} 100%)`,
+                    boxShadow: `0 6px 20px ${alpha(colors.green, 0.5)}`,
+                    transform: 'translateY(-2px)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                Back to Home
+              </Button>
+            </>
           )}
         </Box>
       </Box>

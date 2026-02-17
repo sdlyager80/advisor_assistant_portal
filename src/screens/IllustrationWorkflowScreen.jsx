@@ -47,8 +47,10 @@ import {
 const colors = {
   orange: '#F6921E',
   lightGreen: '#8BC53F',
+  green: '#37A526',
   lightBlue: '#00ADEE',
   blue: '#1B75BB',
+  red: '#D02E2E',
   paleAqua: '#F2F7F6',
 };
 
@@ -112,7 +114,7 @@ const IllustrationWorkflowScreen = ({
       const timer = setTimeout(() => setCurrentStep(1), 1000);
       return () => clearTimeout(timer);
     }
-    if (currentStep > 0 && currentStep < 4) {
+    if (currentStep > 0 && currentStep < 6) {
       const timer = setTimeout(() => setCurrentStep(prev => prev + 1), 2000);
       return () => clearTimeout(timer);
     }
@@ -681,8 +683,234 @@ const IllustrationWorkflowScreen = ({
           </Card>
         </Fade>
 
-        {/* Step 2: Intelligent Insights */}
+        {/* Step 2: Income Gap Identification */}
         <Fade in={currentStep >= 2} timeout={800}>
+          <Card
+            elevation={0}
+            sx={{
+              mb: 3,
+              borderRadius: 3,
+              bgcolor: '#FFFFFF',
+              border: `2px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange}`
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
+                <Box sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 64,
+                  height: 64,
+                  borderRadius: '50%',
+                  bgcolor: params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange,
+                  mb: 2
+                }}>
+                  {params.monthlyWithdrawal >= params.monthlyIncome ? (
+                    <CheckCircle sx={{ fontSize: 36, color: 'white' }} />
+                  ) : (
+                    <Warning sx={{ fontSize: 36, color: 'white' }} />
+                  )}
+                </Box>
+                <Typography variant="h5" fontWeight={700} gutterBottom>
+                  {params.monthlyWithdrawal >= params.monthlyIncome
+                    ? 'Income Needs Met ✓'
+                    : 'Potential Income Gap Identified'}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Intelligent income analysis for {customerName}
+                </Typography>
+              </Box>
+
+              <Grid container spacing={3} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: alpha(colors.blue, 0.08), borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                      Monthly Income Need
+                    </Typography>
+                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: colors.blue }}>
+                      ${params.monthlyIncome.toLocaleString()}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Estimated requirement
+                    </Typography>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: alpha(colors.lightGreen, 0.08), borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                      Policy Provides
+                    </Typography>
+                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: colors.green }}>
+                      ${params.monthlyWithdrawal.toLocaleString()}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Monthly withdrawal
+                    </Typography>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{
+                    p: 2.5,
+                    textAlign: 'center',
+                    bgcolor: params.monthlyWithdrawal >= params.monthlyIncome
+                      ? alpha(colors.lightGreen, 0.15)
+                      : alpha(colors.orange, 0.15),
+                    borderRadius: 2,
+                    border: `2px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange}`
+                  }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                      {params.monthlyWithdrawal >= params.monthlyIncome ? 'Surplus' : 'Gap'}
+                    </Typography>
+                    <Typography variant="h4" fontWeight={700} sx={{
+                      mt: 1,
+                      color: params.monthlyWithdrawal >= params.monthlyIncome ? colors.green : colors.orange
+                    }}>
+                      ${Math.abs(params.monthlyWithdrawal - params.monthlyIncome).toLocaleString()}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {params.monthlyWithdrawal >= params.monthlyIncome ? 'Extra coverage' : 'Shortfall identified'}
+                    </Typography>
+                  </Paper>
+                </Grid>
+              </Grid>
+
+              {params.monthlyWithdrawal < params.monthlyIncome && (
+                <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.orange, 0.08), borderRadius: 2, borderLeft: `4px solid ${colors.orange}` }}>
+                  <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Lightbulb sx={{ color: colors.orange }} />
+                    Recommended Actions
+                  </Typography>
+                  <Stack spacing={1} sx={{ ml: 4 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      • Gap of ${(params.monthlyIncome - params.monthlyWithdrawal).toLocaleString()}/month identified
+                    </Typography>
+                    {projectedAt85 > 200000 && (
+                      <Typography variant="body2" color="text.secondary">
+                        • Policy can support higher withdrawals - consider increasing to meet needs
+                      </Typography>
+                    )}
+                    {projectedAt85 <= 200000 && (
+                      <Typography variant="body2" color="text.secondary">
+                        • Current policy may not sustain ${params.monthlyIncome.toLocaleString()}/month - delay start age or reduce income need
+                      </Typography>
+                    )}
+                    <Typography variant="body2" color="text.secondary">
+                      • Supplement with Social Security (typically ${Math.round(params.monthlyIncome * 0.4).toLocaleString()}-${Math.round(params.monthlyIncome * 0.5).toLocaleString()}/month)
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      • Consider part-time work or other retirement income sources for remaining gap
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      • Review alternative distribution strategies below for optimized scenarios
+                    </Typography>
+                  </Stack>
+                </Paper>
+              )}
+            </CardContent>
+          </Card>
+        </Fade>
+
+        {/* Step 3: Alternative Distribution Strategies */}
+        <Fade in={currentStep >= 3} timeout={800}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <ShowChart sx={{ fontSize: 28, color: colors.blue, mr: 1.5 }} />
+                <Typography variant="h6" fontWeight={700}>
+                  Alternative Distribution Strategies
+                </Typography>
+              </Box>
+
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Modeled scenarios to optimize income and sustainability:
+              </Typography>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.lightGreen, 0.08), borderRadius: 2, height: '100%' }}>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.green}>
+                      Conservative Strategy
+                    </Typography>
+                    <Divider sx={{ my: 1.5 }} />
+                    <Stack spacing={1}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
+                        <Typography variant="body1" fontWeight={600}>${Math.round(params.monthlyWithdrawal * 0.8).toLocaleString()}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
+                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge + 2}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
+                        <Typography variant="body1" fontWeight={600} color={colors.green}>Age 90+</Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{
+                    p: 2.5,
+                    bgcolor: alpha(colors.blue, 0.12),
+                    borderRadius: 2,
+                    border: `2px solid ${colors.blue}`,
+                    height: '100%'
+                  }}>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.blue} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      Current Strategy
+                      <Chip label="Selected" size="small" sx={{ bgcolor: colors.blue, color: 'white', height: 20 }} />
+                    </Typography>
+                    <Divider sx={{ my: 1.5 }} />
+                    <Stack spacing={1}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
+                        <Typography variant="body1" fontWeight={600}>${params.monthlyWithdrawal.toLocaleString()}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
+                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
+                        <Typography variant="body1" fontWeight={600} color={colors.blue}>Age 85+</Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.orange, 0.08), borderRadius: 2, height: '100%' }}>
+                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.orange}>
+                      Aggressive Strategy
+                    </Typography>
+                    <Divider sx={{ my: 1.5 }} />
+                    <Stack spacing={1}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
+                        <Typography variant="body1" fontWeight={600}>${Math.round(params.monthlyWithdrawal * 1.25).toLocaleString()}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
+                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
+                        <Typography variant="body1" fontWeight={600} color={colors.orange}>Age 80</Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Fade>
+
+        {/* Step 4: Intelligent Insights */}
+        <Fade in={currentStep >= 4} timeout={800}>
           <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -745,8 +973,8 @@ const IllustrationWorkflowScreen = ({
           </Card>
         </Fade>
 
-        {/* Step 3: Compliance Check */}
-        <Fade in={currentStep >= 3} timeout={800}>
+        {/* Step 5: Compliance Check */}
+        <Fade in={currentStep >= 5} timeout={800}>
           <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
@@ -780,8 +1008,8 @@ const IllustrationWorkflowScreen = ({
           </Card>
         </Fade>
 
-        {/* Step 4: Life-Stage Milestone - Birthday Approaching */}
-        <Fade in={currentStep >= 4} timeout={800}>
+        {/* Step 6: Life-Stage Milestone - Birthday Approaching */}
+        <Fade in={currentStep >= 6} timeout={800}>
           <Card
             elevation={0}
             sx={{
@@ -799,7 +1027,7 @@ const IllustrationWorkflowScreen = ({
               if (onNavigateToEngagement) {
                 onNavigateToEngagement({
                   name: customerName,
-                  age: 65, // Fixed milestone birthday
+                  age: 60, // Fixed milestone birthday
                   milestone: 'birthday'
                 });
               }
@@ -815,7 +1043,7 @@ const IllustrationWorkflowScreen = ({
                         Upcoming Milestone Detected
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {customerName} turns 65 in 2 weeks
+                        {customerName} turns 60 in 2 weeks
                       </Typography>
                     </Box>
                   </Box>

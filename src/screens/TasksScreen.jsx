@@ -204,7 +204,8 @@ const TasksScreen = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', py: 3 }}>
+      <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography
           variant="h4"
@@ -480,6 +481,7 @@ const TasksScreen = () => {
         </DialogActions>
       </Dialog>
     </Container>
+    </Box>
   );
 };
 
