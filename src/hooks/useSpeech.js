@@ -23,37 +23,60 @@ export const useSpeech = () => {
         // Log available voices for debugging
         console.log('Available voices:', availableVoices.map(v => ({ name: v.name, lang: v.lang })));
 
-        // Try to select British English female voice with explicit name matching
+        // Comprehensive English voice selection for all browsers and devices
         const preferredVoice =
-          // Try specific British female voice names
-          availableVoices.find(voice => voice.name === 'Google UK English Female') ||
-          availableVoices.find(voice => voice.name === 'Microsoft Hazel Desktop - English (Great Britain)') ||
+          // === iOS (Safari/Chrome on iPhone/iPad) ===
+          availableVoices.find(voice => voice.name === 'Samantha' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Karen' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Moira' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Tessa' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Fiona' && voice.lang.startsWith('en')) ||
+
+          // === Android (Chrome/Samsung Internet) ===
+          availableVoices.find(voice => voice.name === 'Google US English' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'English United States' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'en-US-language' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'English (United States)' && voice.lang.startsWith('en')) ||
+
+          // === macOS Safari ===
+          availableVoices.find(voice => voice.name === 'Samantha' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Karen' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Moira' && voice.lang.startsWith('en')) ||
+          availableVoices.find(voice => voice.name === 'Alex' && voice.lang.startsWith('en')) ||
+
+          // === Windows Chrome/Edge ===
+          availableVoices.find(voice => voice.name === 'Microsoft Zira Desktop - English (United States)') ||
+          availableVoices.find(voice => voice.name === 'Microsoft Zira - English (United States)') ||
+          availableVoices.find(voice => voice.name.includes('Zira') && voice.lang.startsWith('en')) ||
           availableVoices.find(voice => voice.name === 'Microsoft Susan Desktop - English (Great Britain)') ||
-          availableVoices.find(voice => voice.name.includes('Karen')) ||
-          // Try any en-GB female voice
+          availableVoices.find(voice => voice.name === 'Microsoft Hazel Desktop - English (Great Britain)') ||
+
+          // === Google Chrome (all platforms) ===
+          availableVoices.find(voice => voice.name === 'Google US English Female') ||
+          availableVoices.find(voice => voice.name === 'Google UK English Female') ||
+          availableVoices.find(voice => voice.name === 'Google US English') ||
+          availableVoices.find(voice => voice.name === 'Google UK English') ||
+
+          // === Generic patterns for any browser ===
+          // Female English voices
           availableVoices.find(voice =>
-            voice.lang === 'en-GB' && (
-              voice.name.toLowerCase().includes('female') ||
-              voice.name.toLowerCase().includes('woman') ||
-              voice.name.toLowerCase().includes('susan') ||
-              voice.name.toLowerCase().includes('hazel') ||
-              voice.name.toLowerCase().includes('karen')
-            )
+            voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female')
           ) ||
-          // Try any en-GB voice that's not male
           availableVoices.find(voice =>
-            voice.lang === 'en-GB' && !voice.name.toLowerCase().includes('male') && !voice.name.toLowerCase().includes('daniel') && !voice.name.toLowerCase().includes('george')
+            voice.lang.startsWith('en-US') && !voice.name.toLowerCase().includes('male')
           ) ||
-          // Try any English female voice
           availableVoices.find(voice =>
-            voice.lang.startsWith('en') && (
-              voice.name.toLowerCase().includes('female') ||
-              voice.name.toLowerCase().includes('woman') ||
-              voice.name.toLowerCase().includes('zira') ||
-              voice.name.toLowerCase().includes('samantha')
-            )
+            voice.lang.startsWith('en-GB') && !voice.name.toLowerCase().includes('male')
           ) ||
+
+          // Any English voice (US/UK/AU/CA)
+          availableVoices.find(voice => voice.lang === 'en-US') ||
+          availableVoices.find(voice => voice.lang === 'en-GB') ||
+          availableVoices.find(voice => voice.lang === 'en-AU') ||
+          availableVoices.find(voice => voice.lang === 'en-CA') ||
           availableVoices.find(voice => voice.lang.startsWith('en')) ||
+
+          // Last resort: first available voice
           availableVoices[0];
 
         console.log('Selected voice:', preferredVoice?.name, preferredVoice?.lang);
@@ -88,21 +111,50 @@ export const useSpeech = () => {
 
     const utterance = new SpeechSynthesisUtterance(text);
 
-    // Get fresh voices list and select female voice
+    // Get fresh voices list and select English voice
     const currentVoices = synthRef.current.getVoices();
 
-    // Force select a female voice (Zira or any non-male voice)
-    const femaleVoice = currentVoices.find(v => v.name.includes('Zira')) ||
-                       currentVoices.find(v => v.name.toLowerCase().includes('female')) ||
-                       currentVoices.find(v => !v.name.includes('David') && !v.name.includes('Mark') && !v.name.includes('George'));
+    // Comprehensive English voice selection for all platforms
+    const englishVoice =
+      // === iOS (Safari/Chrome on iPhone/iPad) ===
+      currentVoices.find(v => v.name === 'Samantha' && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name === 'Karen' && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name === 'Moira' && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name === 'Tessa' && v.lang.startsWith('en')) ||
 
-    console.log('Speaking with voice:', femaleVoice?.name);
+      // === Android ===
+      currentVoices.find(v => v.name === 'Google US English' && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name === 'English United States' && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name === 'English (United States)' && v.lang.startsWith('en')) ||
 
-    // Configure voice - use femaleVoice instead of selectedVoice
-    if (femaleVoice) {
-      utterance.voice = femaleVoice;
-    } else if (selectedVoice) {
-      utterance.voice = selectedVoice;
+      // === Windows ===
+      currentVoices.find(v => v.name.includes('Zira') && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name.includes('Susan') && v.lang.startsWith('en')) ||
+      currentVoices.find(v => v.name.includes('Hazel') && v.lang.startsWith('en')) ||
+
+      // === Google Chrome ===
+      currentVoices.find(v => v.name === 'Google US English Female') ||
+      currentVoices.find(v => v.name === 'Google UK English Female') ||
+      currentVoices.find(v => v.name === 'Google US English') ||
+
+      // === Generic English voice ===
+      currentVoices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+      currentVoices.find(v => v.lang === 'en-US') ||
+      currentVoices.find(v => v.lang === 'en-GB') ||
+      currentVoices.find(v => v.lang.startsWith('en')) ||
+
+      // Fallback to selectedVoice
+      selectedVoice;
+
+    console.log('Speaking with voice:', englishVoice?.name, 'Language:', englishVoice?.lang);
+
+    // Configure voice
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+      utterance.lang = englishVoice.lang || 'en-US'; // Use the voice's language or default to en-US
+    } else {
+      // If no English voice found, explicitly set language
+      utterance.lang = 'en-US';
     }
 
     // Apply options
