@@ -193,7 +193,7 @@ function App() {
   const [showDemo, setShowDemo] = useState(false);
   const [activeModule, setActiveModule] = useState(null);
   const [demoCustomerName, setDemoCustomerName] = useState('Sam Wright');
-  const [demoCustomerData, setDemoCustomerData] = useState({ name: 'Sam Wright', age: 65, milestone: 'birthday' }); // Sam is 64, turning 65
+  const [demoCustomerData, setDemoCustomerData] = useState({ name: 'Sam Wright', age: 60, milestone: 'birthday' }); // Sam is 59, turning 60
   const [showNotifications, setShowNotifications] = useState(false);
   const [toastNotification, setToastNotification] = useState(null);
   const [showIllustration, setShowIllustration] = useState(false);
@@ -204,6 +204,10 @@ function App() {
   const tasksScreenRef = useRef(null);
   const calendarScreenRef = useRef(null);
   const notificationIdRef = useRef(5); // Start from 5 since we have 4 mock notifications
+
+  // Dynamic greeting based on time of day
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   // Mock data - will be replaced with ServiceNow API
   const [userData, setUserData] = useState({
@@ -337,11 +341,11 @@ function App() {
 
   const ActiveScreenComponent = screens[activeScreen].component;
 
-  const handleNavigateToDemo = (customerName = 'Sam Wright', age = 65) => {
+  const handleNavigateToDemo = (customerName = 'Sam Wright', age = 60) => {
     // Handle both string and object parameters
     if (typeof customerName === 'object') {
       setDemoCustomerName(customerName.name);
-      setDemoCustomerData({ name: customerName.name, age: customerName.age || 65, milestone: customerName.milestone || 'birthday' });
+      setDemoCustomerData({ name: customerName.name, age: customerName.age || 60, milestone: customerName.milestone || 'birthday' });
     } else {
       setDemoCustomerName(customerName);
       setDemoCustomerData({ name: customerName, age: age, milestone: 'birthday' });
@@ -392,7 +396,7 @@ function App() {
     // Handle both old format (string) and new format (object) for backward compatibility
     if (typeof customerData === 'string') {
       setDemoCustomerName(customerData);
-      setDemoCustomerData({ name: customerData, age: 65, milestone: 'birthday' });
+      setDemoCustomerData({ name: customerData, age: 60, milestone: 'birthday' });
     } else {
       setDemoCustomerName(customerData.name);
       setDemoCustomerData(customerData);
@@ -463,7 +467,7 @@ function App() {
       case 'SHOW_DEMO':
         // Navigate to demo screen
         const customerName = command.customerName || 'Sam Wright';
-        const customerAge = command.customerAge || 65;
+        const customerAge = command.customerAge || 60;
         console.log('🎬 SHOW_DEMO command received - navigating to demo screen for:', customerName, 'age:', customerAge);
         setDemoCustomerName(customerName);
         setDemoCustomerData({ name: customerName, age: customerAge, milestone: 'birthday' });
@@ -545,7 +549,7 @@ function App() {
                         </Typography>
                         {activeScreen === 0 && !showDemo && !activeModule && !showIllustration && (
                           <Typography variant="caption" color="text.secondary">
-                            Good morning, {userData.name.split(' ')[0]}
+                            {greeting}, {userData.name.split(' ')[0]}
                           </Typography>
                         )}
                       </Box>
@@ -592,6 +596,7 @@ function App() {
                         customerName={demoCustomerName}
                         customerAge={demoCustomerData.age}
                         customerMilestone={demoCustomerData.milestone}
+                        onClose={handleBackFromDemo}
                       />
                     ) : activeModule ? (
                       <Suspense fallback={

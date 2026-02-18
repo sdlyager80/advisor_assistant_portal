@@ -113,7 +113,8 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', py: 3 }}>
+      <Container maxWidth="lg" sx={{ pb: 10, pt: 3 }}>
       <Typography
         variant="h4"
         sx={{
@@ -133,13 +134,26 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
       </Typography>
 
       {/* Enterprise Module Cards Grid */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+          },
+          gap: 2,
+          mb: 4,
+        }}
+      >
         {enterpriseModules.map((module) => (
-          <Grid item xs={12} sm={6} md={4} key={module.id}>
+          <Box key={module.id}>
             <Card
               sx={{
-                height: '100%',
-                minHeight: 180,
+                width: '100%',
+                minWidth: 0,
+                height: 220,
+                boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'column',
                 background: `linear-gradient(135deg, ${alpha(module.color, 0.95)} 0%, ${alpha(module.color, 0.85)} 100%)`,
@@ -174,7 +188,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                   background: alpha('#FFFFFF', 0.15),
                 }}
               />
-              <CardContent sx={{ p: 3, position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 }, position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {/* Icon and Badge Row */}
                 <Box sx={{
                   display: 'flex',
@@ -221,7 +235,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                       fontFamily: 'Roboto Slab, serif',
                       fontWeight: 700,
                       mb: 1,
-                      fontSize: '1.1rem',
+                      fontSize: { xs: '1rem', sm: '1.05rem', md: '1.1rem' },
                       lineHeight: 1.3,
                     }}
                   >
@@ -231,8 +245,13 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                     variant="body2"
                     sx={{
                       opacity: 0.95,
-                      fontSize: '0.875rem',
-                      lineHeight: 1.5,
+                      fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.875rem' },
+                      lineHeight: 1.4,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
                     }}
                   >
                     {module.description}
@@ -240,9 +259,9 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
 
       <Divider sx={{ my: 4 }} />
 
@@ -333,6 +352,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
         </ListItemButton>
       </Card>
     </Container>
+    </Box>
   );
 };
 

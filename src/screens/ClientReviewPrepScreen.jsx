@@ -691,8 +691,17 @@ COMPLIANCE:
                 All paperwork prepared for immediate execution
               </Typography>
 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    md: 'repeat(2, 1fr)',
+                  },
+                  gap: 2,
+                }}
+              >
+                <Box>
                   <Paper
                     elevation={0}
                     sx={{
@@ -728,9 +737,9 @@ COMPLIANCE:
                       </Button>
                     </Box>
                   </Paper>
-                </Grid>
+                </Box>
 
-                <Grid item xs={12} sm={6}>
+                <Box>
                   <Paper
                     elevation={0}
                     sx={{
@@ -766,9 +775,9 @@ COMPLIANCE:
                       </Button>
                     </Box>
                   </Paper>
-                </Grid>
+                </Box>
 
-                <Grid item xs={12} sm={6}>
+                <Box>
                   <Paper
                     elevation={0}
                     sx={{
@@ -804,9 +813,9 @@ COMPLIANCE:
                       </Button>
                     </Box>
                   </Paper>
-                </Grid>
+                </Box>
 
-                <Grid item xs={12} sm={6}>
+                <Box>
                   <Paper
                     elevation={0}
                     sx={{
@@ -842,8 +851,8 @@ COMPLIANCE:
                       </Button>
                     </Box>
                   </Paper>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </CardContent>
           </Card>
         </Fade>
