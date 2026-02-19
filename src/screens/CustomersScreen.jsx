@@ -119,7 +119,7 @@ const CustomersScreen = () => {
       address: '456 Oak Avenue, Chicago, IL 60614',
       occupation: 'Senior Marketing Executive',
       employer: 'Global Brands Inc',
-      annualIncome: '$165,000',
+      annualIncome: '$120,000',
       maritalStatus: 'Married',
       spouse: 'Emma Wright',
       spouseAge: 57,
@@ -131,7 +131,7 @@ const CustomersScreen = () => {
       ],
       hobbies: ['Golf', 'Cooking', 'Travel'],
       favoriteTeam: 'Chicago Bulls',
-      birthday: 'June 12 (in 2 weeks)',
+      birthday: 'March 6 (in 2 weeks)',
       anniversary: 'September 8',
       homeowner: true,
       homeValue: '$625,000',
@@ -147,11 +147,13 @@ const CustomersScreen = () => {
           policyNumber: 'IUL-554321',
           premium: '$425/month',
           coverage: '$300,000',
+          deathBenefit: '$300,000',
           status: 'Payment Overdue',
           statusDetails: '12 days overdue - Auto-pay failed (expired card)',
           beneficiaries: 'Emma Wright (spouse), Olivia & Noah Wright (children)',
-          startDate: 'Jan 2010',
-          accountValue: '$68,500',
+          issueDate: 'January 15, 2010',
+          startDate: 'January 15, 2010',
+          accountValue: '$485,000',
           paymentDue: '$425',
           lastPayment: 'May 3, 2026',
           nextPayment: 'June 3, 2026 (OVERDUE)'
@@ -1073,10 +1075,10 @@ const CustomersScreen = () => {
                                     <TableCell>{policy.beneficiaries}</TableCell>
                                   </TableRow>
                                 )}
-                                {policy.startDate && (
+                                {policy.issueDate && (
                                   <TableRow>
-                                    <TableCell sx={{ fontWeight: 600 }}>Start Date</TableCell>
-                                    <TableCell>{policy.startDate}</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, fontSize: { xs: '0.813rem', sm: '0.875rem' }, border: 0, py: 1.5 }}>Issue Date</TableCell>
+                                    <TableCell sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' }, border: 0, py: 1.5 }}>{policy.issueDate}</TableCell>
                                   </TableRow>
                                 )}
                                 {policy.renewalDate && (

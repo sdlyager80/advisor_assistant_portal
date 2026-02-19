@@ -60,7 +60,7 @@ const ClientReviewPrepScreen = ({
   onClose,
   clientData = {
     name: 'Sam Wright',
-    age: 42,
+    age: 59,
     meetingTime: '2:30 PM',
     accountValue: 485000,
   }
@@ -93,8 +93,8 @@ const ClientReviewPrepScreen = ({
       content: `
 APPLICANT INFORMATION:
 Name: ${clientData.name}
-Date of Birth: March 15, 1982
-Age: ${clientData.age}
+Date of Birth: March 6, 1966
+Age: ${clientData.age} (turning 60 in 2 weeks)
 Policy Number: IUL-${Math.random().toString(36).substr(2, 9).toUpperCase()}
 
 EXISTING COVERAGE:
