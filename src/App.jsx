@@ -193,7 +193,7 @@ function App() {
   const [showDemo, setShowDemo] = useState(false);
   const [activeModule, setActiveModule] = useState(null);
   const [demoCustomerName, setDemoCustomerName] = useState('Sam Wright');
-  const [demoCustomerData, setDemoCustomerData] = useState({ name: 'Sam Wright', age: 60, milestone: 'birthday' }); // Sam is 59, turning 60
+  const [demoCustomerData, setDemoCustomerData] = useState({ name: 'Sam Wright', age: 59, milestone: 'birthday' }); // Sam is 59, turning 60
   const [showNotifications, setShowNotifications] = useState(false);
   const [toastNotification, setToastNotification] = useState(null);
   const [showIllustration, setShowIllustration] = useState(false);
@@ -341,11 +341,11 @@ function App() {
 
   const ActiveScreenComponent = screens[activeScreen].component;
 
-  const handleNavigateToDemo = (customerName = 'Sam Wright', age = 60) => {
+  const handleNavigateToDemo = (customerName = 'Sam Wright', age = 59) => {
     // Handle both string and object parameters
     if (typeof customerName === 'object') {
       setDemoCustomerName(customerName.name);
-      setDemoCustomerData({ name: customerName.name, age: customerName.age || 60, milestone: customerName.milestone || 'birthday' });
+      setDemoCustomerData({ name: customerName.name, age: customerName.age || 59, milestone: customerName.milestone || 'birthday' });
     } else {
       setDemoCustomerName(customerName);
       setDemoCustomerData({ name: customerName, age: age, milestone: 'birthday' });
@@ -396,7 +396,7 @@ function App() {
     // Handle both old format (string) and new format (object) for backward compatibility
     if (typeof customerData === 'string') {
       setDemoCustomerName(customerData);
-      setDemoCustomerData({ name: customerData, age: 60, milestone: 'birthday' });
+      setDemoCustomerData({ name: customerData, age: 59, milestone: 'birthday' });
     } else {
       setDemoCustomerName(customerData.name);
       setDemoCustomerData(customerData);
@@ -467,7 +467,7 @@ function App() {
       case 'SHOW_DEMO':
         // Navigate to demo screen
         const customerName = command.customerName || 'Sam Wright';
-        const customerAge = command.customerAge || 60;
+        const customerAge = command.customerAge || 59;
         console.log('🎬 SHOW_DEMO command received - navigating to demo screen for:', customerName, 'age:', customerAge);
         setDemoCustomerName(customerName);
         setDemoCustomerData({ name: customerName, age: customerAge, milestone: 'birthday' });
@@ -587,7 +587,7 @@ function App() {
                         clientData={{
                           name: clientReviewParams.clientName,
                           meetingTime: clientReviewParams.meetingTime,
-                          age: 42,
+                          age: 59,
                           accountValue: 485000,
                         }}
                       />
