@@ -29,6 +29,7 @@ import {
   Gavel,
   Psychology,
   BusinessCenter,
+  Insights,
 } from '@mui/icons-material';
 
 // Color Palette
@@ -101,6 +102,14 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
       description: 'Cross-functional analytics',
       color: colors.yellow,
       badge: 'Advanced'
+    },
+    {
+      id: 'business-insights',
+      icon: Insights,
+      title: 'Business Insights',
+      description: 'Platform ROI & performance metrics',
+      color: colors.blue,
+      badge: 'Featured'
     },
   ];
 
