@@ -206,10 +206,6 @@ function App() {
   const calendarScreenRef = useRef(null);
   const notificationIdRef = useRef(5); // Start from 5 since we have 4 mock notifications
 
-  // Dynamic greeting based on time of day
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-
   // Mock data - will be replaced with ServiceNow API
   const [userData, setUserData] = useState({
     name: 'Grace Wilson',
@@ -549,11 +545,6 @@ function App() {
                         <Typography variant="h6" fontWeight="bold">
                           {getCurrentTitle()}
                         </Typography>
-                        {activeScreen === 0 && !showDemo && !activeModule && !showIllustration && (
-                          <Typography variant="caption" color="text.secondary">
-                            {greeting}, {userData.name.split(' ')[0]}
-                          </Typography>
-                        )}
                       </Box>
                       {!showDemo && !activeModule && !showIllustration && (
                         <>
