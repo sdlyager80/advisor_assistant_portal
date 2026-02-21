@@ -334,7 +334,7 @@ const CustomersScreen = () => {
       const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase());
 
       return matchesProduct && matchesAge && matchesSearch;
-    });
+    }).sort((a, b) => a.name.localeCompare(b.name));
   }, [customers, productFilter, ageFilter, searchTerm]);
 
   useEffect(() => {

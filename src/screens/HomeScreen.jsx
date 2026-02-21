@@ -816,71 +816,40 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
           }}
         >
           <CardContent sx={{ p: 4 }}>
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={12} md={8}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <CheckCircle sx={{ fontSize: 32, mr: 1.5, color: colors.blue }} />
-                  <Typography variant="h5" sx={{ color: colors.blue, fontWeight: 600 }}>
-                    Today's Progress
-                  </Typography>
-                </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <CheckCircle sx={{ fontSize: 32, mr: 1.5, color: colors.blue }} />
+              <Typography variant="h5" sx={{ color: colors.blue, fontWeight: 600 }}>
+                Today's Progress
+              </Typography>
+            </Box>
 
-                <Box sx={{ mb: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {stats.tasksCompleted} of {stats.tasksToday} tasks completed
-                    </Typography>
-                    <Typography variant="h6" sx={{ color: '#000000', fontWeight: 700 }}>
-                      {completionRate}%
-                    </Typography>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={completionRate}
-                    sx={{
-                      height: 10,
-                      borderRadius: 5,
-                      bgcolor: alpha(colors.blue, 0.15),
-                      '& .MuiLinearProgress-bar': {
-                        bgcolor: colors.blue,
-                        borderRadius: 5,
-                      }
-                    }}
-                  />
-                </Box>
-
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  Great progress! Keep up the momentum 🚀
+                  {stats.tasksCompleted} of {stats.tasksToday} tasks completed
                 </Typography>
-              </Grid>
+                <Typography variant="h6" sx={{ color: '#000000', fontWeight: 700 }}>
+                  {completionRate}%
+                </Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={completionRate}
+                sx={{
+                  height: 10,
+                  borderRadius: 5,
+                  bgcolor: alpha(colors.blue, 0.15),
+                  '& .MuiLinearProgress-bar': {
+                    bgcolor: colors.blue,
+                    borderRadius: 5,
+                  }
+                }}
+              />
+            </Box>
 
-              <Grid item xs={12} md={4}>
-                <Box
-                  sx={{
-                    textAlign: 'center',
-                    bgcolor: alpha(colors.blue, 0.08),
-                    borderRadius: 3,
-                    p: 3,
-                  }}
-                >
-                  <Typography
-                    variant="h1"
-                    sx={{
-                      color: '#000000',
-                      fontWeight: 800,
-                      fontSize: { xs: '3rem', md: '4rem' },
-                      lineHeight: 1,
-                      mb: 1
-                    }}
-                  >
-                    {stats.tasksToday}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Total Tasks Today
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Great progress! Keep up the momentum 🚀
+            </Typography>
           </CardContent>
         </Card>
 
@@ -904,17 +873,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
             >
               <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.blue, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.blue, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Assignment sx={{ color: colors.blue, fontSize: 24 }} />
                   </Box>
                   <Chip
@@ -932,9 +891,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.tasksToday}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Tasks Due Today
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Tasks Due Today</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -956,28 +913,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.green, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.green, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Event sx={{ color: colors.green, fontSize: 24 }} />
                   </Box>
-                  <AccessTime sx={{ color: colors.orange, fontSize: 20 }} />
                 </Box>
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.appointmentsToday}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Appointments
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Appointments</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -999,28 +943,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.orange, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.orange, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <People sx={{ color: colors.orange, fontSize: 24 }} />
                   </Box>
-                  <TrendingUp sx={{ color: colors.green, fontSize: 20 }} />
                 </Box>
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.leadsActive}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Active Leads
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Active Leads</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -1042,28 +973,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.lightGreen, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.lightGreen, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <AttachMoney sx={{ color: colors.lightGreen, fontSize: 24 }} />
                   </Box>
-                  <Stars sx={{ color: colors.yellow, fontSize: 20 }} />
                 </Box>
                 <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.opportunitiesOpen}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Opportunities
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Opportunities</Typography>
               </CardContent>
             </Card>
           </Grid>
