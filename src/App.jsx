@@ -616,12 +616,12 @@ function App() {
             bottom: 90,
             right: 16,
             zIndex: 1000,
-            background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+            bgcolor: colors.blue,
             color: 'white',
-            boxShadow: `0 4px 16px ${alpha(colors.lightBlue, 0.4)}`,
+            boxShadow: `0 4px 16px ${alpha(colors.blue, 0.25)}`,
             '&:hover': {
-              background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-              boxShadow: `0 6px 20px ${alpha(colors.lightBlue, 0.5)}`,
+              bgcolor: alpha(colors.blue, 0.9),
+              boxShadow: `0 6px 20px ${alpha(colors.blue, 0.3)}`,
             },
             animation: isListening ? 'pulse 1.5s ease-in-out infinite' : 'none',
             '@keyframes pulse': {
@@ -710,6 +710,7 @@ function App() {
             '& .MuiDrawer-paper': {
               width: { xs: '100%', sm: 400 },
               maxWidth: '100%',
+              bgcolor: colors.paleAqua,
             },
           }}
         >
@@ -717,21 +718,37 @@ function App() {
             {/* Header */}
             <Box
               sx={{
-                p: 2,
-                background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
-                color: 'white',
+                p: 3,
+                bgcolor: alpha(colors.lightBlue, 0.08),
+                borderBottom: `3px solid ${colors.lightBlue}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
-              <Box>
-                <Typography variant="h6" fontWeight="bold">
-                  Notifications
-                </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.9 }}>
-                  {notificationCount} unread
-                </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 2,
+                    bgcolor: alpha(colors.lightBlue, 0.15),
+                    border: `2px solid ${colors.lightBlue}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <NotificationsIcon sx={{ color: colors.lightBlue, fontSize: 28 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={700} color={colors.blue} sx={{ fontFamily: 'Roboto Slab, serif' }}>
+                    Notifications
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600} color="#000000">
+                    {notificationCount} unread
+                  </Typography>
+                </Box>
               </Box>
               <Box>
                 {notificationCount > 0 && (
@@ -740,18 +757,27 @@ function App() {
                     size="small"
                     onClick={handleMarkAllAsRead}
                     sx={{
-                      bgcolor: alpha('#FFFFFF', 0.2),
-                      color: 'white',
+                      bgcolor: alpha(colors.green, 0.1),
+                      color: '#000000',
+                      border: `1px solid ${alpha(colors.green, 0.3)}`,
                       fontWeight: 600,
                       mr: 1,
                       cursor: 'pointer',
                       '&:hover': {
-                        bgcolor: alpha('#FFFFFF', 0.3),
+                        bgcolor: alpha(colors.green, 0.15),
                       },
                     }}
                   />
                 )}
-                <IconButton onClick={handleCloseNotifications} sx={{ color: 'white' }}>
+                <IconButton
+                  onClick={handleCloseNotifications}
+                  sx={{
+                    color: colors.blue,
+                    '&:hover': {
+                      bgcolor: alpha(colors.blue, 0.1),
+                    },
+                  }}
+                >
                   <CloseIcon />
                 </IconButton>
               </Box>
@@ -791,29 +817,54 @@ function App() {
                     <React.Fragment key={notification.id}>
                       <ListItem
                         sx={{
-                          bgcolor: notification.read ? 'transparent' : alpha(colors.lightBlue, 0.05),
-                          borderLeft: notification.read ? 'none' : `4px solid ${getPriorityColor()}`,
+                          bgcolor: notification.read ? '#FFFFFF' : alpha(getPriorityColor(), 0.05),
+                          borderLeft: `4px solid ${notification.read ? alpha(getPriorityColor(), 0.2) : getPriorityColor()}`,
+                          border: notification.read ? 'none' : `1px solid ${alpha(getPriorityColor(), 0.15)}`,
+                          borderRadius: notification.read ? 0 : 2,
+                          mx: notification.read ? 0 : 1,
+                          my: notification.read ? 0 : 1,
                           cursor: 'pointer',
+                          transition: 'all 0.2s ease',
                           '&:hover': {
-                            bgcolor: alpha(colors.lightBlue, 0.08),
+                            bgcolor: alpha(getPriorityColor(), 0.1),
+                            transform: notification.read ? 'none' : 'translateX(4px)',
                           },
                           position: 'relative',
                         }}
                         onClick={() => handleMarkAsRead(notification.id)}
                       >
                         <ListItemAvatar>
-                          <Avatar sx={{ bgcolor: alpha(getPriorityColor(), 0.1) }}>
+                          <Avatar
+                            sx={{
+                              bgcolor: alpha(getPriorityColor(), 0.1),
+                              border: `2px solid ${alpha(getPriorityColor(), 0.3)}`,
+                              width: 44,
+                              height: 44,
+                            }}
+                          >
                             {getIcon()}
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
                           primary={
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Typography variant="subtitle2" fontWeight={notification.read ? 500 : 700}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                              <Typography
+                                variant="subtitle2"
+                                fontWeight={notification.read ? 600 : 700}
+                                color="#000000"
+                              >
                                 {notification.title}
                               </Typography>
                               {!notification.read && (
-                                <CircleIcon sx={{ fontSize: 8, color: colors.lightBlue }} />
+                                <Box
+                                  sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    bgcolor: getPriorityColor(),
+                                    boxShadow: `0 0 0 2px ${alpha(getPriorityColor(), 0.2)}`,
+                                  }}
+                                />
                               )}
                             </Box>
                           }
@@ -822,13 +873,22 @@ function App() {
                               <Typography
                                 variant="body2"
                                 color="text.secondary"
-                                sx={{ mt: 0.5, mb: 0.5 }}
+                                sx={{ mt: 0.5, mb: 0.5, fontWeight: 500 }}
                               >
                                 {notification.message}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                {notification.time}
-                              </Typography>
+                              <Chip
+                                label={notification.time}
+                                size="small"
+                                sx={{
+                                  height: 20,
+                                  fontSize: '0.7rem',
+                                  bgcolor: alpha(getPriorityColor(), 0.08),
+                                  color: '#000000',
+                                  border: `1px solid ${alpha(getPriorityColor(), 0.2)}`,
+                                  fontWeight: 600,
+                                }}
+                              />
                             </>
                           }
                         />

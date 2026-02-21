@@ -216,12 +216,13 @@ const CalendarScreen = () => {
               width: 48,
               height: 48,
               borderRadius: 2,
-              background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
+              bgcolor: colors.green,
               color: 'white',
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: `0 6px 16px ${alpha(colors.green, 0.4)}`
+                bgcolor: alpha(colors.green, 0.9),
+                boxShadow: `0 6px 16px ${alpha(colors.green, 0.25)}`
               }
             }}
           >
@@ -232,12 +233,13 @@ const CalendarScreen = () => {
               width: 48,
               height: 48,
               borderRadius: 2,
-              background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+              bgcolor: colors.blue,
               color: 'white',
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: `0 6px 16px ${alpha(colors.lightBlue, 0.4)}`
+                bgcolor: alpha(colors.blue, 0.9),
+                boxShadow: `0 6px 16px ${alpha(colors.blue, 0.25)}`
               }
             }}
           >
@@ -252,44 +254,75 @@ const CalendarScreen = () => {
         sx={{
           mb: 4,
           borderRadius: 3,
-          border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+          border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
           background: '#FFFFFF',
         }}
       >
         <CardContent sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Event sx={{ color: colors.lightBlue, fontSize: 28 }} />
-            <Typography variant="h6" fontWeight={700}>
-              Select Date
-            </Typography>
-          </Box>
-          <TextField
-            type="date"
-            fullWidth
-            value={selectedDate.toISOString().split('T')[0]}
-            onChange={(e) => setSelectedDate(new Date(e.target.value + 'T00:00:00'))}
-            sx={{
-              '& .MuiOutlinedInput-root': {
+          <Box sx={{
+            position: 'relative',
+            p: 3,
+            bgcolor: alpha(colors.lightBlue, 0.08),
+            borderRadius: 3,
+            border: `2px solid ${alpha(colors.lightBlue, 0.2)}`,
+            mb: 2
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Box sx={{
+                width: 48,
+                height: 48,
                 borderRadius: 2,
-                fontSize: '1.1rem',
-                fontWeight: 600,
-                color: colors.blue,
-                '&:hover fieldset': {
-                  borderColor: colors.lightBlue,
+                bgcolor: alpha(colors.lightBlue, 0.15),
+                border: `2px solid ${colors.lightBlue}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Event sx={{ color: colors.lightBlue, fontSize: 28 }} />
+              </Box>
+              <Box>
+                <Typography variant="h6" fontWeight={700} color={colors.blue}>
+                  Select Date
+                </Typography>
+                <Typography variant="caption" color="text.secondary" fontWeight={500}>
+                  Choose a day to view appointments
+                </Typography>
+              </Box>
+            </Box>
+            <TextField
+              type="date"
+              fullWidth
+              value={selectedDate.toISOString().split('T')[0]}
+              onChange={(e) => setSelectedDate(new Date(e.target.value + 'T00:00:00'))}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  color: '#000000',
+                  bgcolor: 'white',
+                  border: `2px solid ${colors.lightBlue}`,
+                  '& fieldset': {
+                    border: 'none',
+                  },
+                  '&:hover': {
+                    bgcolor: alpha(colors.lightBlue, 0.05),
+                    boxShadow: `0 4px 12px ${alpha(colors.lightBlue, 0.15)}`,
+                  },
+                  '&.Mui-focused': {
+                    bgcolor: 'white',
+                    boxShadow: `0 0 0 3px ${alpha(colors.lightBlue, 0.2)}`,
+                  },
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: colors.blue,
-                  borderWidth: 2,
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </Box>
           <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
             <Chip
               label={`${filteredAppointments.length} appointment${filteredAppointments.length !== 1 ? 's' : ''}`}
               sx={{
-                bgcolor: alpha(colors.green, 0.15),
-                color: colors.green,
+                bgcolor: alpha(colors.green, 0.08),
+                color: '#000000',
                 fontWeight: 600,
               }}
             />
@@ -344,7 +377,7 @@ const CalendarScreen = () => {
                   variant="h5"
                   fontWeight="600"
                   sx={{
-                    color: colors.blue,
+                    color: '#000000',
                     mb: 1,
                     fontFamily: 'Roboto Slab, serif'
                   }}
@@ -360,8 +393,8 @@ const CalendarScreen = () => {
                   icon={<Event sx={{ color: `${colors.orange} !important` }} />}
                   sx={{
                     fontWeight: 600,
-                    bgcolor: alpha(colors.orange, 0.15),
-                    color: colors.orange,
+                    bgcolor: alpha(colors.orange, 0.08),
+                    color: '#000000',
                     border: 'none'
                   }}
                 />

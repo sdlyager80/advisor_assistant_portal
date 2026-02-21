@@ -334,7 +334,7 @@ const CustomersScreen = () => {
       const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase());
 
       return matchesProduct && matchesAge && matchesSearch;
-    });
+    }).sort((a, b) => a.name.localeCompare(b.name));
   }, [customers, productFilter, ageFilter, searchTerm]);
 
   useEffect(() => {
@@ -507,8 +507,8 @@ const CustomersScreen = () => {
               size="small"
               sx={{
                 ml: 2,
-                bgcolor: alpha(colors.lightBlue, 0.15),
-                color: colors.blue,
+                bgcolor: alpha(colors.lightBlue, 0.08),
+                color: '#000000',
                 fontWeight: 600
               }}
             />
@@ -663,8 +663,9 @@ const CustomersScreen = () => {
                         height: 20,
                         fontSize: '0.7rem',
                         bgcolor: alpha(colors.lightBlue, 0.1),
-                        color: colors.blue,
-                        border: 'none'
+                        color: '#000000',
+                        border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                        fontWeight: 600
                       }}
                     />
                   ))}
@@ -676,8 +677,9 @@ const CustomersScreen = () => {
                         height: 20,
                         fontSize: '0.7rem',
                         bgcolor: alpha(colors.orange, 0.1),
-                        color: colors.orange,
-                        border: 'none'
+                        color: '#000000',
+                        border: `1px solid ${alpha(colors.orange, 0.3)}`,
+                        fontWeight: 600
                       }}
                     />
                   )}
@@ -689,10 +691,10 @@ const CustomersScreen = () => {
                 sx={{
                   fontWeight: 600,
                   bgcolor: customer.status === 'Active'
-                    ? alpha(colors.green, 0.15)
-                    : alpha(colors.orange, 0.15),
-                  color: customer.status === 'Active' ? colors.green : colors.orange,
-                  border: 'none'
+                    ? alpha(colors.green, 0.1)
+                    : alpha(colors.orange, 0.1),
+                  color: '#000000',
+                  border: `1px solid ${customer.status === 'Active' ? alpha(colors.green, 0.3) : alpha(colors.orange, 0.3)}`
                 }}
               />
             </Box>
@@ -846,8 +848,9 @@ const CustomersScreen = () => {
                         label={selectedCustomer.status}
                         size="small"
                         sx={{
-                          bgcolor: alpha(colors.green, 0.15),
-                          color: colors.green,
+                          bgcolor: alpha(colors.green, 0.1),
+                          color: '#000000',
+                          border: `1px solid ${alpha(colors.green, 0.3)}`,
                           fontWeight: 600,
                           height: { xs: 22, sm: 24 },
                           fontSize: { xs: '0.7rem', sm: '0.75rem' }
@@ -857,8 +860,10 @@ const CustomersScreen = () => {
                         label={`${selectedCustomer.policies} ${selectedCustomer.policies === 1 ? 'Policy' : 'Policies'}`}
                         size="small"
                         sx={{
-                          bgcolor: alpha(colors.lightBlue, 0.15),
-                          color: colors.blue,
+                          bgcolor: alpha(colors.lightBlue, 0.1),
+                          color: '#000000',
+                          border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                          fontWeight: 600,
                           height: { xs: 22, sm: 24 },
                           fontSize: { xs: '0.7rem', sm: '0.75rem' }
                         }}
@@ -1045,8 +1050,9 @@ const CustomersScreen = () => {
                                 label={policy.status === 'Payment Overdue' ? 'Active' : policy.status}
                                 size="small"
                                 sx={{
-                                  bgcolor: alpha(colors.green, 0.15),
-                                  color: colors.green,
+                                  bgcolor: alpha(colors.green, 0.1),
+                                  color: '#000000',
+                                  border: `1px solid ${alpha(colors.green, 0.3)}`,
                                   fontWeight: 600
                                 }}
                               />
@@ -1260,8 +1266,9 @@ const CustomersScreen = () => {
                                 label={interaction.type}
                                 size="small"
                                 sx={{
-                                  bgcolor: alpha(colors.lightBlue, 0.15),
-                                  color: colors.blue,
+                                  bgcolor: alpha(colors.lightBlue, 0.1),
+                                  color: '#000000',
+                                  border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
                                   fontWeight: 600,
                                   fontSize: { xs: '0.7rem', sm: '0.75rem' }
                                 }}

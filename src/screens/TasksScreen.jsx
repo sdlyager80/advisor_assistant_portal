@@ -22,7 +22,7 @@ import {
   CircularProgress,
   alpha
 } from '@mui/material';
-import { Add, CheckCircle, Schedule, Flag, Mic, MicOff, Close } from '@mui/icons-material';
+import { Add, CheckBox, CheckBoxOutlineBlank, Schedule, Flag, Mic, MicOff, Close } from '@mui/icons-material';
 
 // Color Palette
 const colors = {
@@ -224,12 +224,14 @@ const TasksScreen = () => {
               width: 48,
               height: 48,
               borderRadius: 2,
-              background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
-              color: 'white',
+              bgcolor: alpha(colors.green, 0.1),
+              color: colors.green,
+              border: `2px solid ${colors.green}`,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: `0 6px 16px ${alpha(colors.green, 0.4)}`
+                bgcolor: alpha(colors.green, 0.15),
+                boxShadow: `0 6px 16px ${alpha(colors.green, 0.25)}`
               }
             }}
           >
@@ -240,12 +242,14 @@ const TasksScreen = () => {
               width: 48,
               height: 48,
               borderRadius: 2,
-              background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
-              color: 'white',
+              bgcolor: alpha(colors.blue, 0.1),
+              color: colors.blue,
+              border: `2px solid ${colors.blue}`,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: `0 6px 16px ${alpha(colors.lightBlue, 0.4)}`
+                bgcolor: alpha(colors.blue, 0.15),
+                boxShadow: `0 6px 16px ${alpha(colors.blue, 0.25)}`
               }
             }}
           >
@@ -277,11 +281,23 @@ const TasksScreen = () => {
                 sx={{
                   mt: -0.5,
                   mr: 1.5,
-                  color: task.status === 'completed' ? colors.green : 'action.disabled'
+                  p: 0.5,
+                  color: task.status === 'completed' ? colors.green : colors.lightBlue,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    bgcolor: task.status === 'completed'
+                      ? alpha(colors.green, 0.1)
+                      : alpha(colors.lightBlue, 0.1),
+                    transform: 'scale(1.1)',
+                  }
                 }}
                 onClick={() => toggleTaskComplete(task.id)}
               >
-                <CheckCircle sx={{ fontSize: 28 }} />
+                {task.status === 'completed' ? (
+                  <CheckBox sx={{ fontSize: 32 }} />
+                ) : (
+                  <CheckBoxOutlineBlank sx={{ fontSize: 32 }} />
+                )}
               </IconButton>
               <Box sx={{ flex: 1 }}>
                 <Typography
@@ -303,16 +319,18 @@ const TasksScreen = () => {
                     sx={{
                       fontWeight: 600,
                       bgcolor: task.priority === 'high'
-                        ? alpha(colors.red, 0.15)
+                        ? alpha(colors.red, 0.1)
                         : task.priority === 'medium'
-                        ? alpha(colors.orange, 0.15)
-                        : alpha(colors.lightGreen, 0.15),
-                      color: task.priority === 'high'
-                        ? colors.red
-                        : task.priority === 'medium'
-                        ? colors.orange
-                        : colors.green,
-                      border: 'none'
+                        ? alpha(colors.orange, 0.1)
+                        : alpha(colors.lightGreen, 0.1),
+                      color: '#000000',
+                      border: `1px solid ${
+                        task.priority === 'high'
+                          ? alpha(colors.red, 0.3)
+                          : task.priority === 'medium'
+                          ? alpha(colors.orange, 0.3)
+                          : alpha(colors.lightGreen, 0.3)
+                      }`
                     }}
                   />
                   <Chip
@@ -322,8 +340,11 @@ const TasksScreen = () => {
                     sx={{
                       fontWeight: 600,
                       bgcolor: alpha(colors.lightBlue, 0.1),
-                      color: colors.blue,
-                      border: 'none'
+                      color: '#000000',
+                      border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                      '& .MuiChip-icon': {
+                        color: colors.blue,
+                      },
                     }}
                   />
                 </Box>

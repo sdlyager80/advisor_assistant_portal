@@ -945,12 +945,12 @@ COMPLIANCE:
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle sx={{ bgcolor: colors.lightBlue, color: 'white' }}>
+        <DialogTitle sx={{ bgcolor: alpha(colors.lightBlue, 0.08), borderBottom: `3px solid ${colors.lightBlue}` }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="h6" fontWeight={700}>
+            <Typography variant="h6" fontWeight={700} color={colors.blue}>
               {selectedDocument?.title}
             </Typography>
-            <IconButton onClick={handleCloseDocument} sx={{ color: 'white' }}>
+            <IconButton onClick={handleCloseDocument} sx={{ color: colors.blue }}>
               <Close />
             </IconButton>
           </Box>

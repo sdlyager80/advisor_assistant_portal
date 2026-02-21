@@ -185,22 +185,22 @@ const IllustrationWorkflowScreen = ({
       <Paper
         elevation={0}
         sx={{
-          background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-          color: '#fff',
+          background: alpha(colors.blue, 0.1),
+          borderBottom: `3px solid ${colors.blue}`,
           p: 2,
         }}
       >
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" fontWeight={700} color={colors.blue}>
                 Income Planning Illustration
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
                 {customerName} • Age {illustrationParams.age} Withdrawals
               </Typography>
             </Box>
-            <IconButton onClick={onClose} sx={{ color: '#fff' }}>
+            <IconButton onClick={onClose} sx={{ color: colors.blue }}>
               <Close />
             </IconButton>
           </Box>
@@ -425,19 +425,19 @@ const IllustrationWorkflowScreen = ({
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
                     <Typography variant="caption" color="text.secondary">Account Value</Typography>
-                    <Typography variant="h6" fontWeight={700} color={colors.blue}>
+                    <Typography variant="h6" fontWeight={700} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.accountValue || 0).toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="caption" color="text.secondary">Cash Surrender</Typography>
-                    <Typography variant="h6" fontWeight={700} color={colors.lightGreen}>
+                    <Typography variant="h6" fontWeight={700} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.cashSurrenderValue || 0).toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="caption" color="text.secondary">Death Benefit</Typography>
-                    <Typography variant="h6" fontWeight={700} color={colors.orange}>
+                    <Typography variant="h6" fontWeight={700} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.deathBenefit || 0).toLocaleString()}
                     </Typography>
                   </Grid>
@@ -703,13 +703,14 @@ const IllustrationWorkflowScreen = ({
                   width: 64,
                   height: 64,
                   borderRadius: '50%',
-                  bgcolor: params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange,
+                  bgcolor: alpha(params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange, 0.15),
+                  border: `3px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange}`,
                   mb: 2
                 }}>
                   {params.monthlyWithdrawal >= params.monthlyIncome ? (
-                    <CheckCircle sx={{ fontSize: 36, color: 'white' }} />
+                    <CheckCircle sx={{ fontSize: 36, color: colors.lightGreen }} />
                   ) : (
-                    <Warning sx={{ fontSize: 36, color: 'white' }} />
+                    <Warning sx={{ fontSize: 36, color: colors.orange }} />
                   )}
                 </Box>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -728,7 +729,7 @@ const IllustrationWorkflowScreen = ({
                     <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
                       Monthly Income Need
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: colors.blue }}>
+                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: '#000000' }}>
                       ${params.monthlyIncome.toLocaleString()}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -742,7 +743,7 @@ const IllustrationWorkflowScreen = ({
                     <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
                       Policy Provides
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: colors.green }}>
+                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: '#000000' }}>
                       ${params.monthlyWithdrawal.toLocaleString()}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -756,17 +757,17 @@ const IllustrationWorkflowScreen = ({
                     p: 2.5,
                     textAlign: 'center',
                     bgcolor: params.monthlyWithdrawal >= params.monthlyIncome
-                      ? alpha(colors.lightGreen, 0.15)
-                      : alpha(colors.orange, 0.15),
+                      ? alpha(colors.lightGreen, 0.08)
+                      : alpha(colors.orange, 0.08),
                     borderRadius: 2,
-                    border: `2px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange}`
+                    border: `2px solid ${alpha(params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange, 0.3)}`
                   }}>
                     <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
                       {params.monthlyWithdrawal >= params.monthlyIncome ? 'Surplus' : 'Gap'}
                     </Typography>
                     <Typography variant="h4" fontWeight={700} sx={{
                       mt: 1,
-                      color: params.monthlyWithdrawal >= params.monthlyIncome ? colors.green : colors.orange
+                      color: '#000000'
                     }}>
                       ${Math.abs(params.monthlyWithdrawal - params.monthlyIncome).toLocaleString()}
                     </Typography>
@@ -862,7 +863,7 @@ const IllustrationWorkflowScreen = ({
                   }}>
                     <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.blue} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       Current Strategy
-                      <Chip label="Selected" size="small" sx={{ bgcolor: colors.blue, color: 'white', height: 20 }} />
+                      <Chip label="Selected" size="small" sx={{ bgcolor: alpha(colors.blue, 0.1), color: colors.blue, height: 20, border: `1px solid ${alpha(colors.blue, 0.3)}`, fontWeight: 600 }} />
                     </Typography>
                     <Divider sx={{ my: 1.5 }} />
                     <Stack spacing={1}>

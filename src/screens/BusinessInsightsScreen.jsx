@@ -447,9 +447,9 @@ const BusinessInsightsScreen = ({ onClose }) => {
                 textTransform: 'none',
                 fontSize: { xs: '0.75rem', sm: '0.8125rem' },
                 px: { xs: 1.5, sm: 2 },
-                background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+                bgcolor: colors.blue,
                 '&:hover': {
-                  background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
+                  bgcolor: alpha(colors.blue, 0.9),
                 },
               }}
             >
@@ -468,12 +468,12 @@ const BusinessInsightsScreen = ({ onClose }) => {
                   height: '100%',
                   position: 'relative',
                   overflow: 'hidden',
-                  borderTop: `3px solid ${kpi.color}`,
+                  borderTop: `2px solid ${alpha(kpi.color, 0.5)}`,
                   cursor: 'pointer',
                   transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: `0 8px 24px ${alpha(kpi.color, 0.25)}`,
+                    boxShadow: `0 8px 24px ${alpha(kpi.color, 0.15)}`,
                   },
                 }}
               >
@@ -484,7 +484,7 @@ const BusinessInsightsScreen = ({ onClose }) => {
                       sx={{
                         fontWeight: 700,
                         fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
-                        color: kpi.type === 'positive' ? colors.green : colors.lightBlue,
+                        color: '#000000',
                       }}
                     >
                       {kpi.number}
@@ -595,7 +595,7 @@ const BusinessInsightsScreen = ({ onClose }) => {
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>
                       {selectedKPI.label}
                     </Typography>
-                    <Typography variant="h4" sx={{ fontWeight: 700, color: selectedKPI.color }}>
+                    <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000' }}>
                       {selectedKPI.number}
                     </Typography>
                   </Box>
@@ -792,8 +792,8 @@ const BusinessInsightsScreen = ({ onClose }) => {
                     <TableRow key={month}>
                       <TableCell>{month}</TableCell>
                       <TableCell>{chartData.before[index]}%</TableCell>
-                      <TableCell sx={{ fontWeight: 700, color: colors.lightBlue }}>{chartData.after[index]}%</TableCell>
-                      <TableCell sx={{ color: colors.green, fontWeight: 600 }}>
+                      <TableCell sx={{ fontWeight: 700, color: '#000000' }}>{chartData.after[index]}%</TableCell>
+                      <TableCell sx={{ color: '#000000', fontWeight: 600 }}>
                         +{(chartData.after[index] - chartData.before[index]).toFixed(1)} pts
                       </TableCell>
                       <TableCell>
@@ -973,7 +973,7 @@ const RetentionTab = ({ chartData, onChartClick }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.green, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   87.4%
                 </Typography>
                 <Typography
@@ -998,7 +998,7 @@ const RetentionTab = ({ chartData, onChartClick }) => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   $1.8M
                 </Typography>
                 <Typography
@@ -1023,7 +1023,7 @@ const RetentionTab = ({ chartData, onChartClick }) => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   4,218
                 </Typography>
                 <Typography
@@ -1240,7 +1240,7 @@ const RiskTab = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.green, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   –39%
                 </Typography>
                 <Typography
@@ -1265,7 +1265,7 @@ const RiskTab = () => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   312
                 </Typography>
                 <Typography
@@ -1290,7 +1290,7 @@ const RiskTab = () => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   –57%
                 </Typography>
                 <Typography
@@ -1402,7 +1402,7 @@ const OperationsTab = ({ efficiencyMetrics }) => {
                       <Typography variant="body2" sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' }, fontWeight: 500 }}>
                         {metric.label}
                       </Typography>
-                      <Typography variant="body2" sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' }, fontWeight: 700, color: colors.green }}>
+                      <Typography variant="body2" sx={{ fontSize: { xs: '0.8125rem', sm: '0.875rem' }, fontWeight: 700, color: '#000000' }}>
                         –{metric.value}%
                       </Typography>
                     </Box>
@@ -1430,7 +1430,7 @@ const OperationsTab = ({ efficiencyMetrics }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.green, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   184 hrs
                 </Typography>
                 <Typography
@@ -1455,7 +1455,7 @@ const OperationsTab = ({ efficiencyMetrics }) => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   $57,300
                 </Typography>
                 <Typography
@@ -1480,7 +1480,7 @@ const OperationsTab = ({ efficiencyMetrics }) => {
 
             <Card>
               <CardContent sx={{ textAlign: 'center', p: { xs: 2, sm: 2.5 } }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.5rem', sm: '1.75rem' } }}>
                   48%
                 </Typography>
                 <Typography
@@ -1658,7 +1658,7 @@ const ActivityTab = ({ activities }) => {
               <Grid container spacing={1.5}>
                 <Grid item xs={6}>
                   <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: colors.paleAqua, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                       1,847
                     </Typography>
                     <Typography
@@ -1677,7 +1677,7 @@ const ActivityTab = ({ activities }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: colors.paleAqua, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: colors.green, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                       99.2%
                     </Typography>
                     <Typography
@@ -1696,7 +1696,7 @@ const ActivityTab = ({ activities }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: colors.paleAqua, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: colors.lightBlue, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                       &lt; 4s
                     </Typography>
                     <Typography
@@ -1715,7 +1715,7 @@ const ActivityTab = ({ activities }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: colors.paleAqua, borderRadius: 2 }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: colors.green, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#000000', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                       6
                     </Typography>
                     <Typography

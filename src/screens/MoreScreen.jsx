@@ -130,10 +130,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.blue,
         }}
       >
         Enterprise Modules
@@ -165,17 +162,17 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                 boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'column',
-                background: `linear-gradient(135deg, ${alpha(module.color, 0.95)} 0%, ${alpha(module.color, 0.85)} 100%)`,
-                color: 'white',
+                background: alpha(module.color, 0.08),
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 position: 'relative',
                 overflow: 'hidden',
                 border: `3px solid ${module.color}`,
-                boxShadow: `0 4px 16px ${alpha(module.color, 0.3)}`,
+                boxShadow: `0 4px 16px ${alpha(module.color, 0.15)}`,
                 '&:hover': {
                   transform: 'translateY(-6px)',
-                  boxShadow: `0 8px 28px ${alpha(module.color, 0.45)}`,
+                  boxShadow: `0 8px 28px ${alpha(module.color, 0.25)}`,
+                  background: alpha(module.color, 0.12),
                 },
               }}
               onClick={() => {
@@ -194,7 +191,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                   width: 100,
                   height: 100,
                   borderRadius: '50%',
-                  background: alpha('#FFFFFF', 0.15),
+                  background: alpha(module.color, 0.1),
                 }}
               />
               <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3 }, position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -211,14 +208,15 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                       width: 48,
                       height: 48,
                       borderRadius: 2,
-                      bgcolor: alpha('#FFFFFF', 0.25),
+                      bgcolor: alpha(module.color, 0.15),
+                      border: `2px solid ${module.color}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}
                   >
-                    <module.icon sx={{ fontSize: 28 }} />
+                    <module.icon sx={{ fontSize: 28, color: module.color }} />
                   </Box>
                   {module.badge && (
                     <Chip
@@ -246,6 +244,7 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                       mb: 1,
                       fontSize: { xs: '1rem', sm: '1.05rem', md: '1.1rem' },
                       lineHeight: 1.3,
+                      color: '#000000',
                     }}
                   >
                     {module.title}
@@ -253,7 +252,8 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
                   <Typography
                     variant="body2"
                     sx={{
-                      opacity: 0.95,
+                      color: 'text.secondary',
+                      fontWeight: 500,
                       fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.875rem' },
                       lineHeight: 1.4,
                       overflow: 'hidden',

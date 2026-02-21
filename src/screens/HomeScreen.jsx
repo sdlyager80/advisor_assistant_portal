@@ -219,7 +219,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
       type: 'priority',
       icon: <Stars />,
       iconColor: colors.red,
-      bgGradient: `linear-gradient(135deg, ${alpha(colors.red, 0.1)} 0%, ${alpha(colors.red, 0.05)} 100%)`,
+      bgColor: alpha(colors.red, 0.08),
       title: 'High Priority',
       message: 'Follow up with John Smith - Policy renewal expires in 3 days',
       action: 'View Customer',
@@ -230,7 +230,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
       type: 'opportunity',
       icon: <TrendingUp />,
       iconColor: colors.green,
-      bgGradient: `linear-gradient(135deg, ${alpha(colors.green, 0.1)} 0%, ${alpha(colors.green, 0.05)} 100%)`,
+      bgColor: alpha(colors.green, 0.08),
       title: 'Personalized Recommendation',
       message: 'Sarah Johnson qualifies for life insurance upgrade based on recent life event',
       action: 'Create Opportunity',
@@ -241,7 +241,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
       type: 'reminder',
       icon: <Cake />,
       iconColor: colors.orange,
-      bgGradient: `linear-gradient(135deg, ${alpha(colors.orange, 0.1)} 0%, ${alpha(colors.orange, 0.05)} 100%)`,
+      bgColor: alpha(colors.orange, 0.08),
       title: 'Special Occasion',
       message: 'Client birthday today: Michael Chen - Send wishes',
       action: 'Send Message',
@@ -808,100 +808,48 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
           elevation={0}
           sx={{
             mb: 4,
-            background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+            background: colors.paleAqua,
             borderRadius: 4,
             overflow: 'hidden',
             position: 'relative',
+            border: `1px solid ${alpha(colors.blue, 0.15)}`,
           }}
         >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: -100,
-              right: -100,
-              width: 300,
-              height: 300,
-              borderRadius: '50%',
-              background: alpha('#FFFFFF', 0.1),
-            }}
-          />
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: -80,
-              left: -80,
-              width: 250,
-              height: 250,
-              borderRadius: '50%',
-              background: alpha('#FFFFFF', 0.08),
-            }}
-          />
-          <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={12} md={8}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <CheckCircle sx={{ fontSize: 32, mr: 1.5, color: 'white' }} />
-                  <Typography variant="h5" sx={{ color: 'white', fontWeight: 600 }}>
-                    Today's Progress
-                  </Typography>
-                </Box>
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <CheckCircle sx={{ fontSize: 32, mr: 1.5, color: colors.blue }} />
+              <Typography variant="h5" sx={{ color: colors.blue, fontWeight: 600 }}>
+                Today's Progress
+              </Typography>
+            </Box>
 
-                <Box sx={{ mb: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.9 }}>
-                      {stats.tasksCompleted} of {stats.tasksToday} tasks completed
-                    </Typography>
-                    <Typography variant="h6" sx={{ color: 'white', fontWeight: 700 }}>
-                      {completionRate}%
-                    </Typography>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={completionRate}
-                    sx={{
-                      height: 10,
-                      borderRadius: 5,
-                      bgcolor: alpha('#FFFFFF', 0.25),
-                      '& .MuiLinearProgress-bar': {
-                        bgcolor: colors.yellow,
-                        borderRadius: 5,
-                      }
-                    }}
-                  />
-                </Box>
-
-                <Typography variant="body2" sx={{ color: 'white', opacity: 0.85 }}>
-                  Great progress! Keep up the momentum 🚀
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {stats.tasksCompleted} of {stats.tasksToday} tasks completed
                 </Typography>
-              </Grid>
+                <Typography variant="h6" sx={{ color: '#000000', fontWeight: 700 }}>
+                  {completionRate}%
+                </Typography>
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={completionRate}
+                sx={{
+                  height: 10,
+                  borderRadius: 5,
+                  bgcolor: alpha(colors.blue, 0.15),
+                  '& .MuiLinearProgress-bar': {
+                    bgcolor: colors.blue,
+                    borderRadius: 5,
+                  }
+                }}
+              />
+            </Box>
 
-              <Grid item xs={12} md={4}>
-                <Box
-                  sx={{
-                    textAlign: 'center',
-                    bgcolor: alpha('#FFFFFF', 0.15),
-                    borderRadius: 3,
-                    p: 3,
-                  }}
-                >
-                  <Typography
-                    variant="h1"
-                    sx={{
-                      color: 'white',
-                      fontWeight: 800,
-                      fontSize: { xs: '3rem', md: '4rem' },
-                      lineHeight: 1,
-                      mb: 1
-                    }}
-                  >
-                    {stats.tasksToday}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'white', opacity: 0.9 }}>
-                    Total Tasks Today
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Great progress! Keep up the momentum 🚀
+            </Typography>
           </CardContent>
         </Card>
 
@@ -925,17 +873,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
             >
               <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.blue, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.blue, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Assignment sx={{ color: colors.blue, fontSize: 24 }} />
                   </Box>
                   <Chip
@@ -943,18 +881,17 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                     size="small"
                     sx={{
                       bgcolor: alpha(colors.red, 0.1),
-                      color: colors.red,
+                      color: '#000000',
+                      border: `1px solid ${alpha(colors.red, 0.3)}`,
                       fontWeight: 600,
                       fontSize: '0.75rem'
                     }}
                   />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: colors.blue }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.tasksToday}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Tasks Due Today
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Tasks Due Today</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -976,28 +913,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.green, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.green, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Event sx={{ color: colors.green, fontSize: 24 }} />
                   </Box>
-                  <AccessTime sx={{ color: colors.orange, fontSize: 20 }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: colors.green }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.appointmentsToday}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Appointments
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Appointments</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -1019,28 +943,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.orange, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.orange, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <People sx={{ color: colors.orange, fontSize: 24 }} />
                   </Box>
-                  <TrendingUp sx={{ color: colors.green, fontSize: 20 }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: colors.orange }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.leadsActive}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Active Leads
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Active Leads</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -1062,28 +973,15 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               }}
             >
               <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 2,
-                      bgcolor: alpha(colors.lightGreen, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <Box sx={{ mb: 2 }}>
+                  <Box sx={{ width: 48, height: 48, borderRadius: 2, bgcolor: alpha(colors.lightGreen, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <AttachMoney sx={{ color: colors.lightGreen, fontSize: 24 }} />
                   </Box>
-                  <Stars sx={{ color: colors.yellow, fontSize: 20 }} />
                 </Box>
-                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: colors.lightGreen }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, color: '#000000' }}>
                   {stats.opportunitiesOpen}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Opportunities
-                </Typography>
+                <Typography variant="body2" color="text.secondary">Opportunities</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -1095,7 +993,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
           sx={{
             mb: 4,
             borderRadius: 4,
-            border: `2px solid ${alpha(colors.blue, 0.3)}`,
+            border: `1px solid ${alpha(colors.blue, 0.15)}`,
             background: '#FFFFFF',
           }}
         >
@@ -1138,11 +1036,11 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                   fontSize: '1rem',
                   pr: 1,
                   '&:hover fieldset': {
-                    borderColor: colors.lightBlue,
+                    borderColor: alpha(colors.lightBlue, 0.4),
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: colors.blue,
-                    borderWidth: 2,
+                    borderColor: alpha(colors.blue, 0.6),
+                    borderWidth: 1,
                   },
                 },
               }}
@@ -1179,11 +1077,12 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 size="small"
                 sx={{
                   bgcolor: alpha(colors.green, 0.1),
-                  color: colors.green,
+                  color: '#000000',
+                  border: `1px solid ${alpha(colors.green, 0.3)}`,
                   fontWeight: 600,
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: alpha(colors.green, 0.2),
+                    bgcolor: alpha(colors.green, 0.15),
                   },
                 }}
               />
@@ -1192,11 +1091,12 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 size="small"
                 sx={{
                   bgcolor: alpha(colors.orange, 0.1),
-                  color: colors.orange,
+                  color: '#000000',
+                  border: `1px solid ${alpha(colors.orange, 0.3)}`,
                   fontWeight: 600,
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: alpha(colors.orange, 0.2),
+                    bgcolor: alpha(colors.orange, 0.15),
                   },
                 }}
               />
@@ -1205,11 +1105,12 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 size="small"
                 sx={{
                   bgcolor: alpha(colors.blue, 0.1),
-                  color: colors.blue,
+                  color: '#000000',
+                  border: `1px solid ${alpha(colors.blue, 0.3)}`,
                   fontWeight: 600,
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: alpha(colors.blue, 0.2),
+                    bgcolor: alpha(colors.blue, 0.15),
                   },
                 }}
               />
@@ -1218,11 +1119,12 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                 size="small"
                 sx={{
                   bgcolor: alpha(colors.lightGreen, 0.1),
-                  color: colors.lightGreen,
+                  color: '#000000',
+                  border: `1px solid ${alpha(colors.lightGreen, 0.3)}`,
                   fontWeight: 600,
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: alpha(colors.lightGreen, 0.2),
+                    bgcolor: alpha(colors.lightGreen, 0.15),
                   },
                 }}
               />
@@ -1289,7 +1191,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               sx={{
                 mb: 2,
                 borderRadius: 3,
-                border: `2px solid ${alpha(insight.iconColor, 0.3)}`,
+                border: `1px solid ${alpha(insight.iconColor, 0.2)}`,
                 background: '#FFFFFF',
                 transition: 'all 0.3s ease',
                 '&:hover': {
@@ -1305,7 +1207,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                       width: 56,
                       height: 56,
                       borderRadius: 2,
-                      bgcolor: alpha(insight.iconColor, 0.15),
+                      bgcolor: alpha(insight.iconColor, 0.08),
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -1625,7 +1527,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               startIcon={<Send />}
               onClick={handleSendMessage}
               sx={{
-                background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+                bgcolor: colors.blue,
               }}
             >
               Send Message
@@ -1725,19 +1627,43 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                       primary={
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography variant="subtitle1" fontWeight={600}>{apt.client}</Typography>
-                          <Typography variant="h6" color={colors.green} fontWeight={700}>{apt.time}</Typography>
+                          <Typography variant="h6" color="#000000" fontWeight={700}>{apt.time}</Typography>
                         </Box>
                       }
                       secondary={
                         <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                          <Chip label={apt.type} size="small" />
-                          <Chip label={apt.duration} size="small" icon={<AccessTime />} />
+                          <Chip
+                            label={apt.type}
+                            size="small"
+                            sx={{
+                              bgcolor: alpha(colors.blue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.blue, 0.3)}`,
+                              fontWeight: 600,
+                            }}
+                          />
+                          <Chip
+                            label={apt.duration}
+                            size="small"
+                            icon={<AccessTime sx={{ color: colors.lightBlue }} />}
+                            sx={{
+                              bgcolor: alpha(colors.lightBlue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                              fontWeight: 600,
+                              '& .MuiChip-icon': {
+                                color: colors.lightBlue,
+                              },
+                            }}
+                          />
                           <Chip
                             label={apt.status}
                             size="small"
                             sx={{
-                              bgcolor: apt.status === 'confirmed' ? alpha(colors.green, 0.15) : alpha(colors.orange, 0.15),
-                              color: apt.status === 'confirmed' ? colors.green : colors.orange,
+                              bgcolor: apt.status === 'confirmed' ? alpha(colors.green, 0.1) : alpha(colors.orange, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${apt.status === 'confirmed' ? alpha(colors.green, 0.3) : alpha(colors.orange, 0.3)}`,
+                              fontWeight: 600,
                             }}
                           />
                         </Box>
@@ -1793,17 +1719,53 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                             label={lead.rating.toUpperCase()}
                             size="small"
                             sx={{
-                              bgcolor: lead.rating === 'hot' ? alpha(colors.red, 0.15) :
-                                      lead.rating === 'warm' ? alpha(colors.orange, 0.15) :
-                                      alpha(colors.lightBlue, 0.15),
-                              color: lead.rating === 'hot' ? colors.red :
-                                     lead.rating === 'warm' ? colors.orange : colors.lightBlue,
+                              bgcolor: lead.rating === 'hot' ? alpha(colors.red, 0.1) :
+                                      lead.rating === 'warm' ? alpha(colors.orange, 0.1) :
+                                      alpha(colors.lightBlue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${lead.rating === 'hot' ? alpha(colors.red, 0.3) :
+                                     lead.rating === 'warm' ? alpha(colors.orange, 0.3) : alpha(colors.lightBlue, 0.3)}`,
                               fontWeight: 700,
                             }}
                           />
-                          <Chip label={lead.type} size="small" />
-                          <Chip label={lead.source} size="small" icon={<TrendingUp />} />
-                          <Chip label={lead.phone} size="small" icon={<Phone />} />
+                          <Chip
+                            label={lead.type}
+                            size="small"
+                            sx={{
+                              bgcolor: alpha(colors.blue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.blue, 0.3)}`,
+                              fontWeight: 600,
+                            }}
+                          />
+                          <Chip
+                            label={lead.source}
+                            size="small"
+                            icon={<TrendingUp sx={{ color: colors.green }} />}
+                            sx={{
+                              bgcolor: alpha(colors.green, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.green, 0.3)}`,
+                              fontWeight: 600,
+                              '& .MuiChip-icon': {
+                                color: colors.green,
+                              },
+                            }}
+                          />
+                          <Chip
+                            label={lead.phone}
+                            size="small"
+                            icon={<Phone sx={{ color: colors.lightBlue }} />}
+                            sx={{
+                              bgcolor: alpha(colors.lightBlue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                              fontWeight: 600,
+                              '& .MuiChip-icon': {
+                                color: colors.lightBlue,
+                              },
+                            }}
+                          />
                         </Box>
                       }
                     />
@@ -1848,19 +1810,38 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
                       primary={
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <Typography variant="subtitle1" fontWeight={600}>{opp.client}</Typography>
-                          <Typography variant="h6" color={colors.green} fontWeight={700}>{opp.value}</Typography>
+                          <Typography variant="h6" color="#000000" fontWeight={700}>{opp.value}</Typography>
                         </Box>
                       }
                       secondary={
                         <Box sx={{ display: 'flex', gap: 1, mt: 0.5, flexWrap: 'wrap' }}>
-                          <Chip label={opp.type} size="small" />
-                          <Chip label={opp.stage} size="small" sx={{ bgcolor: alpha(colors.lightBlue, 0.15) }} />
+                          <Chip
+                            label={opp.type}
+                            size="small"
+                            sx={{
+                              bgcolor: alpha(colors.orange, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.orange, 0.3)}`,
+                              fontWeight: 600,
+                            }}
+                          />
+                          <Chip
+                            label={opp.stage}
+                            size="small"
+                            sx={{
+                              bgcolor: alpha(colors.lightBlue, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
+                              fontWeight: 600,
+                            }}
+                          />
                           <Chip
                             label={`${opp.probability} probability`}
                             size="small"
                             sx={{
-                              bgcolor: alpha(colors.green, 0.15),
-                              color: colors.green,
+                              bgcolor: alpha(colors.green, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${alpha(colors.green, 0.3)}`,
                               fontWeight: 600,
                             }}
                           />
@@ -2140,7 +2121,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
               variant="contained"
               onClick={handleAddCustomer}
               disabled={!newCustomerData.name || !newCustomerData.email}
-              sx={{ background: `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)` }}
+              sx={{ bgcolor: colors.blue }}
             >
               Add Customer
             </Button>

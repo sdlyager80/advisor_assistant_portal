@@ -21,39 +21,40 @@ const IllustrationScreen = () => {
       title: 'Voice Request',
       content: (
         <Card sx={{
-          background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
-          color: 'white',
-          boxShadow: `0 8px 32px ${alpha(colors.green, 0.3)}`,
+          bgcolor: colors.paleAqua,
+          color: colors.green,
+          border: `2px solid ${alpha(colors.green, 0.3)}`,
+          boxShadow: `0 4px 16px ${alpha(colors.green, 0.15)}`,
         }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: alpha('#fff', 0.25), width: 64, height: 64 }}>
-                <Mic sx={{ fontSize: 32 }} />
+              <Avatar sx={{ bgcolor: alpha(colors.green, 0.15), border: `2px solid ${colors.green}`, width: 64, height: 64 }}>
+                <Mic sx={{ fontSize: 32, color: colors.green }} />
               </Avatar>
               <Box>
-                <Typography variant="h5" fontWeight={700} gutterBottom>
+                <Typography variant="h5" fontWeight={700} gutterBottom color={colors.green}>
                   You Ask
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.95 }}>
+                <Typography variant="body2" color="text.secondary" fontWeight={500}>
                   Initiate request via voice or chat
                 </Typography>
               </Box>
             </Box>
 
-            <Box sx={{ p: 3, bgcolor: alpha('#fff', 0.15), borderRadius: 2, mb: 2 }}>
-              <Typography variant="h6" fontWeight={600} fontStyle="italic">
+            <Box sx={{ p: 3, bgcolor: alpha(colors.green, 0.08), borderRadius: 2, mb: 2, border: `1px solid ${alpha(colors.green, 0.2)}` }}>
+              <Typography variant="h6" fontWeight={600} fontStyle="italic" color="#000000">
                 "Show me retirement income options for the Johnson family"
               </Typography>
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               <Chip
-                icon={<Mic sx={{ color: 'white !important' }} />}
+                icon={<Mic sx={{ color: `${colors.green} !important` }} />}
                 label="Voice Input"
-                sx={{ bgcolor: alpha('#fff', 0.25), color: 'white', fontWeight: 600 }}
+                sx={{ bgcolor: alpha(colors.green, 0.1), color: colors.green, fontWeight: 600, border: `1px solid ${alpha(colors.green, 0.3)}` }}
               />
-              <Chip label="Natural Language" sx={{ bgcolor: alpha('#fff', 0.25), color: 'white' }} />
-              <Chip label="Hands-Free" sx={{ bgcolor: alpha('#fff', 0.25), color: 'white' }} />
+              <Chip label="Natural Language" sx={{ bgcolor: alpha(colors.green, 0.1), color: colors.green, fontWeight: 600, border: `1px solid ${alpha(colors.green, 0.3)}` }} />
+              <Chip label="Hands-Free" sx={{ bgcolor: alpha(colors.green, 0.1), color: colors.green, fontWeight: 600, border: `1px solid ${alpha(colors.green, 0.3)}` }} />
             </Box>
           </CardContent>
         </Card>
@@ -65,8 +66,8 @@ const IllustrationScreen = () => {
         <Card sx={{ boxShadow: `0 4px 24px ${alpha(colors.blue, 0.15)}` }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: colors.lightBlue, width: 64, height: 64 }}>
-                <ShowChart sx={{ fontSize: 32, color: 'white' }} />
+              <Avatar sx={{ bgcolor: alpha(colors.lightBlue, 0.15), border: `2px solid ${colors.lightBlue}`, width: 64, height: 64 }}>
+                <ShowChart sx={{ fontSize: 32, color: colors.lightBlue }} />
               </Avatar>
               <Box>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -120,8 +121,8 @@ const IllustrationScreen = () => {
         <Card sx={{ boxShadow: `0 4px 24px ${alpha(colors.orange, 0.15)}` }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: colors.orange, width: 64, height: 64 }}>
-                <TrendingUp sx={{ fontSize: 32, color: 'white' }} />
+              <Avatar sx={{ bgcolor: alpha(colors.orange, 0.15), border: `2px solid ${colors.orange}`, width: 64, height: 64 }}>
+                <TrendingUp sx={{ fontSize: 32, color: colors.orange }} />
               </Avatar>
               <Box>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -193,8 +194,8 @@ const IllustrationScreen = () => {
         <Card sx={{ boxShadow: `0 4px 24px ${alpha(colors.blue, 0.15)}` }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: colors.blue, width: 64, height: 64 }}>
-                <Description sx={{ fontSize: 32, color: 'white' }} />
+              <Avatar sx={{ bgcolor: alpha(colors.blue, 0.15), border: `2px solid ${colors.blue}`, width: 64, height: 64 }}>
+                <Description sx={{ fontSize: 32, color: colors.blue }} />
               </Avatar>
               <Box>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -288,8 +289,8 @@ const IllustrationScreen = () => {
         <Card sx={{ boxShadow: `0 4px 24px ${alpha(colors.orange, 0.15)}` }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar sx={{ bgcolor: colors.orange, width: 64, height: 64 }}>
-                <Gavel sx={{ fontSize: 32, color: 'white' }} />
+              <Avatar sx={{ bgcolor: alpha(colors.orange, 0.15), border: `2px solid ${colors.orange}`, width: 64, height: 64 }}>
+                <Gavel sx={{ fontSize: 32, color: colors.orange }} />
               </Avatar>
               <Box>
                 <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -361,9 +362,10 @@ const IllustrationScreen = () => {
       title: 'Delivery',
       content: (
         <Card sx={{
-          background: `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`,
-          color: 'white',
-          boxShadow: `0 8px 32px ${alpha(colors.green, 0.3)}`,
+          bgcolor: colors.paleAqua,
+          color: colors.green,
+          border: `2px solid ${alpha(colors.green, 0.3)}`,
+          boxShadow: `0 4px 16px ${alpha(colors.green, 0.15)}`,
         }}>
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
