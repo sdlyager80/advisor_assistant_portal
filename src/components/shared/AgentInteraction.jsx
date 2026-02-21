@@ -57,8 +57,9 @@ const AgentInteraction = ({
       {/* Input Section */}
       <Card
         sx={{
-          background: `linear-gradient(135deg, ${alpha(colors.lightBlue, 0.05)} 0%, ${alpha(colors.blue, 0.02)} 100%)`,
-          border: `2px solid ${alpha(colors.lightBlue, 0.2)}`,
+          bgcolor: '#FFFFFF',
+          border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+          borderLeft: `4px solid ${colors.lightBlue}`,
           mb: 3,
         }}
       >
@@ -143,8 +144,9 @@ const AgentInteraction = ({
       <Collapse in={isProcessing}>
         <Card
           sx={{
-            background: `linear-gradient(135deg, ${alpha(colors.lightBlue, 0.1)} 0%, ${alpha(colors.blue, 0.05)} 100%)`,
-            border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+            bgcolor: alpha(colors.lightBlue, 0.05),
+            border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+            borderLeft: `4px solid ${colors.lightBlue}`,
             mb: 3,
           }}
         >
@@ -170,8 +172,9 @@ const AgentInteraction = ({
           {currentResponse && (
             <Card
               sx={{
-                background: `linear-gradient(135deg, ${alpha(colors.green, 0.05)} 0%, ${alpha(colors.green, 0.02)} 100%)`,
-                border: `2px solid ${alpha(colors.green, 0.3)}`,
+                bgcolor: '#FFFFFF',
+                border: `1px solid ${alpha(colors.green, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 mb: 3,
               }}
             >

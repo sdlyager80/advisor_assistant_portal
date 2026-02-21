@@ -52,7 +52,7 @@ const MeetingPrepScreen = () => {
               </Card>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Card sx={{ bgcolor: alpha(colors.yellow, 0.1), border: `2px solid ${colors.yellow}` }}>
+              <Card sx={{ bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.yellow, 0.3)}`, borderLeft: `4px solid ${colors.orange}` }}>
                 <CardContent>
                   <Typography variant="caption" color="text.secondary">Milestone Alert</Typography>
                   <Typography variant="h6" fontWeight={700}>Birthday</Typography>
@@ -158,10 +158,7 @@ const MeetingPrepScreen = () => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.yellow} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.orange,
         }}
       >
         Meeting Preparation Intelligence

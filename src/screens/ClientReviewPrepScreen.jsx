@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Container,
@@ -14,7 +14,6 @@ import {
   alpha,
   Grid,
   Divider,
-  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
@@ -32,14 +31,12 @@ import {
   Close,
   CheckCircle,
   Warning,
-  AttachMoney,
   Description,
   TrendingUp,
   Security,
   Lightbulb,
   ArrowForward,
   Schedule,
-  Person,
   Assessment,
   Gavel,
   Edit,
@@ -49,6 +46,7 @@ import {
 
 const colors = {
   orange: '#F6921E',
+  green: '#37A526',
   lightGreen: '#8BC53F',
   lightBlue: '#00ADEE',
   blue: '#1B75BB',
@@ -73,6 +71,12 @@ const ClientReviewPrepScreen = ({
   const [signatureSent, setSignatureSent] = useState(false);
   const [downloadingBrief, setDownloadingBrief] = useState(false);
   const [joiningMeeting, setJoiningMeeting] = useState(false);
+  const topRef = useRef(null);
+
+  // Scroll to top when screen opens
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }, []);
 
   // Progressive step reveal
   useEffect(() => {
@@ -244,7 +248,6 @@ Actual results may vary based on market performance and policy management.
 
   const handleConfirmSendSignature = () => {
     setSendingSignature(true);
-    // Simulate sending
     setTimeout(() => {
       setSendingSignature(false);
       setSignatureSent(true);
@@ -255,9 +258,7 @@ Actual results may vary based on market performance and policy management.
 
   const handleDownloadBrief = () => {
     setDownloadingBrief(true);
-    // Simulate download
     setTimeout(() => {
-      // Create a text summary
       const briefContent = `
 CLIENT REVIEW BRIEF
 Generated: ${new Date().toLocaleString()}
@@ -290,7 +291,6 @@ COMPLIANCE:
 - Disclosures: Ready
       `.trim();
 
-      // Create and download file
       const blob = new Blob([briefContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -300,14 +300,12 @@ COMPLIANCE:
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-
       setDownloadingBrief(false);
     }, 1500);
   };
 
   const handleJoinMeeting = () => {
     setJoiningMeeting(true);
-    // Simulate joining meeting - in real app would open Zoom/Teams/etc
     setTimeout(() => {
       alert(`Opening meeting for ${clientData.name} at ${clientData.meetingTime}\n\nIn production, this would:\n- Open your video conferencing app\n- Load client context on second screen\n- Start call recording\n- Enable automated assistant for real-time notes`);
       setJoiningMeeting(false);
@@ -315,27 +313,28 @@ COMPLIANCE:
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
+    <Box ref={topRef} sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
+
       {/* Header */}
       <Paper
         elevation={0}
         sx={{
-          background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-          color: '#fff',
+          bgcolor: alpha(colors.blue, 0.08),
+          borderBottom: `3px solid ${colors.blue}`,
           p: 2,
         }}
       >
         <Container maxWidth="lg">
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box>
-              <Typography variant="h6" fontWeight={700}>
+              <Typography variant="h6" fontWeight={700} color={colors.blue}>
                 Client Review Prep
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              <Typography variant="body2" color="text.secondary">
                 {clientData.name} • {clientData.meetingTime} Meeting
               </Typography>
             </Box>
-            <IconButton onClick={onClose} sx={{ color: '#fff' }}>
+            <IconButton onClick={onClose} sx={{ color: colors.blue }}>
               <Close />
             </IconButton>
           </Box>
@@ -343,9 +342,10 @@ COMPLIANCE:
       </Paper>
 
       <Container maxWidth="lg" sx={{ mt: 3 }}>
-        {/* Step 1: Gathering Data */}
+
+        {/* Step 1: Gathering Client Intelligence */}
         <Fade in={currentStep >= 1} timeout={800}>
-          <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Assessment sx={{ fontSize: 28, color: colors.lightBlue, mr: 1.5 }} />
@@ -362,73 +362,72 @@ COMPLIANCE:
                 <Box>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.1), borderRadius: 2 }}>
+                      <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <CheckCircle sx={{ color: colors.lightGreen, fontSize: 18 }} />
-                          <Typography variant="caption" fontWeight={600}>Service Activity</Typography>
+                          <CheckCircle sx={{ color: colors.green, fontSize: 18 }} />
+                          <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.6 }}>Service Activity</Typography>
                         </Box>
-                        <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                          3 interactions last 30 days
+                        <Typography variant="body2" color="text.secondary">
+                          <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>3</Box> interactions last{' '}
+                          <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>30 days</Box>
                         </Typography>
                       </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.orange, 0.1), borderRadius: 2 }}>
+                      <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                           <Warning sx={{ color: colors.orange, fontSize: 18 }} />
-                          <Typography variant="caption" fontWeight={600}>Billing Status</Typography>
+                          <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.6 }}>Billing Status</Typography>
                         </Box>
-                        <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                          Payment 12 days overdue
+                        <Typography variant="body2" color="text.secondary">
+                          Payment{' '}
+                          <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>12 days</Box> overdue
                         </Typography>
                       </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightGreen, 0.1), borderRadius: 2 }}>
+                      <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightGreen, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                          <CheckCircle sx={{ color: colors.lightGreen, fontSize: 18 }} />
-                          <Typography variant="caption" fontWeight={600}>Applications</Typography>
+                          <CheckCircle sx={{ color: colors.green, fontSize: 18 }} />
+                          <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.6 }}>Applications</Typography>
                         </Box>
-                        <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                          1 pending medical exam
+                        <Typography variant="body2" color="text.secondary">
+                          <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>1</Box> pending medical exam
                         </Typography>
                       </Paper>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                      <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.1), borderRadius: 2 }}>
+                      <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                           <TrendingUp sx={{ color: colors.blue, fontSize: 18 }} />
-                          <Typography variant="caption" fontWeight={600}>Opportunities</Typography>
+                          <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.6 }}>Opportunities</Typography>
                         </Box>
-                        <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
+                        <Typography variant="body2" color="text.secondary">
                           Upgrade eligible
                         </Typography>
                       </Paper>
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ mt: 2, p: 2, bgcolor: alpha(colors.lightBlue, 0.05), borderRadius: 2 }}>
-                    <Typography variant="caption" fontWeight={600} sx={{ display: 'block', mb: 1 }}>
+                  <Paper elevation={0} sx={{ mt: 2, p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2 }}>
+                    <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ display: 'block', mb: 1, textTransform: 'uppercase', letterSpacing: 0.6 }}>
                       Systems Scanned
                     </Typography>
                     <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                      <Chip label="Policy Admin" size="small" sx={{ bgcolor: 'white' }} />
-                      <Chip label="Billing" size="small" sx={{ bgcolor: 'white' }} />
-                      <Chip label="Underwriting" size="small" sx={{ bgcolor: 'white' }} />
-                      <Chip label="CRM" size="small" sx={{ bgcolor: 'white' }} />
-                      <Chip label="Claims History" size="small" sx={{ bgcolor: 'white' }} />
-                      <Chip label="Competitor Data" size="small" sx={{ bgcolor: 'white' }} />
+                      {['Policy Admin', 'Billing', 'Underwriting', 'CRM', 'Claims History', 'Competitor Data'].map((system) => (
+                        <Chip key={system} label={system} size="small" sx={{ bgcolor: alpha(colors.lightBlue, 0.08), color: '#000000', border: `1px solid ${alpha(colors.lightBlue, 0.25)}`, fontWeight: 600 }} />
+                      ))}
                     </Stack>
-                  </Box>
+                  </Paper>
                 </Box>
               )}
             </CardContent>
           </Card>
         </Fade>
 
-        {/* Step 2: Key Issues Identified */}
+        {/* Step 2: Priority Issues Detected */}
         <Fade in={currentStep >= 2} timeout={800}>
-          <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Warning sx={{ fontSize: 28, color: colors.orange, mr: 1.5 }} />
@@ -439,52 +438,61 @@ COMPLIANCE:
 
               <Stack spacing={2}>
                 {/* Billing Friction */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.red, 0.05), borderLeft: `4px solid ${colors.red}` }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.red, 0.15)}`, borderLeft: `4px solid ${colors.red}`, borderRadius: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle2" fontWeight={700} color="error">
-                        Billing Friction - URGENT
+                      <Typography variant="subtitle2" fontWeight={700} color={colors.red}>
+                        Billing Friction — URGENT
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Premium payment of $425 is 12 days overdue. Auto-pay failed due to expired card on file.
+                        Premium payment of{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$425</Box> is{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>12 days</Box> overdue. Auto-pay failed due to expired card on file.
                       </Typography>
                     </Box>
-                    <Chip label="Address First" size="small" color="error" />
+                    <Chip label="Address First" size="small" sx={{ ml: 1, bgcolor: alpha(colors.red, 0.08), color: '#000000', border: `1px solid ${alpha(colors.red, 0.25)}`, fontWeight: 600 }} />
                   </Box>
                 </Paper>
 
                 {/* Application Status */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.orange, 0.05), borderLeft: `4px solid ${colors.orange}` }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle2" fontWeight={700} sx={{ color: colors.orange }}>
+                      <Typography variant="subtitle2" fontWeight={700} color={colors.orange}>
                         Pending Medical Exam
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Term conversion application submitted 3 weeks ago. Medical exam scheduled for next Tuesday but lab work still outstanding.
+                        Term conversion application submitted{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>3 weeks ago</Box>. Medical exam scheduled for next Tuesday but lab work still outstanding.
                       </Typography>
                     </Box>
-                    <Chip label="Follow Up" size="small" sx={{ bgcolor: colors.orange, color: 'white' }} />
+                    <Chip label="Follow Up" size="small" sx={{ ml: 1, bgcolor: alpha(colors.orange, 0.08), color: '#000000', border: `1px solid ${alpha(colors.orange, 0.25)}`, fontWeight: 600 }} />
                   </Box>
                 </Paper>
 
                 {/* Cross-Policy Exposure */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.05), borderLeft: `4px solid ${colors.blue}` }}>
-                  <Typography variant="subtitle2" fontWeight={700} sx={{ color: colors.blue }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
+                  <Typography variant="subtitle2" fontWeight={700} color={colors.blue}>
                     Cross-Policy Analysis
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                    Client holds 3 policies: Term ($500K), Whole Life ($250K), and Indexed Universal Life ($300K). Combined coverage: $1.05M across products.
+                    Client holds <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>3 policies</Box>: Term (
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$500K</Box>), Whole Life (
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$250K</Box>), and Indexed Universal Life (
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$300K</Box>). Combined coverage:{' '}
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$1.05M</Box> across products.
                   </Typography>
                 </Paper>
 
                 {/* Competitor Quote */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.orange, 0.05), borderLeft: `4px solid ${colors.orange}` }}>
-                  <Typography variant="subtitle2" fontWeight={700} sx={{ color: colors.orange }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2 }}>
+                  <Typography variant="subtitle2" fontWeight={700} color={colors.orange}>
                     Prior Competitor Quote Found
                   </Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                    6 months ago, client received quote from MutualCo for $750K term at $380/mo. Current rate is competitive.
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>6 months ago</Box>, client received quote from MutualCo for{' '}
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$750K</Box> term at{' '}
+                    <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$380/mo</Box>. Current rate is competitive.
                   </Typography>
                 </Paper>
               </Stack>
@@ -492,12 +500,12 @@ COMPLIANCE:
           </Card>
         </Fade>
 
-        {/* Step 3: Structured Meeting Brief */}
+        {/* Step 3: Recommended Meeting Structure */}
         <Fade in={currentStep >= 3} timeout={800}>
-          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, border: `2px solid ${colors.lightGreen}` }}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Lightbulb sx={{ fontSize: 28, color: colors.lightGreen, mr: 1.5 }} />
+                <Lightbulb sx={{ fontSize: 28, color: colors.green, mr: 1.5 }} />
                 <Typography variant="h6" fontWeight={700}>
                   Recommended Meeting Structure
                 </Typography>
@@ -507,166 +515,126 @@ COMPLIANCE:
                 Personalized agenda optimized for this client's situation
               </Typography>
 
-              <List sx={{ bgcolor: alpha(colors.lightGreen, 0.05), borderRadius: 2, p: 2 }}>
-                <ListItem sx={{ alignItems: 'flex-start', py: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <Box
-                      sx={{
-                        bgcolor: colors.red,
-                        color: 'white',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                      }}
-                    >
+              <Stack spacing={0}>
+                {/* Agenda Item 1 */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.red, 0.04), border: `1px solid ${alpha(colors.red, 0.12)}`, borderLeft: `4px solid ${colors.red}`, borderRadius: 2, mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    <Box sx={{ bgcolor: colors.red, color: 'white', width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0, mt: 0.25 }}>
                       1
                     </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Typography variant="subtitle2" fontWeight={700}>Address Billing Concerns First</Typography>}
-                    secondary="Acknowledge the overdue payment, update card on file, offer to waive late fee as goodwill gesture. Emphasize value of maintaining coverage continuity."
-                  />
-                </ListItem>
+                    <Box>
+                      <Typography variant="subtitle2" fontWeight={700}>Address Billing Concerns First</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Acknowledge the overdue payment, update card on file, offer to waive late fee as goodwill gesture. Emphasize value of maintaining coverage continuity.
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
 
-                <Divider sx={{ my: 1 }} />
-
-                <ListItem sx={{ alignItems: 'flex-start', py: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <Box
-                      sx={{
-                        bgcolor: colors.lightBlue,
-                        color: 'white',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                      }}
-                    >
+                {/* Agenda Item 2 */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.04), border: `1px solid ${alpha(colors.lightBlue, 0.12)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2, mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    <Box sx={{ bgcolor: colors.lightBlue, color: 'white', width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0, mt: 0.25 }}>
                       2
                     </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Typography variant="subtitle2" fontWeight={700}>Reinforce Protection Improvements</Typography>}
-                    secondary="Review current coverage ($1.05M total). Highlight how the term conversion application strengthens long-term protection and aligns with retirement planning goals."
-                  />
-                </ListItem>
+                    <Box>
+                      <Typography variant="subtitle2" fontWeight={700}>Reinforce Protection Improvements</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Review current coverage (<Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$1.05M</Box> total). Highlight how the term conversion application strengthens long-term protection and aligns with retirement planning goals.
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
 
-                <Divider sx={{ my: 1 }} />
-
-                <ListItem sx={{ alignItems: 'flex-start', py: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <Box
-                      sx={{
-                        bgcolor: colors.lightGreen,
-                        color: 'white',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                      }}
-                    >
+                {/* Agenda Item 3 */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightGreen, 0.04), border: `1px solid ${alpha(colors.lightGreen, 0.12)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2, mb: 1.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    <Box sx={{ bgcolor: colors.green, color: 'white', width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0, mt: 0.25 }}>
                       3
                     </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Typography variant="subtitle2" fontWeight={700}>Discuss Income Sustainability</Typography>}
-                    secondary="Show illustration projecting IUL account value through retirement. Current trajectory supports $2,400/month withdrawals starting at age 65 with balance lasting to age 90+."
-                  />
-                </ListItem>
+                    <Box>
+                      <Typography variant="subtitle2" fontWeight={700}>Discuss Income Sustainability</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Show illustration projecting IUL account value through retirement. Current trajectory supports{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$2,400/month</Box> withdrawals starting at age{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>65</Box> with balance lasting to age{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>90+</Box>.
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
 
-                <Divider sx={{ my: 1 }} />
-
-                <ListItem sx={{ alignItems: 'flex-start', py: 1 }}>
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <Box
-                      sx={{
-                        bgcolor: colors.blue,
-                        color: 'white',
-                        width: 24,
-                        height: 24,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 700,
-                        fontSize: '0.75rem',
-                      }}
-                    >
+                {/* Agenda Item 4 */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.04), border: `1px solid ${alpha(colors.blue, 0.12)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    <Box sx={{ bgcolor: colors.blue, color: 'white', width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.75rem', flexShrink: 0, mt: 0.25 }}>
                       4
                     </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={<Typography variant="subtitle2" fontWeight={700}>Introduce Upgrade Opportunity</Typography>}
-                    secondary="Client is eligible for enhanced riders on IUL: Long-Term Care and Accelerated Death Benefit. Adds $45/month but provides $150K in LTC benefits. Suitability score: 92%."
-                  />
-                </ListItem>
-              </List>
+                    <Box>
+                      <Typography variant="subtitle2" fontWeight={700}>Introduce Upgrade Opportunity</Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        Client is eligible for enhanced riders on IUL: Long-Term Care and Accelerated Death Benefit. Adds{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$45/month</Box> but provides{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>$150K</Box> in LTC benefits. Suitability score:{' '}
+                        <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>92%</Box>.
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Paper>
+              </Stack>
             </CardContent>
           </Card>
         </Fade>
 
         {/* Step 4: Compliance Validation */}
         <Fade in={currentStep >= 4} timeout={800}>
-          <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
             <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Security sx={{ fontSize: 28, color: colors.lightGreen, mr: 1.5 }} />
+                  <Security sx={{ fontSize: 28, color: colors.green, mr: 1.5 }} />
                   <Typography variant="h6" fontWeight={700}>
                     Compliance & Suitability Validated
                   </Typography>
                 </Box>
                 <Chip
-                  icon={<CheckCircle />}
+                  icon={<CheckCircle sx={{ color: `${colors.green} !important` }} />}
                   label="Approved"
                   size="small"
-                  sx={{ bgcolor: colors.lightGreen, color: '#fff', fontWeight: 600 }}
+                  sx={{ bgcolor: alpha(colors.lightGreen, 0.1), color: '#000000', border: `1px solid ${alpha(colors.green, 0.3)}`, fontWeight: 600 }}
                 />
               </Box>
 
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightGreen, 0.05), borderRadius: 2 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600}>Suitability Score</Typography>
-                    <Typography variant="h5" fontWeight={700} color={colors.lightGreen} sx={{ my: 0.5 }}>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightGreen, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Suitability Score</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000" sx={{ my: 0.5 }}>
                       92%
                     </Typography>
-                    <Typography variant="caption">
+                    <Typography variant="caption" color="text.secondary">
                       Excellent fit for risk profile
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.05), borderRadius: 2 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600}>Affordability Check</Typography>
-                    <Typography variant="h5" fontWeight={700} color={colors.blue} sx={{ my: 0.5 }}>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Affordability Check</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000" sx={{ my: 0.5 }}>
                       ✓ Pass
                     </Typography>
-                    <Typography variant="caption">
-                      3.8% of monthly income
+                    <Typography variant="caption" color="text.secondary">
+                      <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>3.8%</Box> of monthly income
                     </Typography>
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.05), borderRadius: 2 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600}>Disclosures</Typography>
-                    <Typography variant="h5" fontWeight={700} color={colors.lightBlue} sx={{ my: 0.5 }}>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Disclosures</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000" sx={{ my: 0.5 }}>
                       Ready
                     </Typography>
-                    <Typography variant="caption">
+                    <Typography variant="caption" color="text.secondary">
                       State-compliant docs prepared
                     </Typography>
                   </Paper>
@@ -678,7 +646,7 @@ COMPLIANCE:
 
         {/* Step 5: Documents Ready */}
         <Fade in={currentStep >= 5} timeout={800}>
-          <Card elevation={0} sx={{ mb: 3, borderRadius: 3 }}>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
             <CardContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Description sx={{ fontSize: 28, color: colors.blue, mr: 1.5 }} />
@@ -691,167 +659,63 @@ COMPLIANCE:
                 All paperwork prepared for immediate execution
               </Typography>
 
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: {
-                    xs: '1fr',
-                    md: 'repeat(2, 1fr)',
-                  },
-                  gap: 2,
-                }}
-              >
-                <Box>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: 'white',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 2,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: colors.lightGreen,
-                        boxShadow: `0 4px 12px ${alpha(colors.lightGreen, 0.2)}`,
-                      }
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Edit sx={{ color: colors.lightGreen, fontSize: 32 }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={700}>
-                          Rider Application
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Pre-filled with client data
-                        </Typography>
-                      </Box>
-                      <Button
-                        size="small"
-                        startIcon={<CloudDownload />}
-                        sx={{ textTransform: 'none' }}
-                        onClick={() => handleOpenDocument('Rider Application')}
-                      >
-                        Open
-                      </Button>
-                    </Box>
-                  </Paper>
-                </Box>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' }, gap: 2 }}>
 
-                <Box>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: 'white',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 2,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: colors.orange,
-                        boxShadow: `0 4px 12px ${alpha(colors.orange, 0.2)}`,
-                      }
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Gavel sx={{ color: colors.orange, fontSize: 32 }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={700}>
-                          Disclosures Package
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          7 pages, compliance-approved
-                        </Typography>
-                      </Box>
-                      <Button
-                        size="small"
-                        startIcon={<CloudDownload />}
-                        sx={{ textTransform: 'none' }}
-                        onClick={() => handleOpenDocument('Disclosures Package')}
-                      >
-                        Open
-                      </Button>
+                {/* Rider Application */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.green, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2, cursor: 'pointer', transition: 'all 0.2s', '&:hover': { boxShadow: `0 4px 12px ${alpha(colors.green, 0.15)}` } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Edit sx={{ color: colors.green, fontSize: 28 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={700}>Rider Application</Typography>
+                      <Typography variant="caption" color="text.secondary">Pre-filled with client data</Typography>
                     </Box>
-                  </Paper>
-                </Box>
+                    <Button size="small" startIcon={<CloudDownload />} sx={{ textTransform: 'none', color: colors.green }} onClick={() => handleOpenDocument('Rider Application')}>
+                      Open
+                    </Button>
+                  </Box>
+                </Paper>
 
-                <Box>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: 'white',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 2,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: colors.blue,
-                        boxShadow: `0 4px 12px ${alpha(colors.blue, 0.2)}`,
-                      }
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Assessment sx={{ color: colors.blue, fontSize: 32 }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={700}>
-                          Policy Illustration
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          30-year income projection
-                        </Typography>
-                      </Box>
-                      <Button
-                        size="small"
-                        startIcon={<CloudDownload />}
-                        sx={{ textTransform: 'none' }}
-                        onClick={() => handleOpenDocument('Policy Illustration')}
-                      >
-                        Open
-                      </Button>
+                {/* Disclosures Package */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2, cursor: 'pointer', transition: 'all 0.2s', '&:hover': { boxShadow: `0 4px 12px ${alpha(colors.orange, 0.15)}` } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Gavel sx={{ color: colors.orange, fontSize: 28 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={700}>Disclosures Package</Typography>
+                      <Typography variant="caption" color="text.secondary">7 pages, compliance-approved</Typography>
                     </Box>
-                  </Paper>
-                </Box>
+                    <Button size="small" startIcon={<CloudDownload />} sx={{ textTransform: 'none', color: colors.orange }} onClick={() => handleOpenDocument('Disclosures Package')}>
+                      Open
+                    </Button>
+                  </Box>
+                </Paper>
 
-                <Box>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      bgcolor: 'white',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 2,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: colors.lightGreen,
-                        boxShadow: `0 4px 12px ${alpha(colors.lightGreen, 0.2)}`,
-                      }
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Send sx={{ color: colors.lightGreen, fontSize: 32 }} />
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle2" fontWeight={700}>
-                          E-Signature Ready
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          DocuSign integration active
-                        </Typography>
-                      </Box>
-                      <Button
-                        size="small"
-                        startIcon={<ArrowForward />}
-                        sx={{ textTransform: 'none' }}
-                        onClick={handleSendForSignature}
-                      >
-                        Send
-                      </Button>
+                {/* Policy Illustration */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2, cursor: 'pointer', transition: 'all 0.2s', '&:hover': { boxShadow: `0 4px 12px ${alpha(colors.blue, 0.15)}` } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Assessment sx={{ color: colors.blue, fontSize: 28 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={700}>Policy Illustration</Typography>
+                      <Typography variant="caption" color="text.secondary">30-year income projection</Typography>
                     </Box>
-                  </Paper>
-                </Box>
+                    <Button size="small" startIcon={<CloudDownload />} sx={{ textTransform: 'none', color: colors.blue }} onClick={() => handleOpenDocument('Policy Illustration')}>
+                      Open
+                    </Button>
+                  </Box>
+                </Paper>
+
+                {/* E-Signature */}
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2, cursor: 'pointer', transition: 'all 0.2s', '&:hover': { boxShadow: `0 4px 12px ${alpha(colors.lightBlue, 0.15)}` } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Send sx={{ color: colors.lightBlue, fontSize: 28 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" fontWeight={700}>E-Signature Ready</Typography>
+                      <Typography variant="caption" color="text.secondary">DocuSign integration active</Typography>
+                    </Box>
+                    <Button size="small" startIcon={<ArrowForward />} sx={{ textTransform: 'none', color: colors.lightBlue }} onClick={handleSendForSignature}>
+                      Send
+                    </Button>
+                  </Box>
+                </Paper>
               </Box>
             </CardContent>
           </Card>
@@ -859,46 +723,41 @@ COMPLIANCE:
 
         {/* Step 6: Ready Summary */}
         <Fade in={currentStep >= 6} timeout={800}>
-          <Card
-            elevation={0}
-            sx={{
-              mb: 3,
-              borderRadius: 3,
-              background: `linear-gradient(135deg, ${colors.lightGreen} 0%, ${colors.lightBlue} 100%)`,
-              color: 'white',
-            }}
-          >
-            <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <CheckCircle sx={{ fontSize: 32, mr: 1.5 }} />
-                <Typography variant="h6" fontWeight={700}>
-                  You're Ready for {clientData.meetingTime}
-                </Typography>
-              </Box>
+          <Card elevation={0} sx={{ mb: 3, borderRadius: 3, bgcolor: '#FFFFFF' }}>
 
-              <Typography variant="body2" sx={{ mb: 3, opacity: 0.95 }}>
-                Complete client intelligence gathered in 8 seconds. No system-hopping required.
+            {/* Card Header */}
+            <Box sx={{ bgcolor: alpha(colors.green, 0.08), px: 3, py: 2.5, borderBottom: `1px solid ${alpha(colors.green, 0.12)}`, borderRadius: '12px 12px 0 0', display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <CheckCircle sx={{ fontSize: 28, color: colors.green }} />
+              <Typography variant="h6" fontWeight={700}>
+                You're Ready for{' '}
+                <Box component="span" sx={{ fontWeight: 800, color: '#000000' }}>{clientData.meetingTime}</Box>
+              </Typography>
+            </Box>
+
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Complete client intelligence gathered in{' '}
+                <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>8 seconds</Box>. No system-hopping required.
               </Typography>
 
-              <Paper elevation={0} sx={{ p: 2, bgcolor: alpha('#fff', 0.15), borderRadius: 2, mb: 2 }}>
-                <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
-                  ✓ What You Have:
+              <Paper elevation={0} sx={{ p: 2.5, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2, mb: 3 }}>
+                <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ display: 'block', mb: 1.5, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                  What You Have
                 </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
-                  • Comprehensive view across 6 systems
-                </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
-                  • Priority issues ranked and contextualized
-                </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
-                  • Structured meeting agenda with talking points
-                </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
-                  • Compliance-validated upgrade opportunity
-                </Typography>
-                <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                  • Pre-filled documents ready for e-signature
-                </Typography>
+                <Stack spacing={0.75}>
+                  {[
+                    'Comprehensive view across 6 systems',
+                    'Priority issues ranked and contextualized',
+                    'Structured meeting agenda with talking points',
+                    'Compliance-validated upgrade opportunity',
+                    'Pre-filled documents ready for e-signature',
+                  ].map((item) => (
+                    <Box key={item} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <CheckCircle sx={{ fontSize: 16, color: colors.green }} />
+                      <Typography variant="body2" color="text.secondary">{item}</Typography>
+                    </Box>
+                  ))}
+                </Stack>
               </Paper>
 
               <Stack direction="row" spacing={2}>
@@ -908,27 +767,17 @@ COMPLIANCE:
                   startIcon={joiningMeeting ? <CircularProgress size={20} color="inherit" /> : <Schedule />}
                   onClick={handleJoinMeeting}
                   disabled={joiningMeeting}
-                  sx={{
-                    bgcolor: 'white',
-                    color: colors.lightGreen,
-                    fontWeight: 700,
-                    '&:hover': { bgcolor: alpha('#fff', 0.9) }
-                  }}
+                  sx={{ bgcolor: colors.green, color: '#fff', fontWeight: 700, '&:hover': { bgcolor: alpha(colors.green, 0.88) } }}
                 >
                   {joiningMeeting ? 'Launching...' : 'Join Meeting'}
                 </Button>
                 <Button
                   variant="outlined"
                   size="large"
-                  startIcon={downloadingBrief ? <CircularProgress size={20} color="inherit" /> : <CloudDownload />}
+                  startIcon={downloadingBrief ? <CircularProgress size={20} sx={{ color: colors.blue }} /> : <CloudDownload />}
                   onClick={handleDownloadBrief}
                   disabled={downloadingBrief}
-                  sx={{
-                    borderColor: 'white',
-                    color: 'white',
-                    fontWeight: 700,
-                    '&:hover': { borderColor: 'white', bgcolor: alpha('#fff', 0.1) }
-                  }}
+                  sx={{ borderColor: colors.blue, color: colors.blue, fontWeight: 700, '&:hover': { borderColor: colors.blue, bgcolor: alpha(colors.blue, 0.06) } }}
                 >
                   {downloadingBrief ? 'Preparing...' : 'Download Brief'}
                 </Button>
@@ -939,13 +788,8 @@ COMPLIANCE:
       </Container>
 
       {/* Document Preview Modal */}
-      <Dialog
-        open={documentModalOpen}
-        onClose={handleCloseDocument}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle sx={{ bgcolor: alpha(colors.lightBlue, 0.08), borderBottom: `3px solid ${colors.lightBlue}` }}>
+      <Dialog open={documentModalOpen} onClose={handleCloseDocument} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ bgcolor: alpha(colors.blue, 0.06), borderBottom: `2px solid ${alpha(colors.blue, 0.2)}` }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" fontWeight={700} color={colors.blue}>
               {selectedDocument?.title}
@@ -956,28 +800,17 @@ COMPLIANCE:
           </Box>
         </DialogTitle>
         <DialogContent sx={{ mt: 2 }}>
-          <Paper
-            elevation={0}
-            sx={{
-              p: 3,
-              bgcolor: alpha(colors.paleAqua, 0.5),
-              borderRadius: 2,
-              fontFamily: 'monospace',
-              whiteSpace: 'pre-wrap',
-              fontSize: '0.875rem',
-              lineHeight: 1.6,
-            }}
-          >
+          <Paper elevation={0} sx={{ p: 3, bgcolor: colors.paleAqua, border: `1px solid ${alpha(colors.blue, 0.1)}`, borderRadius: 2, fontFamily: 'monospace', whiteSpace: 'pre-wrap', fontSize: '0.875rem', lineHeight: 1.6 }}>
             {selectedDocument?.content}
           </Paper>
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleCloseDocument}>Close</Button>
+          <Button onClick={handleCloseDocument} sx={{ color: 'text.secondary' }}>Close</Button>
           <Button
             variant="contained"
             startIcon={<CloudDownload />}
+            sx={{ bgcolor: colors.blue, '&:hover': { bgcolor: alpha(colors.blue, 0.88) } }}
             onClick={() => {
-              // Download document
               const blob = new Blob([selectedDocument?.content || ''], { type: 'text/plain' });
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
@@ -996,36 +829,37 @@ COMPLIANCE:
 
       {/* Send for E-Signature Modal */}
       <Dialog open={sendSignatureOpen} onClose={() => !sendingSignature && setSendSignatureOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>
+        <DialogTitle sx={{ bgcolor: alpha(colors.green, 0.06), borderBottom: `2px solid ${alpha(colors.green, 0.2)}` }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Send sx={{ color: colors.lightGreen }} />
-            <Typography variant="h6" fontWeight={700}>
+            <Send sx={{ color: colors.green }} />
+            <Typography variant="h6" fontWeight={700} color={colors.green}>
               Send Documents for E-Signature
             </Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Send the following documents to {clientData.name} via DocuSign for electronic signature:
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3, mt: 2 }}>
+            Send the following documents to{' '}
+            <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{clientData.name}</Box> via DocuSign for electronic signature:
           </Typography>
 
           <Stack spacing={1.5}>
-            <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.05), borderRadius: 2 }}>
+            <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.green, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <CheckCircle sx={{ color: colors.lightGreen }} />
+                <CheckCircle sx={{ color: colors.green }} />
                 <Box>
                   <Typography variant="subtitle2" fontWeight={600}>Rider Application</Typography>
-                  <Typography variant="caption" color="text.secondary">3 signature fields</Typography>
+                  <Typography variant="caption" color="text.secondary"><Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>3</Box> signature fields</Typography>
                 </Box>
               </Box>
             </Paper>
 
-            <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.05), borderRadius: 2 }}>
+            <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.green, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <CheckCircle sx={{ color: colors.lightGreen }} />
+                <CheckCircle sx={{ color: colors.green }} />
                 <Box>
                   <Typography variant="subtitle2" fontWeight={600}>Disclosures Package</Typography>
-                  <Typography variant="caption" color="text.secondary">7 pages, 12 initials required</Typography>
+                  <Typography variant="caption" color="text.secondary"><Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>7 pages</Box>, <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>12</Box> initials required</Typography>
                 </Box>
               </Box>
             </Paper>
@@ -1058,7 +892,7 @@ Grace Wilson`}
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button onClick={() => setSendSignatureOpen(false)} disabled={sendingSignature}>
+          <Button onClick={() => setSendSignatureOpen(false)} disabled={sendingSignature} sx={{ color: 'text.secondary' }}>
             Cancel
           </Button>
           <Button
@@ -1066,7 +900,7 @@ Grace Wilson`}
             onClick={handleConfirmSendSignature}
             disabled={sendingSignature}
             startIcon={sendingSignature ? <CircularProgress size={20} color="inherit" /> : <Send />}
-            sx={{ bgcolor: colors.lightGreen }}
+            sx={{ bgcolor: colors.green, '&:hover': { bgcolor: alpha(colors.green, 0.88) } }}
           >
             {sendingSignature ? 'Sending...' : 'Send via DocuSign'}
           </Button>

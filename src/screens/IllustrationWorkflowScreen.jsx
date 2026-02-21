@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Container,
@@ -58,12 +58,12 @@ const IllustrationWorkflowScreen = ({
   onClose,
   onNavigateToEngagement,
   clientData = {
-    name: 'John Smith',
+    name: 'Sam Wright',
     age: 64,
     currentValue: 485000,
   },
   illustrationParams = {
-    customerName: 'John Smith',
+    customerName: 'Sam Wright',
     age: 65,
     monthlyWithdrawal: 2000,
   }
@@ -71,6 +71,12 @@ const IllustrationWorkflowScreen = ({
   // Use dynamic customer name from params, fallback to clientData
   const customerName = illustrationParams.customerName || clientData.name;
   const [currentStep, setCurrentStep] = useState(0);
+  const topRef = useRef(null);
+
+  // Scroll to top when screen opens
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }, []);
 
   // Interactive parameters state
   const [params, setParams] = useState({
@@ -85,6 +91,22 @@ const IllustrationWorkflowScreen = ({
   });
 
   const [showParameters, setShowParameters] = useState(true);
+
+  // Distribution strategy selection
+  const [selectedStrategy, setSelectedStrategy] = useState('current');
+  const [baseWithdrawal, setBaseWithdrawal] = useState(illustrationParams.monthlyWithdrawal || 2000);
+  const [baseStartAge, setBaseStartAge] = useState(illustrationParams.age || 65);
+
+  const handleStrategySelect = (strategyKey) => {
+    const presets = {
+      conservative: { withdrawal: Math.round(baseWithdrawal * 0.8), startAge: baseStartAge + 2 },
+      current:      { withdrawal: baseWithdrawal,                   startAge: baseStartAge },
+      aggressive:   { withdrawal: Math.round(baseWithdrawal * 1.25), startAge: baseStartAge },
+    };
+    const preset = presets[strategyKey];
+    setParams(prev => ({ ...prev, monthlyWithdrawal: preset.withdrawal, withdrawalStartAge: preset.startAge }));
+    setSelectedStrategy(strategyKey);
+  };
 
   // Toggle states for chart lines
   const [showAccountValue, setShowAccountValue] = useState(true);
@@ -180,7 +202,7 @@ const IllustrationWorkflowScreen = ({
   const growthPercentage = ((totalGrowth / params.currentValue) * 100).toFixed(1);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
+    <Box ref={topRef} sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', pb: 4 }}>
       {/* Simple Header */}
       <Paper
         elevation={0}
@@ -251,22 +273,28 @@ const IllustrationWorkflowScreen = ({
               {/* Key Metrics Header */}
               <Grid container spacing={2} sx={{ mb: 3 }}>
                 <Grid item xs={4}>
-                  <Typography variant="caption" color="text.secondary">Current Value</Typography>
-                  <Typography variant="h5" fontWeight={700} color={colors.blue}>
-                    ${(params.currentValue / 1000).toFixed(0)}K
-                  </Typography>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.06), border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Current Value</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000">
+                      ${(params.currentValue / 1000).toFixed(0)}K
+                    </Typography>
+                  </Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography variant="caption" color="text.secondary">Total Growth</Typography>
-                  <Typography variant="h5" fontWeight={700} color={colors.lightGreen}>
-                    ${(totalGrowth / 1000).toFixed(0)}K
-                  </Typography>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.green, 0.06), border: `1px solid ${alpha(colors.green, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Total Growth</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000">
+                      ${(totalGrowth / 1000).toFixed(0)}K
+                    </Typography>
+                  </Paper>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography variant="caption" color="text.secondary">Growth Rate</Typography>
-                  <Typography variant="h5" fontWeight={700} color={colors.lightGreen}>
-                    +{growthPercentage}%
-                  </Typography>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.orange, 0.06), border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 0.5 }}>Growth Rate</Typography>
+                    <Typography variant="h4" fontWeight={800} color="#000000">
+                      +{growthPercentage}%
+                    </Typography>
+                  </Paper>
                 </Grid>
               </Grid>
 
@@ -278,7 +306,7 @@ const IllustrationWorkflowScreen = ({
                     onClick={() => setShowAccountValue(!showAccountValue)}
                     sx={{
                       bgcolor: showAccountValue ? alpha(colors.blue, 0.15) : alpha('#000', 0.05),
-                      color: colors.blue,
+                      color: '#000000',
                       fontWeight: 600,
                       border: `2px solid ${showAccountValue ? colors.blue : 'transparent'}`,
                       cursor: 'pointer'
@@ -289,7 +317,7 @@ const IllustrationWorkflowScreen = ({
                     onClick={() => setShowCashSurrender(!showCashSurrender)}
                     sx={{
                       bgcolor: showCashSurrender ? alpha(colors.lightGreen, 0.15) : alpha('#000', 0.05),
-                      color: colors.lightGreen,
+                      color: '#000000',
                       fontWeight: 600,
                       border: `2px solid ${showCashSurrender ? colors.lightGreen : 'transparent'}`,
                       cursor: 'pointer'
@@ -300,7 +328,7 @@ const IllustrationWorkflowScreen = ({
                     onClick={() => setShowDeathBenefit(!showDeathBenefit)}
                     sx={{
                       bgcolor: showDeathBenefit ? alpha(colors.orange, 0.15) : alpha('#000', 0.05),
-                      color: colors.orange,
+                      color: '#000000',
                       fontWeight: 600,
                       border: `2px solid ${showDeathBenefit ? colors.orange : 'transparent'}`,
                       cursor: 'pointer'
@@ -418,31 +446,31 @@ const IllustrationWorkflowScreen = ({
               </Typography>
 
               {/* Projected Values at Age 85 */}
-              <Box sx={{ bgcolor: alpha(colors.paleAqua, 0.5), borderRadius: 2, p: 2, mb: 2 }}>
-                <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 2 }}>
+              <Paper elevation={0} sx={{ border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2, p: 2, mb: 2, bgcolor: '#FFFFFF' }}>
+                <Typography variant="subtitle2" fontWeight={700} color={colors.blue} sx={{ mb: 2, textTransform: 'uppercase', letterSpacing: 0.8, fontSize: '0.75rem' }}>
                   Projected Values at Age 85
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={4}>
-                    <Typography variant="caption" color="text.secondary">Account Value</Typography>
-                    <Typography variant="h6" fontWeight={700} color="#000000">
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>Account Value</Typography>
+                    <Typography variant="h6" fontWeight={800} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.accountValue || 0).toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Typography variant="caption" color="text.secondary">Cash Surrender</Typography>
-                    <Typography variant="h6" fontWeight={700} color="#000000">
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>Cash Surrender</Typography>
+                    <Typography variant="h6" fontWeight={800} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.cashSurrenderValue || 0).toLocaleString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Typography variant="caption" color="text.secondary">Death Benefit</Typography>
-                    <Typography variant="h6" fontWeight={700} color="#000000">
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>Death Benefit</Typography>
+                    <Typography variant="h6" fontWeight={800} color="#000000">
                       ${(chartData.find(d => d.age === 85)?.deathBenefit || 0).toLocaleString()}
                     </Typography>
                   </Grid>
                 </Grid>
-              </Box>
+              </Paper>
 
               {/* Compact Parameter Adjusters - Directly Below Metrics */}
               <Box sx={{ mt: 3, pt: 2, borderTop: `1px solid ${alpha(colors.lightBlue, 0.2)}` }}>
@@ -512,7 +540,7 @@ const IllustrationWorkflowScreen = ({
                           </Typography>
                           <TextField
                             value={params.monthlyWithdrawal}
-                            onChange={(e) => setParams({ ...params, monthlyWithdrawal: Number(e.target.value) || 0 })}
+                            onChange={(e) => { const v = Number(e.target.value) || 0; setParams({ ...params, monthlyWithdrawal: v }); setBaseWithdrawal(v); setSelectedStrategy('current'); }}
                             size="small"
                             type="number"
                             fullWidth
@@ -526,7 +554,7 @@ const IllustrationWorkflowScreen = ({
                           />
                           <Slider
                             value={params.monthlyWithdrawal}
-                            onChange={(e, val) => setParams({ ...params, monthlyWithdrawal: val })}
+                            onChange={(e, val) => { setParams({ ...params, monthlyWithdrawal: val }); setBaseWithdrawal(val); setSelectedStrategy('current'); }}
                             min={0}
                             max={5000}
                             step={100}
@@ -602,7 +630,7 @@ const IllustrationWorkflowScreen = ({
                           </Typography>
                           <TextField
                             value={params.withdrawalStartAge}
-                            onChange={(e) => setParams({ ...params, withdrawalStartAge: Number(e.target.value) || clientData.age })}
+                            onChange={(e) => { const v = Number(e.target.value) || clientData.age; setParams({ ...params, withdrawalStartAge: v }); setBaseStartAge(v); setSelectedStrategy('current'); }}
                             size="small"
                             type="number"
                             fullWidth
@@ -613,7 +641,7 @@ const IllustrationWorkflowScreen = ({
                           />
                           <Slider
                             value={params.withdrawalStartAge}
-                            onChange={(e, val) => setParams({ ...params, withdrawalStartAge: val })}
+                            onChange={(e, val) => { setParams({ ...params, withdrawalStartAge: val }); setBaseStartAge(val); setSelectedStrategy('current'); }}
                             min={clientData.age}
                             max={75}
                             step={1}
@@ -654,28 +682,28 @@ const IllustrationWorkflowScreen = ({
                     </Grid>
 
                     {/* Compact Impact Summary */}
-                    <Box sx={{ mt: 2, p: 1.5, bgcolor: alpha(colors.lightBlue, 0.05), borderRadius: 1 }}>
+                    <Paper elevation={0} sx={{ mt: 2, p: 1.5, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 1 }}>
                       <Grid container spacing={2}>
                         <Grid item xs={4}>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>Income Replacement</Typography>
-                          <Typography variant="body2" fontWeight={700} sx={{ fontSize: '0.875rem' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem', display: 'block', mb: 0.25 }}>Income Replacement</Typography>
+                          <Typography variant="body2" fontWeight={800} color="#000000" sx={{ fontSize: '0.9rem' }}>
                             {((params.monthlyWithdrawal / params.monthlyIncome) * 100).toFixed(1)}%
                           </Typography>
                         </Grid>
                         <Grid item xs={4}>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>Net Growth</Typography>
-                          <Typography variant="body2" fontWeight={700} sx={{ fontSize: '0.875rem' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem', display: 'block', mb: 0.25 }}>Net Growth</Typography>
+                          <Typography variant="body2" fontWeight={800} color="#000000" sx={{ fontSize: '0.9rem' }}>
                             {(params.growthRate - params.annualFees).toFixed(1)}%
                           </Typography>
                         </Grid>
                         <Grid item xs={4}>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>Years to Withdrawal</Typography>
-                          <Typography variant="body2" fontWeight={700} sx={{ fontSize: '0.875rem' }}>
-                            {params.withdrawalStartAge - clientData.age} years
+                          <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.7rem', display: 'block', mb: 0.25 }}>Years to Withdrawal</Typography>
+                          <Typography variant="body2" fontWeight={800} color="#000000" sx={{ fontSize: '0.9rem' }}>
+                            {params.withdrawalStartAge - clientData.age} yrs
                           </Typography>
                         </Grid>
                       </Grid>
-                    </Box>
+                    </Paper>
                   </Box>
                 )}
               </Box>
@@ -691,7 +719,8 @@ const IllustrationWorkflowScreen = ({
               mb: 3,
               borderRadius: 3,
               bgcolor: '#FFFFFF',
-              border: `2px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange}`
+              border: `1px solid ${alpha(params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange, 0.2)}`,
+              borderLeft: `4px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.green : colors.orange}`,
             }}
           >
             <CardContent sx={{ p: 3 }}>
@@ -725,11 +754,11 @@ const IllustrationWorkflowScreen = ({
 
               <Grid container spacing={3} sx={{ mb: 2 }}>
                 <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: alpha(colors.blue, 0.08), borderRadius: 2 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 1 }}>
                       Monthly Income Need
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: '#000000' }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: '#000000' }}>
                       ${params.monthlyIncome.toLocaleString()}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -739,11 +768,11 @@ const IllustrationWorkflowScreen = ({
                 </Grid>
 
                 <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: alpha(colors.lightGreen, 0.08), borderRadius: 2 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                  <Paper elevation={0} sx={{ p: 2.5, textAlign: 'center', bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightGreen, 0.15)}`, borderLeft: `4px solid ${colors.green}`, borderRadius: 2 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 1 }}>
                       Policy Provides
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{ mt: 1, color: '#000000' }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: '#000000' }}>
                       ${params.monthlyWithdrawal.toLocaleString()}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -756,19 +785,15 @@ const IllustrationWorkflowScreen = ({
                   <Paper elevation={0} sx={{
                     p: 2.5,
                     textAlign: 'center',
-                    bgcolor: params.monthlyWithdrawal >= params.monthlyIncome
-                      ? alpha(colors.lightGreen, 0.08)
-                      : alpha(colors.orange, 0.08),
+                    bgcolor: '#FFFFFF',
+                    border: `1px solid ${alpha(params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange, 0.15)}`,
+                    borderLeft: `4px solid ${params.monthlyWithdrawal >= params.monthlyIncome ? colors.green : colors.orange}`,
                     borderRadius: 2,
-                    border: `2px solid ${alpha(params.monthlyWithdrawal >= params.monthlyIncome ? colors.lightGreen : colors.orange, 0.3)}`
                   }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.8, display: 'block', mb: 1 }}>
                       {params.monthlyWithdrawal >= params.monthlyIncome ? 'Surplus' : 'Gap'}
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} sx={{
-                      mt: 1,
-                      color: '#000000'
-                    }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: '#000000' }}>
                       ${Math.abs(params.monthlyWithdrawal - params.monthlyIncome).toLocaleString()}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -779,14 +804,14 @@ const IllustrationWorkflowScreen = ({
               </Grid>
 
               {params.monthlyWithdrawal < params.monthlyIncome && (
-                <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.orange, 0.08), borderRadius: 2, borderLeft: `4px solid ${colors.orange}` }}>
+                <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.orange, 0.06), border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2 }}>
                   <Typography variant="subtitle2" fontWeight={700} gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Lightbulb sx={{ color: colors.orange }} />
                     Recommended Actions
                   </Typography>
                   <Stack spacing={1} sx={{ ml: 4 }}>
                     <Typography variant="body2" color="text.secondary">
-                      • Gap of ${(params.monthlyIncome - params.monthlyWithdrawal).toLocaleString()}/month identified
+                      • Gap of <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${(params.monthlyIncome - params.monthlyWithdrawal).toLocaleString()}/month</Box> identified
                     </Typography>
                     {projectedAt85 > 200000 && (
                       <Typography variant="body2" color="text.secondary">
@@ -795,11 +820,11 @@ const IllustrationWorkflowScreen = ({
                     )}
                     {projectedAt85 <= 200000 && (
                       <Typography variant="body2" color="text.secondary">
-                        • Current policy may not sustain ${params.monthlyIncome.toLocaleString()}/month - delay start age or reduce income need
+                        • Current policy may not sustain <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${params.monthlyIncome.toLocaleString()}/month</Box> - delay start age or reduce income need
                       </Typography>
                     )}
                     <Typography variant="body2" color="text.secondary">
-                      • Supplement with Social Security (typically ${Math.round(params.monthlyIncome * 0.4).toLocaleString()}-${Math.round(params.monthlyIncome * 0.5).toLocaleString()}/month)
+                      • Supplement with Social Security (typically <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${Math.round(params.monthlyIncome * 0.4).toLocaleString()}-${Math.round(params.monthlyIncome * 0.5).toLocaleString()}/month</Box>)
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       • Consider part-time work or other retirement income sources for remaining gap
@@ -830,81 +855,58 @@ const IllustrationWorkflowScreen = ({
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.lightGreen, 0.08), borderRadius: 2, height: '100%' }}>
-                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.green}>
-                      Conservative Strategy
-                    </Typography>
-                    <Divider sx={{ my: 1.5 }} />
-                    <Stack spacing={1}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
-                        <Typography variant="body1" fontWeight={600}>${Math.round(params.monthlyWithdrawal * 0.8).toLocaleString()}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
-                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge + 2}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
-                        <Typography variant="body1" fontWeight={600} color={colors.green}>Age 90+</Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{
-                    p: 2.5,
-                    bgcolor: alpha(colors.blue, 0.12),
-                    borderRadius: 2,
-                    border: `2px solid ${colors.blue}`,
-                    height: '100%'
-                  }}>
-                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.blue} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      Current Strategy
-                      <Chip label="Selected" size="small" sx={{ bgcolor: alpha(colors.blue, 0.1), color: colors.blue, height: 20, border: `1px solid ${alpha(colors.blue, 0.3)}`, fontWeight: 600 }} />
-                    </Typography>
-                    <Divider sx={{ my: 1.5 }} />
-                    <Stack spacing={1}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
-                        <Typography variant="body1" fontWeight={600}>${params.monthlyWithdrawal.toLocaleString()}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
-                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
-                        <Typography variant="body1" fontWeight={600} color={colors.blue}>Age 85+</Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={12} md={4}>
-                  <Paper elevation={0} sx={{ p: 2.5, bgcolor: alpha(colors.orange, 0.08), borderRadius: 2, height: '100%' }}>
-                    <Typography variant="subtitle2" fontWeight={700} gutterBottom color={colors.orange}>
-                      Aggressive Strategy
-                    </Typography>
-                    <Divider sx={{ my: 1.5 }} />
-                    <Stack spacing={1}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Monthly Withdrawal</Typography>
-                        <Typography variant="body1" fontWeight={600}>${Math.round(params.monthlyWithdrawal * 1.25).toLocaleString()}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Start Age</Typography>
-                        <Typography variant="body1" fontWeight={600}>{params.withdrawalStartAge}</Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">Sustainability</Typography>
-                        <Typography variant="body1" fontWeight={600} color={colors.orange}>Age 80</Typography>
-                      </Box>
-                    </Stack>
-                  </Paper>
-                </Grid>
+                {[
+                  { key: 'conservative', label: 'Conservative Strategy', color: colors.green,  withdrawal: Math.round(baseWithdrawal * 0.8),  startAge: baseStartAge + 2, sustainability: 'Age 90+' },
+                  { key: 'current',      label: 'Current Strategy',      color: colors.blue,   withdrawal: baseWithdrawal,                   startAge: baseStartAge,     sustainability: 'Age 85+' },
+                  { key: 'aggressive',   label: 'Aggressive Strategy',   color: colors.orange, withdrawal: Math.round(baseWithdrawal * 1.25), startAge: baseStartAge,     sustainability: 'Age 80'  },
+                ].map((strategy) => {
+                  const isSelected = selectedStrategy === strategy.key;
+                  return (
+                    <Grid item xs={12} md={4} key={strategy.key}>
+                      <Paper
+                        elevation={0}
+                        onClick={() => handleStrategySelect(strategy.key)}
+                        sx={{
+                          p: 2.5,
+                          bgcolor: isSelected ? alpha(strategy.color, 0.06) : '#FFFFFF',
+                          border: `1px solid ${alpha(strategy.color, isSelected ? 0.4 : 0.15)}`,
+                          borderLeft: `4px solid ${strategy.color}`,
+                          borderRadius: 2,
+                          height: '100%',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            bgcolor: alpha(strategy.color, 0.08),
+                            boxShadow: `0 4px 12px ${alpha(strategy.color, 0.15)}`,
+                            transform: 'translateY(-2px)',
+                          },
+                        }}
+                      >
+                        <Typography variant="subtitle2" fontWeight={700} gutterBottom color={strategy.color} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          {strategy.label}
+                          {isSelected && (
+                            <Chip label="Selected" size="small" sx={{ bgcolor: alpha(strategy.color, 0.1), color: '#000000', height: 20, border: `1px solid ${alpha(strategy.color, 0.3)}`, fontWeight: 600 }} />
+                          )}
+                        </Typography>
+                        <Divider sx={{ my: 1.5, borderColor: alpha(strategy.color, 0.15) }} />
+                        <Stack spacing={1.5}>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.25 }}>Monthly Withdrawal</Typography>
+                            <Typography variant="body1" fontWeight={800} color="#000000">${strategy.withdrawal.toLocaleString()}</Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.25 }}>Start Age</Typography>
+                            <Typography variant="body1" fontWeight={800} color="#000000">{strategy.startAge}</Typography>
+                          </Box>
+                          <Box>
+                            <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.25 }}>Sustainability</Typography>
+                            <Typography variant="body1" fontWeight={800} color="#000000">{strategy.sustainability}</Typography>
+                          </Box>
+                        </Stack>
+                      </Paper>
+                    </Grid>
+                  );
+                })}
               </Grid>
             </CardContent>
           </Card>
@@ -923,7 +925,7 @@ const IllustrationWorkflowScreen = ({
 
               <Stack spacing={2}>
                 {/* Income Sustainability */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(projectedAt85 > 100000 ? colors.lightGreen : colors.orange, 0.1), borderLeft: `4px solid ${projectedAt85 > 100000 ? colors.lightGreen : colors.orange}` }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(projectedAt85 > 100000 ? colors.lightGreen : colors.orange, 0.15)}`, borderLeft: `4px solid ${projectedAt85 > 100000 ? colors.lightGreen : colors.orange}`, borderRadius: 2 }}>
                   <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
                     {projectedAt85 > 100000 ? (
                       <CheckCircle sx={{ color: colors.lightGreen, fontSize: 20 }} />
@@ -936,14 +938,14 @@ const IllustrationWorkflowScreen = ({
                   </Stack>
                   <Typography variant="body2" color="text.secondary">
                     {projectedAt85 > 100000
-                      ? `Current policy supports $${(params.monthlyWithdrawal * 12).toLocaleString()}/year in withdrawals through age 85+ with healthy account balance of $${projectedAt85.toLocaleString()}.`
-                      : `With current parameters, account balance at age 85 is only $${projectedAt85.toLocaleString()}. Consider increasing premiums or reducing withdrawal amounts.`
+                      ? <>Current policy supports <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${(params.monthlyWithdrawal * 12).toLocaleString()}/year</Box> in withdrawals through age 85+ with healthy account balance of <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${projectedAt85.toLocaleString()}</Box>.</>
+                      : <>With current parameters, account balance at age 85 is only <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${projectedAt85.toLocaleString()}</Box>. Consider increasing premiums or reducing withdrawal amounts.</>
                     }
                   </Typography>
                 </Paper>
 
                 {/* Net Cash Flow */}
-                <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.blue, 0.1), borderLeft: `4px solid ${colors.blue}` }}>
+                <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.blue, 0.15)}`, borderLeft: `4px solid ${colors.blue}`, borderRadius: 2 }}>
                   <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
                     <TrendingUp sx={{ color: colors.blue, fontSize: 20 }} />
                     <Typography variant="subtitle2" fontWeight={700}>
@@ -951,13 +953,13 @@ const IllustrationWorkflowScreen = ({
                     </Typography>
                   </Stack>
                   <Typography variant="body2" color="text.secondary">
-                    You're contributing ${params.monthlyPremium.toLocaleString()}/month until age {params.withdrawalStartAge}, then withdrawing ${params.monthlyWithdrawal.toLocaleString()}/month. Net growth rate after fees: {(params.growthRate - params.annualFees).toFixed(1)}%
+                    You're contributing <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${params.monthlyPremium.toLocaleString()}/month</Box> until age <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{params.withdrawalStartAge}</Box>, then withdrawing <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${params.monthlyWithdrawal.toLocaleString()}/month</Box>. Net growth rate after fees: <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{(params.growthRate - params.annualFees).toFixed(1)}%</Box>
                   </Typography>
                 </Paper>
 
                 {/* Alternative Strategy */}
                 {params.withdrawalStartAge < 67 && (
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.lightBlue, 0.1), borderLeft: `4px solid ${colors.lightBlue}` }}>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightBlue, 0.15)}`, borderLeft: `4px solid ${colors.lightBlue}`, borderRadius: 2 }}>
                     <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
                       <Lightbulb sx={{ color: colors.lightBlue, fontSize: 20 }} />
                       <Typography variant="subtitle2" fontWeight={700}>
@@ -965,7 +967,7 @@ const IllustrationWorkflowScreen = ({
                       </Typography>
                     </Stack>
                     <Typography variant="body2" color="text.secondary">
-                      Delaying withdrawals to age {params.withdrawalStartAge + 2} could increase your monthly income by approximately ${Math.round(params.monthlyWithdrawal * 0.15).toLocaleString()} while maintaining sustainability.
+                      Delaying withdrawals to age <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{params.withdrawalStartAge + 2}</Box> could increase your monthly income by approximately <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${Math.round(params.monthlyWithdrawal * 0.15).toLocaleString()}</Box> while maintaining sustainability.
                     </Typography>
                   </Paper>
                 )}
@@ -986,18 +988,18 @@ const IllustrationWorkflowScreen = ({
                   </Typography>
                 </Box>
                 <Chip
-                  icon={<CheckCircle />}
+                  icon={<CheckCircle sx={{ color: `${colors.green} !important` }} />}
                   label="Approved"
                   size="small"
-                  sx={{ bgcolor: colors.lightGreen, color: '#fff', fontWeight: 600 }}
+                  sx={{ bgcolor: alpha(colors.lightGreen, 0.1), color: '#000000', fontWeight: 600, border: `1px solid ${alpha(colors.green, 0.3)}` }}
                 />
               </Box>
 
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Withdrawal strategy of ${params.monthlyWithdrawal.toLocaleString()}/month ({((params.monthlyWithdrawal / params.monthlyIncome) * 100).toFixed(0)}% income replacement) starting at age {params.withdrawalStartAge} aligns with client's stated retirement objectives and risk tolerance. Regulator-ready documentation prepared.
+                Withdrawal strategy of <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>${params.monthlyWithdrawal.toLocaleString()}/month</Box> (<Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{((params.monthlyWithdrawal / params.monthlyIncome) * 100).toFixed(0)}% income replacement</Box>) starting at age <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{params.withdrawalStartAge}</Box> aligns with client's stated retirement objectives and risk tolerance. Regulator-ready documentation prepared.
               </Typography>
 
-              <Paper elevation={0} sx={{ p: 2, bgcolor: '#fff', border: '1px solid #e0e0e0', borderRadius: 2 }}>
+              <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.lightGreen, 0.15)}`, borderLeft: `4px solid ${colors.lightGreen}`, borderRadius: 2 }}>
                 <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>
                   COMPLIANCE SUMMARY
                 </Typography>
@@ -1016,12 +1018,13 @@ const IllustrationWorkflowScreen = ({
             sx={{
               mb: 3,
               borderRadius: 3,
-              border: `2px solid ${colors.orange}`,
+              border: `1px solid ${alpha(colors.orange, 0.15)}`,
+              borderLeft: `4px solid ${colors.orange}`,
               cursor: 'pointer',
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-4px)',
-                boxShadow: `0 8px 24px ${alpha(colors.orange, 0.2)}`,
+                boxShadow: `0 8px 24px ${alpha(colors.orange, 0.15)}`,
               }
             }}
             onClick={() => {
@@ -1049,7 +1052,7 @@ const IllustrationWorkflowScreen = ({
                     </Box>
                   </Box>
 
-                  <Paper elevation={0} sx={{ p: 2, bgcolor: alpha(colors.orange, 0.1), borderRadius: 2, mb: 2 }}>
+                  <Paper elevation={0} sx={{ p: 2, bgcolor: '#FFFFFF', border: `1px solid ${alpha(colors.orange, 0.15)}`, borderLeft: `4px solid ${colors.orange}`, borderRadius: 2, mb: 2 }}>
                     <Typography variant="body2" color="text.secondary">
                       <strong>Recommended Action:</strong> Send personalized birthday outreach with coverage adequacy review. This milestone is an ideal opportunity for proactive engagement and retention.
                     </Typography>

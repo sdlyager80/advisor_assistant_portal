@@ -58,10 +58,7 @@ const StepFlow = ({ steps, title, subtitle, color = colors.lightBlue }) => {
             fontFamily: 'Roboto Slab, serif',
             fontWeight: 700,
             mb: 1,
-            background: `linear-gradient(135deg, ${color} 0%, ${alpha(color, 0.7)} 100%)`,
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            color: color,
           }}
         >
           {title}
@@ -134,10 +131,10 @@ const StepFlow = ({ steps, title, subtitle, color = colors.lightBlue }) => {
                 width: 40,
                 height: 40,
                 borderRadius: '50%',
-                background:
+                bgcolor:
                   index <= currentStep
-                    ? `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`
-                    : alpha(color, 0.15),
+                    ? colors.green
+                    : alpha(color, 0.1),
                 color: index <= currentStep ? 'white' : 'text.secondary',
                 display: 'flex',
                 alignItems: 'center',
@@ -147,7 +144,7 @@ const StepFlow = ({ steps, title, subtitle, color = colors.lightBlue }) => {
                 mb: 1,
                 position: 'relative',
                 zIndex: 1,
-                border: `3px solid ${index <= currentStep ? colors.green : alpha(color, 0.3)}`,
+                border: `2px solid ${index <= currentStep ? colors.green : alpha(color, 0.3)}`,
                 boxShadow: index <= currentStep ? `0 4px 12px ${alpha(colors.green, 0.4)}` : 'none',
                 transition: 'all 0.3s ease',
               }}

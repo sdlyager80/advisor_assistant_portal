@@ -41,14 +41,15 @@ const DataCard = ({
     <Card
       sx={{
         borderRadius: 3,
-        border: `2px solid ${alpha(color, 0.3)}`,
-        background: `linear-gradient(135deg, #FFFFFF 0%, ${alpha(color, 0.05)} 100%)`,
-        boxShadow: `0 4px 16px ${alpha(color, 0.15)}`,
+        bgcolor: '#FFFFFF',
+        border: `1px solid ${alpha(color, 0.15)}`,
+        borderLeft: `4px solid ${color}`,
+        boxShadow: `0 2px 8px ${alpha(color, 0.08)}`,
         cursor: onClick ? 'pointer' : 'default',
         transition: 'all 0.3s ease',
         '&:hover': onClick ? {
           transform: 'translateY(-4px)',
-          boxShadow: `0 8px 24px ${alpha(color, 0.25)}`,
+          boxShadow: `0 6px 20px ${alpha(color, 0.18)}`,
         } : {},
       }}
       onClick={onClick}
@@ -83,8 +84,8 @@ const DataCard = ({
               variant="h4"
               sx={{
                 fontFamily: 'Roboto Slab, serif',
-                fontWeight: 700,
-                color: color,
+                fontWeight: 800,
+                color: '#000000',
                 fontSize: '2rem'
               }}
             >

@@ -141,7 +141,7 @@ const IllustrationScreen = () => {
                     <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                       Annual Income Shortfall
                     </Typography>
-                    <Typography variant="h4" fontWeight={700} color="error">
+                    <Typography variant="h4" fontWeight={700} color="#000000">
                       $28,000/year
                     </Typography>
                     <Typography variant="caption" color="text.secondary">

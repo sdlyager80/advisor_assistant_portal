@@ -55,6 +55,7 @@ import {
   Mic,
 } from '@mui/icons-material';
 import useSpeech from '../hooks/useSpeech';
+import { useTasks } from '../contexts/TasksContext';
 
 // Color Palette
 const colors = {
@@ -70,6 +71,7 @@ const colors = {
 
 const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotification }) => {
   const { speak, stop, isSpeaking, isEnabled, toggleEnabled, getRandomResponse } = useSpeech();
+  const { tasks, toggleTaskComplete, completedCount, totalCount } = useTasks();
   const notificationsInitialized = useRef(false);
 
   // Dynamic greeting based on time of day
@@ -136,20 +138,6 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
   });
 
   // Mock data for modals
-  const mockTasks = [
-    { id: 1, title: 'Follow up with John Smith', priority: 'high', dueDate: 'Today, 2:00 PM', status: 'pending' },
-    { id: 2, title: 'Prepare quote for Sarah Johnson', priority: 'high', dueDate: 'Today, 3:30 PM', status: 'pending' },
-    { id: 3, title: 'Review policy documents for Michael Chen', priority: 'medium', dueDate: 'Today, 4:00 PM', status: 'pending' },
-    { id: 4, title: 'Send birthday wishes', priority: 'medium', dueDate: 'Today, 5:00 PM', status: 'pending' },
-    { id: 5, title: 'Update CRM records', priority: 'low', dueDate: 'Today, End of day', status: 'in_progress' },
-    { id: 6, title: 'Call Emma Wilson - policy renewal', priority: 'high', dueDate: 'Today, 6:00 PM', status: 'pending' },
-    { id: 7, title: 'Process insurance claim for Robert Taylor', priority: 'high', dueDate: 'Today, 7:00 PM', status: 'pending' },
-    { id: 8, title: 'Send policy renewal reminder to clients', priority: 'medium', dueDate: 'Today, 8:00 PM', status: 'pending' },
-    { id: 9, title: 'Review new applications', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 10, title: 'Update pipeline in CRM', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 11, title: 'Prepare presentation for team meeting', priority: 'medium', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 12, title: 'Review compliance documents', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-  ];
 
   const mockAppointments = [
     { id: 1, client: 'Sarah Johnson', type: 'Policy Review', time: '2:00 PM', duration: '30 min', status: 'confirmed' },
@@ -204,8 +192,8 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
   ];
 
   const stats = {
-    tasksToday: mockTasks.length,
-    tasksCompleted: mockTasks.filter(t => t.status === 'in_progress').length + 7, // 7 already completed
+    tasksToday: totalCount,
+    tasksCompleted: completedCount,
     appointmentsToday: mockAppointments.length,
     leadsActive: mockLeads.length,
     opportunitiesOpen: mockOpportunities.length
@@ -666,7 +654,7 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
       console.log('✅ Illustration pattern matched!');
 
       // Extract customer name from command
-      let customerName = 'John Smith'; // Default
+      let customerName = 'Sam Wright'; // Default
 
       // Patterns to extract name: "run illustration for [name]" or "illustration for [name]"
       const namePatterns = [
@@ -1541,7 +1529,9 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Assignment sx={{ color: colors.blue, fontSize: 28 }} />
-                <Typography variant="h6">Tasks Due Today ({mockTasks.length})</Typography>
+                <Typography variant="h6">
+                  Tasks Due Today ({completedCount}/{totalCount} done)
+                </Typography>
               </Box>
               <IconButton onClick={() => setTasksModalOpen(false)} size="small">
                 <Close />
@@ -1549,45 +1539,75 @@ const HomeScreen = ({ userData, onNavigateToDemo, onNavigateToModule, addNotific
             </Box>
           </DialogTitle>
           <DialogContent>
-            <List>
-              {mockTasks.map((task, index) => (
+            <List sx={{ p: 0 }}>
+              {tasks.map((task, index) => (
                 <React.Fragment key={task.id}>
                   <ListItem
                     sx={{
                       borderLeft: `4px solid ${
+                        task.status === 'completed' ? colors.green :
                         task.priority === 'high' ? colors.red :
                         task.priority === 'medium' ? colors.orange : colors.lightGreen
                       }`,
                       mb: 1,
                       bgcolor: '#FFFFFF',
-                      border: `1px solid ${alpha(colors.blue, 0.15)}`,
+                      border: `1px solid ${alpha(colors.blue, 0.1)}`,
                       borderRadius: 2,
+                      opacity: task.status === 'completed' ? 0.65 : 1,
+                      transition: 'all 0.2s ease',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: alpha(colors.blue, 0.03) },
                     }}
+                    onClick={() => toggleTaskComplete(task.id)}
                   >
-                    <ListItemIcon>
-                      <CheckCircle sx={{ color: task.status === 'in_progress' ? colors.orange : colors.blue }} />
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      {task.status === 'completed'
+                        ? <CheckCircle sx={{ color: colors.green }} />
+                        : <CheckCircle sx={{ color: alpha(colors.blue, 0.25) }} />
+                      }
                     </ListItemIcon>
                     <ListItemText
-                      primary={task.title}
+                      primary={
+                        <Typography
+                          variant="body2"
+                          fontWeight={600}
+                          sx={{
+                            textDecoration: task.status === 'completed' ? 'line-through' : 'none',
+                            color: task.status === 'completed' ? 'text.secondary' : 'text.primary',
+                          }}
+                        >
+                          {task.title}
+                        </Typography>
+                      }
                       secondary={
                         <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                           <Chip
                             label={task.priority.toUpperCase()}
                             size="small"
                             sx={{
-                              bgcolor: task.priority === 'high' ? alpha(colors.red, 0.15) :
-                                      task.priority === 'medium' ? alpha(colors.orange, 0.15) :
-                                      alpha(colors.lightGreen, 0.15),
-                              color: task.priority === 'high' ? colors.red :
-                                     task.priority === 'medium' ? colors.orange : colors.green,
+                              bgcolor: task.priority === 'high' ? alpha(colors.red, 0.1) :
+                                      task.priority === 'medium' ? alpha(colors.orange, 0.1) :
+                                      alpha(colors.lightGreen, 0.1),
+                              color: '#000000',
+                              border: `1px solid ${
+                                task.priority === 'high' ? alpha(colors.red, 0.3) :
+                                task.priority === 'medium' ? alpha(colors.orange, 0.3) :
+                                alpha(colors.lightGreen, 0.3)
+                              }`,
+                              fontWeight: 600,
                             }}
                           />
-                          <Chip label={task.dueDate} size="small" icon={<AccessTime />} />
+                          <Chip
+                            label={task.dueDate}
+                            size="small"
+                            icon={<AccessTime sx={{ fontSize: '14px !important' }} />}
+                            sx={{ color: '#000000', fontWeight: 600 }}
+                          />
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < mockTasks.length - 1 && <Divider />}
+                  {index < tasks.length - 1 && <Divider sx={{ mb: 1 }} />}
                 </React.Fragment>
               ))}
             </List>

@@ -42,9 +42,10 @@ const IntelligencePanel = ({
     <Card
       sx={{
         borderRadius: 3,
-        border: `2px solid ${alpha(color, 0.3)}`,
-        background: `linear-gradient(135deg, #FFFFFF 0%, ${alpha(color, 0.03)} 100%)`,
-        boxShadow: `0 4px 16px ${alpha(color, 0.15)}`,
+        bgcolor: '#FFFFFF',
+        border: `1px solid ${alpha(color, 0.15)}`,
+        borderLeft: `4px solid ${color}`,
+        boxShadow: `0 2px 8px ${alpha(color, 0.08)}`,
         overflow: 'visible',
         transition: 'all 0.3s ease',
       }}

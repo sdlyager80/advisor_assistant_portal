@@ -29,10 +29,7 @@ const LifeStageScreen = () => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.blue,
         }}
       >
         Life-Stage & Retention Intelligence

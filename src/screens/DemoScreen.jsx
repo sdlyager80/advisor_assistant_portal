@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Card,
@@ -63,6 +63,12 @@ const DemoScreen = ({
   const theme = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [emailSent, setEmailSent] = useState(false);
+  const topRef = useRef(null);
+
+  // Scroll to top on every step change
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }, [currentStep]);
 
   // Extract first name and generate initials
   const firstName = customerName.split(' ')[0];
@@ -167,8 +173,9 @@ const DemoScreen = ({
             color: colors.green,
             borderRadius: 4,
             overflow: 'hidden',
-            border: `2px solid ${alpha(colors.green, 0.3)}`,
-            boxShadow: `0 4px 16px ${alpha(colors.green, 0.15)}`,
+            border: `1px solid ${alpha(colors.green, 0.15)}`,
+            borderLeft: `4px solid ${colors.green}`,
+            boxShadow: `0 4px 16px ${alpha(colors.green, 0.12)}`,
           }}
         >
           <CardContent sx={{ p: 4, textAlign: 'center' }}>
@@ -208,7 +215,8 @@ const DemoScreen = ({
           sx={{
             p: 4,
             borderRadius: 3,
-            border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+            border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+            borderLeft: `4px solid ${colors.blue}`,
             background: '#FFFFFF',
           }}
         >
@@ -248,7 +256,8 @@ const DemoScreen = ({
           position: 'relative',
           overflow: 'hidden',
           boxShadow: '0 8px 32px rgba(27, 117, 187, 0.15)',
-          border: `3px solid ${colors.blue}`,
+          border: `1px solid ${alpha(colors.blue, 0.15)}`,
+          borderLeft: `4px solid ${colors.blue}`,
         }}
       >
         {/* Decorative circles */}
@@ -312,9 +321,9 @@ const DemoScreen = ({
                 fontSize: '2.5rem',
                 fontFamily: 'Roboto Slab, serif',
                 fontWeight: 700,
-                background: `linear-gradient(135deg, ${colors.orange} 0%, ${colors.yellow} 100%)`,
-                border: '4px solid rgba(255,255,255,0.3)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                bgcolor: colors.orange,
+                border: `2px solid ${alpha(colors.orange, 0.3)}`,
+                boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
               }}
             >
               {initials}
@@ -387,8 +396,9 @@ const DemoScreen = ({
           sx={{
             mb: 2,
             p: 2,
-            background: `linear-gradient(135deg, ${alpha(colors.blue, 0.1)} 0%, ${alpha(colors.lightBlue, 0.05)} 100%)`,
-            border: `2px solid ${colors.lightBlue}`,
+            bgcolor: alpha(colors.blue, 0.06),
+            border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+            borderLeft: `4px solid ${colors.blue}`,
             borderRadius: 3,
           }}
         >
@@ -443,8 +453,8 @@ const DemoScreen = ({
                 icon={<AutoAwesome sx={{ color: `${colors.lightBlue} !important` }} />}
                 label="Auto-Retrieved"
                 sx={{
-                  bgcolor: alpha(colors.lightBlue, 0.15),
-                  color: colors.lightBlue,
+                  bgcolor: alpha(colors.lightBlue, 0.1),
+                  color: '#000000',
                   fontWeight: 700,
                   border: `1px solid ${alpha(colors.lightBlue, 0.3)}`,
                 }}
@@ -460,7 +470,8 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `2px solid ${colors.lightGreen}`,
+                border: `1px solid ${alpha(colors.lightGreen, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
               }}
             >
@@ -500,7 +511,8 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `2px solid ${alpha(colors.red, 0.3)}`,
+                border: `1px solid ${alpha(colors.red, 0.15)}`,
+                borderLeft: `4px solid ${colors.red}`,
                 borderRadius: 3,
               }}
             >
@@ -527,10 +539,10 @@ const DemoScreen = ({
                 <Chip
                   label="SMS Marketing"
                   sx={{
-                    bgcolor: alpha(colors.red, 0.2),
-                    color: colors.red,
+                    bgcolor: alpha(colors.red, 0.1),
+                    color: '#000000',
                     fontWeight: 600,
-                    border: `1px solid ${colors.red}`,
+                    border: `1px solid ${alpha(colors.red, 0.3)}`,
                   }}
                 />
               </Box>
@@ -544,7 +556,8 @@ const DemoScreen = ({
                   flex: 1,
                   p: 3,
                   background: '#FFFFFF',
-                  border: `2px solid ${alpha(colors.orange, 0.3)}`,
+                  border: `1px solid ${alpha(colors.orange, 0.15)}`,
+                  borderLeft: `4px solid ${colors.orange}`,
                   borderRadius: 3,
                 }}
               >
@@ -565,7 +578,8 @@ const DemoScreen = ({
                   flex: 1,
                   p: 3,
                   background: '#FFFFFF',
-                  border: `2px solid ${alpha(colors.blue, 0.3)}`,
+                  border: `1px solid ${alpha(colors.blue, 0.15)}`,
+                  borderLeft: `4px solid ${colors.blue}`,
                   borderRadius: 3,
                 }}
               >
@@ -587,7 +601,8 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `2px solid ${colors.green}`,
+                border: `1px solid ${alpha(colors.green, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
               }}
             >
@@ -658,8 +673,8 @@ const DemoScreen = ({
               icon={<AutoAwesome sx={{ color: `${colors.orange} !important` }} />}
               label="Proactive Insight"
               sx={{
-                bgcolor: alpha(colors.orange, 0.15),
-                color: colors.orange,
+                bgcolor: alpha(colors.orange, 0.1),
+                color: '#000000',
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 border: `1px solid ${alpha(colors.orange, 0.3)}`,
@@ -674,9 +689,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.lightBlue}`,
+                border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+                borderLeft: `4px solid ${colors.blue}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.blue}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
@@ -698,9 +713,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.lightGreen}`,
+                border: `1px solid ${alpha(colors.lightGreen, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.green}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
@@ -723,9 +738,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.orange}`,
+                border: `1px solid ${alpha(colors.orange, 0.15)}`,
+                borderLeft: `4px solid ${colors.orange}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.orange}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1.5 }}>
@@ -748,8 +763,9 @@ const DemoScreen = ({
               elevation={0}
               sx={{
                 p: 3,
-                background: alpha(colors.green, 0.1),
-                border: `3px solid ${colors.green}`,
+                background: '#FFFFFF',
+                border: `1px solid ${alpha(colors.green, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
               }}
             >
@@ -842,7 +858,8 @@ const DemoScreen = ({
               p: 3,
               borderRadius: 3,
               background: '#FFFFFF',
-              border: `3px solid ${colors.lightGreen}`,
+              border: `1px solid ${alpha(colors.lightGreen, 0.15)}`,
+              borderLeft: `4px solid ${colors.green}`,
             }}
           >
             <Typography variant="body1" color="text.secondary" sx={{ mb: 1, fontWeight: 500 }}>
@@ -859,9 +876,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.blue}`,
+                border: `1px solid ${alpha(colors.blue, 0.15)}`,
+                borderLeft: `4px solid ${colors.blue}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.blue}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
@@ -881,9 +898,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.lightGreen}`,
+                border: `1px solid ${alpha(colors.lightGreen, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.green}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
@@ -903,9 +920,9 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.orange}`,
+                border: `1px solid ${alpha(colors.orange, 0.15)}`,
+                borderLeft: `4px solid ${colors.orange}`,
                 borderRadius: 3,
-                borderLeft: `8px solid ${colors.orange}`,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
@@ -916,7 +933,10 @@ const DemoScreen = ({
                 </Typography>
               </Box>
               <Typography variant="body1" color="text.secondary" sx={{ ml: 8, fontWeight: 500 }}>
-                Premium {customerData.age}th birthday card to arrive within {customerData.cardDelivery}
+                Premium{' '}
+                <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.age}th</Box>{' '}
+                birthday card to arrive within{' '}
+                <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.cardDelivery}</Box>
               </Typography>
             </Paper>
           </Stack>
@@ -927,8 +947,9 @@ const DemoScreen = ({
               mt: 4,
               p: 3,
               borderRadius: 3,
-              background: alpha(colors.green, 0.1),
-              border: `3px solid ${colors.green}`,
+              background: '#FFFFFF',
+              border: `1px solid ${alpha(colors.green, 0.15)}`,
+              borderLeft: `4px solid ${colors.green}`,
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -958,9 +979,10 @@ const DemoScreen = ({
           sx={{
             mb: 3,
             p: 3,
-            background: alpha(colors.green, 0.1),
+            bgcolor: alpha(colors.green, 0.08),
             borderRadius: 4,
-            border: `3px solid ${colors.green}`,
+            border: `1px solid ${alpha(colors.green, 0.15)}`,
+            borderLeft: `4px solid ${colors.green}`,
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -993,8 +1015,8 @@ const DemoScreen = ({
               icon={<Verified sx={{ color: `${colors.green} !important` }} />}
               label="Approved & Ready"
               sx={{
-                bgcolor: alpha(colors.green, 0.15),
-                color: colors.green,
+                bgcolor: alpha(colors.green, 0.1),
+                color: '#000000',
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 border: `1px solid ${alpha(colors.green, 0.3)}`,
@@ -1030,7 +1052,7 @@ const DemoScreen = ({
                 <Typography variant="caption" color="text.secondary" fontWeight={600}>
                   Milestone
                 </Typography>
-                <Typography variant="body1" fontWeight={700}>
+                <Typography variant="body1" fontWeight={700} color="#000000">
                   {customerData.age}th Birthday (in 2 weeks)
                 </Typography>
               </Grid>
@@ -1038,7 +1060,7 @@ const DemoScreen = ({
                 <Typography variant="caption" color="text.secondary" fontWeight={600}>
                   Relationship
                 </Typography>
-                <Typography variant="body1" fontWeight={700}>
+                <Typography variant="body1" fontWeight={700} color="#000000">
                   {customerData.yearsAsCustomer} Years
                 </Typography>
               </Grid>
@@ -1058,7 +1080,7 @@ const DemoScreen = ({
         <Card sx={{
           mb: 3,
           background: colors.paleAqua,
-          border: emailSent ? `3px solid ${colors.green}` : 'none',
+          border: emailSent ? `1px solid ${alpha(colors.green, 0.3)}` : `1px solid ${alpha(colors.lightBlue, 0.15)}`,
           transition: 'all 0.3s ease'
         }}>
           <Box sx={{
@@ -1083,11 +1105,10 @@ const DemoScreen = ({
                 onClick={handleSendEmail}
                 disabled={emailSent}
                 sx={{
-                  background: emailSent
-                    ? `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`
-                    : `linear-gradient(135deg, ${colors.lightBlue} 0%, ${colors.blue} 100%)`,
+                  bgcolor: emailSent ? colors.green : colors.blue,
                   fontWeight: 600,
                   transition: 'all 0.3s ease',
+                  '&:hover': { bgcolor: emailSent ? colors.lightGreen : colors.lightBlue },
                 }}
               >
                 {emailSent ? 'Sent!' : 'Send Now'}
@@ -1100,7 +1121,8 @@ const DemoScreen = ({
               sx={{
                 p: 3,
                 bgcolor: 'white',
-                border: `2px solid ${alpha(colors.lightBlue, 0.3)}`,
+                border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+                borderLeft: `4px solid ${colors.lightBlue}`,
                 borderRadius: 2,
               }}
             >
@@ -1143,9 +1165,9 @@ Senior Advisor`}
                 sx={{
                   p: 2.5,
                   background: '#FFFFFF',
-                  border: `2px solid ${colors.green}`,
+                  border: `1px solid ${alpha(colors.green, 0.15)}`,
+                  borderLeft: `4px solid ${colors.green}`,
                   borderRadius: 2,
-                  borderLeft: `6px solid ${colors.green}`,
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -1155,7 +1177,7 @@ Senior Advisor`}
                       Follow-up call scheduled
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {customerData.followUpDateTime} - Call prepared in your calendar
+                      <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.followUpDateTime}</Box> - Call prepared in your calendar
                     </Typography>
                   </Box>
                 </Box>
@@ -1166,9 +1188,9 @@ Senior Advisor`}
                 sx={{
                   p: 2.5,
                   background: '#FFFFFF',
-                  border: `2px solid ${colors.lightBlue}`,
+                  border: `1px solid ${alpha(colors.lightBlue, 0.15)}`,
+                  borderLeft: `4px solid ${colors.lightBlue}`,
                   borderRadius: 2,
-                  borderLeft: `6px solid ${colors.lightBlue}`,
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -1189,9 +1211,9 @@ Senior Advisor`}
                 sx={{
                   p: 2.5,
                   background: '#FFFFFF',
-                  border: `2px solid ${colors.orange}`,
+                  border: `1px solid ${alpha(colors.orange, 0.15)}`,
+                  borderLeft: `4px solid ${colors.orange}`,
                   borderRadius: 2,
-                  borderLeft: `6px solid ${colors.orange}`,
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -1201,7 +1223,10 @@ Senior Advisor`}
                       Physical card being sent
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Premium {customerData.age}th milestone card - arrives in {customerData.cardDelivery}
+                      Premium{' '}
+                      <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.age}th</Box>{' '}
+                      milestone card - arrives in{' '}
+                      <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.cardDelivery}</Box>
                     </Typography>
                   </Box>
                 </Box>
@@ -1261,8 +1286,8 @@ Senior Advisor`}
               icon={<AutoAwesome sx={{ color: `${colors.green} !important` }} />}
               label="Automated"
               sx={{
-                bgcolor: alpha(colors.green, 0.15),
-                color: colors.green,
+                bgcolor: alpha(colors.green, 0.1),
+                color: '#000000',
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 border: `1px solid ${alpha(colors.green, 0.3)}`,
@@ -1278,7 +1303,8 @@ Senior Advisor`}
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.blue}`,
+                border: `1px solid ${alpha(colors.blue, 0.15)}`,
+                borderLeft: `4px solid ${colors.blue}`,
                 borderRadius: 3,
               }}
             >
@@ -1311,7 +1337,8 @@ Senior Advisor`}
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.orange}`,
+                border: `1px solid ${alpha(colors.orange, 0.15)}`,
+                borderLeft: `4px solid ${colors.orange}`,
                 borderRadius: 3,
               }}
             >
@@ -1322,7 +1349,7 @@ Senior Advisor`}
                     Printed Card Request Sent
                   </Typography>
                   <Typography variant="body1" color="text.secondary" gutterBottom fontWeight={500}>
-                    Premium {customerData.age}th birthday milestone card
+                    Premium <Box component="span" sx={{ fontWeight: 700, color: '#000000' }}>{customerData.age}th</Box> birthday milestone card
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1.5, mt: 2 }}>
                     <Chip
@@ -1344,7 +1371,8 @@ Senior Advisor`}
               sx={{
                 p: 3,
                 background: '#FFFFFF',
-                border: `3px solid ${colors.lightGreen}`,
+                border: `1px solid ${alpha(colors.lightGreen, 0.15)}`,
+                borderLeft: `4px solid ${colors.green}`,
                 borderRadius: 3,
               }}
             >
@@ -1378,8 +1406,9 @@ Senior Advisor`}
             sx={{
               p: 4,
               borderRadius: 3,
-              background: colors.paleAqua,
-              border: `3px solid ${colors.blue}`,
+              background: '#FFFFFF',
+              border: `1px solid ${alpha(colors.blue, 0.15)}`,
+              borderLeft: `4px solid ${colors.blue}`,
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -1390,9 +1419,9 @@ Senior Advisor`}
             </Box>
             <Stack spacing={2}>
               {[
-                '47% higher engagement through personalized touch',
-                '3x better response with advisor-led follow-up',
-                '62% improvement in brand sentiment with physical card',
+                { stat: '47%', text: 'higher engagement through personalized touch' },
+                { stat: '3x', text: 'better response with advisor-led follow-up' },
+                { stat: '62%', text: 'improvement in brand sentiment with physical card' },
               ].map((item, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
                   <Box
@@ -1402,10 +1431,11 @@ Senior Advisor`}
                       borderRadius: '50%',
                       bgcolor: colors.blue,
                       mr: 2,
+                      flexShrink: 0,
                     }}
                   />
                   <Typography variant="body1" fontWeight={500} color="#000000">
-                    {item}
+                    <Box component="span" sx={{ fontWeight: 800, color: '#000000' }}>{item.stat}</Box>{' '}{item.text}
                   </Typography>
                 </Box>
               ))}
@@ -1428,6 +1458,7 @@ Senior Advisor`}
 
   return (
     <Box
+      ref={topRef}
       sx={{
         minHeight: '100vh',
         background: '#FFFFFF',
@@ -1493,10 +1524,7 @@ Senior Advisor`}
                     width: 40,
                     height: 40,
                     borderRadius: '50%',
-                    background:
-                      index <= currentStep
-                        ? `linear-gradient(135deg, ${colors.green} 0%, ${colors.lightGreen} 100%)`
-                        : alpha(colors.lightBlue, 0.2),
+                    bgcolor: index <= currentStep ? colors.green : alpha(colors.lightBlue, 0.2),
                     color: index <= currentStep ? 'white' : 'text.secondary',
                     display: 'flex',
                     alignItems: 'center',
@@ -1506,14 +1534,14 @@ Senior Advisor`}
                     mb: 1,
                     position: 'relative',
                     zIndex: 1,
-                    border: `3px solid ${index <= currentStep ? colors.green : alpha(colors.lightBlue, 0.3)}`,
-                    boxShadow: index <= currentStep ? `0 4px 12px ${alpha(colors.green, 0.4)}` : 'none',
+                    border: `2px solid ${index <= currentStep ? colors.green : alpha(colors.lightBlue, 0.3)}`,
+                    boxShadow: index <= currentStep ? `0 4px 12px ${alpha(colors.green, 0.3)}` : 'none',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                     '&:hover': {
                       transform: 'scale(1.1)',
-                      boxShadow: `0 6px 16px ${alpha(index <= currentStep ? colors.green : colors.lightBlue, 0.5)}`,
-                      border: `3px solid ${index <= currentStep ? colors.lightGreen : colors.lightBlue}`,
+                      boxShadow: `0 6px 16px ${alpha(index <= currentStep ? colors.green : colors.lightBlue, 0.4)}`,
+                      border: `2px solid ${index <= currentStep ? colors.lightGreen : colors.lightBlue}`,
                     },
                   }}
                 >
@@ -1593,11 +1621,11 @@ Senior Advisor`}
                 py: 1.5,
                 fontWeight: 700,
                 fontSize: '1rem',
-                background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-                boxShadow: `0 4px 16px ${alpha(colors.lightBlue, 0.4)}`,
+                bgcolor: colors.blue,
+                boxShadow: `0 4px 16px ${alpha(colors.blue, 0.3)}`,
                 '&:hover': {
-                  background: `linear-gradient(135deg, ${colors.blue} 20%, ${colors.lightBlue} 100%)`,
-                  boxShadow: `0 6px 20px ${alpha(colors.lightBlue, 0.5)}`,
+                  bgcolor: colors.lightBlue,
+                  boxShadow: `0 6px 20px ${alpha(colors.lightBlue, 0.4)}`,
                   transform: 'translateY(-2px)',
                 },
                 transition: 'all 0.2s ease',

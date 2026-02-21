@@ -20,13 +20,13 @@ const UseCaseCard = ({
   return (
     <Card
       sx={{
-        background: `linear-gradient(135deg, ${alpha(color, 0.05)} 0%, ${alpha(color, 0.02)} 100%)`,
-        border: `2px solid ${alpha(color, 0.2)}`,
+        bgcolor: '#FFFFFF',
+        border: `1px solid ${alpha(color, 0.15)}`,
+        borderLeft: `4px solid ${color}`,
         transition: 'all 0.3s ease',
         '&:hover': {
           transform: 'translateY(-4px)',
-          boxShadow: `0 8px 24px ${alpha(color, 0.2)}`,
-          borderColor: alpha(color, 0.4),
+          boxShadow: `0 6px 20px ${alpha(color, 0.15)}`,
         },
       }}
     >
@@ -39,7 +39,8 @@ const UseCaseCard = ({
             size="small"
             sx={{
               bgcolor: alpha(color, 0.1),
-              color: color,
+              color: '#000000',
+              border: `1px solid ${alpha(color, 0.25)}`,
               fontWeight: 600,
               fontSize: '0.75rem',
             }}

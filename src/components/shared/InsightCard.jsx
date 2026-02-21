@@ -66,13 +66,14 @@ const InsightCard = ({
     <Card
       sx={{
         borderRadius: 3,
-        border: `2px solid ${alpha(config.color, 0.3)}`,
-        background: `linear-gradient(135deg, ${alpha(config.color, 0.05)} 0%, #FFFFFF 100%)`,
-        boxShadow: `0 4px 16px ${alpha(config.color, 0.15)}`,
+        bgcolor: '#FFFFFF',
+        border: `1px solid ${alpha(config.color, 0.15)}`,
+        borderLeft: `4px solid ${config.color}`,
+        boxShadow: `0 2px 8px ${alpha(config.color, 0.08)}`,
         transition: 'all 0.3s ease',
         '&:hover': {
           transform: 'translateY(-4px)',
-          boxShadow: `0 8px 24px ${alpha(config.color, 0.25)}`,
+          boxShadow: `0 6px 20px ${alpha(config.color, 0.18)}`,
         },
       }}
     >
@@ -110,8 +111,9 @@ const InsightCard = ({
                   label={priority}
                   size="small"
                   sx={{
-                    bgcolor: alpha(config.color, 0.2),
-                    color: config.color,
+                    bgcolor: alpha(config.color, 0.1),
+                    color: '#000000',
+                    border: `1px solid ${alpha(config.color, 0.3)}`,
                     fontWeight: 700,
                     fontSize: '0.75rem',
                   }}
@@ -122,8 +124,9 @@ const InsightCard = ({
               label={config.label}
               size="small"
               sx={{
-                bgcolor: alpha(config.color, 0.15),
-                color: config.color,
+                bgcolor: alpha(config.color, 0.1),
+                color: '#000000',
+                border: `1px solid ${alpha(config.color, 0.25)}`,
                 fontWeight: 600,
                 fontSize: '0.7rem',
                 height: 20,

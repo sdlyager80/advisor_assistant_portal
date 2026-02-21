@@ -25,10 +25,7 @@ const EnterpriseScreen = () => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.yellow} 0%, ${colors.orange} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.orange,
         }}
       >
         Enterprise Intelligence Extension

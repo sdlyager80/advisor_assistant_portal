@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useSpeech from '../hooks/useSpeech';
+import { useTasks } from '../contexts/TasksContext';
 import {
   Container,
   Typography,
@@ -38,21 +39,7 @@ const colors = {
 
 const TasksScreen = () => {
   const { speak, getRandomResponse } = useSpeech();
-
-  const [tasks, setTasks] = useState([
-    { id: 1, title: 'Follow up with John Smith', priority: 'high', dueDate: 'Today, 2:00 PM', status: 'pending' },
-    { id: 2, title: 'Prepare quote for Sarah Johnson', priority: 'high', dueDate: 'Today, 3:30 PM', status: 'pending' },
-    { id: 3, title: 'Review policy documents for Michael Chen', priority: 'medium', dueDate: 'Today, 4:00 PM', status: 'pending' },
-    { id: 4, title: 'Send birthday wishes', priority: 'medium', dueDate: 'Today, 5:00 PM', status: 'pending' },
-    { id: 5, title: 'Update CRM records', priority: 'low', dueDate: 'Today, End of day', status: 'in_progress' },
-    { id: 6, title: 'Call Emma Wilson - policy renewal', priority: 'high', dueDate: 'Today, 6:00 PM', status: 'pending' },
-    { id: 7, title: 'Process insurance claim for Robert Taylor', priority: 'high', dueDate: 'Today, 7:00 PM', status: 'pending' },
-    { id: 8, title: 'Send policy renewal reminder to clients', priority: 'medium', dueDate: 'Today, 8:00 PM', status: 'pending' },
-    { id: 9, title: 'Review new applications', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 10, title: 'Update pipeline in CRM', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 11, title: 'Prepare presentation for team meeting', priority: 'medium', dueDate: 'Today, End of day', status: 'pending' },
-    { id: 12, title: 'Review compliance documents', priority: 'low', dueDate: 'Today, End of day', status: 'pending' },
-  ]);
+  const { tasks, toggleTaskComplete: contextToggle, addTask, completedCount, totalCount } = useTasks();
 
   const [openVoiceDialog, setOpenVoiceDialog] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -139,14 +126,14 @@ const TasksScreen = () => {
     }
 
     const newTask = {
-      id: tasks.length + 1,
+      id: Date.now(),
       title: taskTitle.trim(),
       priority: taskPriority,
       status: 'pending',
       dueDate: taskDueDate
     };
 
-    setTasks([newTask, ...tasks]);
+    addTask(newTask);
     setOpenVoiceDialog(false);
     setTaskTitle('');
     setVoiceText('');
@@ -175,22 +162,17 @@ const TasksScreen = () => {
   const toggleTaskComplete = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+    contextToggle(taskId);
 
-    setTasks(tasks.map(t =>
-      t.id === taskId
-        ? { ...t, status: newStatus }
-        : t
-    ));
-
-    // Voice confirmation - conversational responses
+    // Voice confirmation
     if (newStatus === 'completed') {
-      const remainingTasks = tasks.filter(t => t.status !== 'completed').length - 1;
+      const remaining = tasks.filter(t => t.status !== 'completed').length - 1;
       const completionResponses = [
-        `Excellent work! Task completed. ${remainingTasks > 0 ? `You have ${remainingTasks} more to go` : "That's everything on your list!"}`,
+        `Excellent work! Task completed. ${remaining > 0 ? `You have ${remaining} more to go` : "That's everything on your list!"}`,
         `Great job! Checked that one off for you. Keep up the momentum!`,
         `Nice! One more task done. You're making great progress today!`,
         `Perfect! I've marked that as complete. You're on fire!`,
-        `Well done! Task completed successfully. ${remainingTasks > 0 ? `Just ${remainingTasks} more to go` : "You've completed all your tasks!"}`
+        `Well done! Task completed successfully. ${remaining > 0 ? `Just ${remaining} more to go` : "You've completed all your tasks!"}`
       ];
       speak(getRandomResponse(completionResponses));
     } else {

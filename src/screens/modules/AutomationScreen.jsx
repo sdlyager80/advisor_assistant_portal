@@ -29,10 +29,7 @@ const AutomationScreen = () => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.red} 0%, ${colors.orange} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.orange,
         }}
       >
         Automation & Compliance Support

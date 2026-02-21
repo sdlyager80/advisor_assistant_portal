@@ -62,6 +62,7 @@ import { IllustrationProvider } from './contexts/IllustrationContext';
 import { MeetingPrepProvider } from './contexts/MeetingPrepContext';
 import { ComplianceProvider } from './contexts/ComplianceContext';
 import { PredictiveAnalyticsProvider } from './contexts/PredictiveAnalyticsContext';
+import { TasksProvider } from './contexts/TasksContext';
 
 // Lazy load module screens
 const IllustrationScreen = lazy(() => import('./screens/modules/IllustrationScreen'));
@@ -198,12 +199,20 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [toastNotification, setToastNotification] = useState(null);
   const [showIllustration, setShowIllustration] = useState(false);
-  const [illustrationParams, setIllustrationParams] = useState({ age: 65, monthlyWithdrawal: 2000 });
+  const [illustrationParams, setIllustrationParams] = useState({ customerName: 'Sam Wright', age: 65, monthlyWithdrawal: 2000 });
   const [showClientReviewPrep, setShowClientReviewPrep] = useState(false);
   const [clientReviewParams, setClientReviewParams] = useState({ clientName: 'Sam Wright', meetingTime: '2:30 PM' });
+  const contentRef = useRef(null);
   const homeScreenRef = useRef(null);
   const tasksScreenRef = useRef(null);
   const calendarScreenRef = useRef(null);
+
+  // Scroll to top on every navigation change
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [activeScreen, showDemo, showIllustration, activeModule, showClientReviewPrep]);
   const notificationIdRef = useRef(5); // Start from 5 since we have 4 mock notifications
 
   // Mock data - will be replaced with ServiceNow API
@@ -358,7 +367,7 @@ function App() {
 
   const handleNavigateToModule = (moduleId, params) => {
     if (moduleId === 'illustration-workflow') {
-      setIllustrationParams(params || { age: 65, monthlyWithdrawal: 2000 });
+      setIllustrationParams(params || { customerName: 'Sam Wright', age: 65, monthlyWithdrawal: 2000 });
       setShowIllustration(true);
       setShowDemo(false);
       setShowClientReviewPrep(false);
@@ -456,7 +465,7 @@ function App() {
       case 'SHOW_ILLUSTRATION':
         // Navigate to illustration workflow screen
         console.log('📊 SHOW_ILLUSTRATION command received with params:', command.params);
-        setIllustrationParams(command.params || { age: 65, monthlyWithdrawal: 2000 });
+        setIllustrationParams(command.params || { customerName: 'Sam Wright', age: 65, monthlyWithdrawal: 2000 });
         setShowIllustration(true);
         setShowDemo(false);
         setActiveModule(null);
@@ -508,6 +517,7 @@ function App() {
   };
 
   return (
+    <TasksProvider>
     <CustomerIntelligenceProvider>
       <IllustrationProvider>
         <MeetingPrepProvider>
@@ -562,7 +572,7 @@ function App() {
                   </AppBar>
 
                   {/* Main Content Area */}
-                  <Box sx={{
+                  <Box ref={contentRef} sx={{
                     flex: 1,
                     overflow: 'auto',
                     background: `linear-gradient(180deg, ${colors.paleAqua} 0%, ${alpha(colors.lightBlue, 0.1)} 100%)`,
@@ -930,6 +940,7 @@ function App() {
         </MeetingPrepProvider>
       </IllustrationProvider>
     </CustomerIntelligenceProvider>
+    </TasksProvider>
   );
 }
 

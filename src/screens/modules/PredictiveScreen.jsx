@@ -29,10 +29,7 @@ const PredictiveScreen = () => {
           fontFamily: 'Roboto Slab, serif',
           fontWeight: 700,
           mb: 1,
-          background: `linear-gradient(135deg, ${colors.lightGreen} 0%, ${colors.green} 100%)`,
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
+          color: colors.green,
         }}
       >
         Predictive Risk & Retention Insights

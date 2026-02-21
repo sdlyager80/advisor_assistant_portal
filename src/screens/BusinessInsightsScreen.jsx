@@ -407,10 +407,7 @@ const BusinessInsightsScreen = ({ onClose }) => {
                 fontWeight: 700,
                 mb: 0.5,
                 fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
-                background: `linear-gradient(135deg, ${colors.blue} 0%, ${colors.lightBlue} 100%)`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: colors.blue,
               }}
             >
               Business Insights
@@ -468,7 +465,8 @@ const BusinessInsightsScreen = ({ onClose }) => {
                   height: '100%',
                   position: 'relative',
                   overflow: 'hidden',
-                  borderTop: `2px solid ${alpha(kpi.color, 0.5)}`,
+                  border: `1px solid ${alpha(kpi.color, 0.15)}`,
+                  borderLeft: `4px solid ${kpi.color}`,
                   cursor: 'pointer',
                   transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                   '&:hover': {
@@ -1415,7 +1413,7 @@ const OperationsTab = ({ efficiencyMetrics }) => {
                         bgcolor: colors.paleAqua,
                         '& .MuiLinearProgress-bar': {
                           borderRadius: 10,
-                          background: `linear-gradient(90deg, ${metric.color} 0%, ${alpha(metric.color, 0.7)} 100%)`,
+                          background: metric.color,
                         },
                       }}
                     />
@@ -1782,8 +1780,9 @@ const ActivityTab = ({ activities }) => {
                       label={feature.status}
                       size="small"
                       sx={{
-                        bgcolor: feature.status === 'Active' ? alpha(colors.green, 0.15) : alpha(colors.lightBlue, 0.15),
-                        color: feature.status === 'Active' ? colors.green : colors.lightBlue,
+                        bgcolor: feature.status === 'Active' ? alpha(colors.green, 0.1) : alpha(colors.lightBlue, 0.1),
+                        color: '#000000',
+                        border: `1px solid ${feature.status === 'Active' ? alpha(colors.green, 0.3) : alpha(colors.lightBlue, 0.3)}`,
                         fontWeight: 600,
                         fontSize: { xs: '0.65rem', sm: '0.7rem' },
                         height: { xs: 20, sm: 24 },

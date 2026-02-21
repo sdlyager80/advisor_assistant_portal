@@ -205,7 +205,7 @@ export const useVoiceCommands = (onCommand) => {
       console.log('📊 Illustration request detected:', command);
 
       // Extract customer name from command
-      let customerName = 'John Smith'; // Default
+      let customerName = 'Sam Wright'; // Default
 
       // Patterns to extract name: "run illustration for [name]"
       const namePatterns = [
