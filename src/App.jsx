@@ -72,6 +72,8 @@ const AutomationScreen = lazy(() => import('./screens/modules/AutomationScreen')
 const PredictiveScreen = lazy(() => import('./screens/modules/PredictiveScreen'));
 const EnterpriseScreen = lazy(() => import('./screens/modules/EnterpriseScreen'));
 const BusinessInsightsScreen = lazy(() => import('./screens/BusinessInsightsScreen'));
+const ProducerAnalyticsScreen = lazy(() => import('./screens/ProducerAnalyticsScreen'));
+const SubmissionIntakeScreen = lazy(() => import('./screens/SubmissionIntakeScreen'));
 
 // Vibrant color palette
 const colors = {
@@ -344,6 +346,8 @@ function App() {
     predictive: { component: PredictiveScreen, title: 'Predictive Insights' },
     enterprise: { component: EnterpriseScreen, title: 'Enterprise Intelligence' },
     'business-insights': { component: BusinessInsightsScreen, title: 'Business Insights' },
+    'producer-analytics': { component: ProducerAnalyticsScreen, title: 'My Performance' },
+    'submission-intake': { component: SubmissionIntakeScreen, title: 'Submission Intake' },
   };
 
   const ActiveScreenComponent = screens[activeScreen].component;

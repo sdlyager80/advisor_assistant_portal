@@ -30,6 +30,8 @@ import {
   Psychology,
   BusinessCenter,
   Insights,
+  TrendingUp,
+  CloudUpload,
 } from '@mui/icons-material';
 
 // Color Palette
@@ -110,6 +112,22 @@ const MoreScreen = ({ userData, onNavigateToDemo, onNavigateToModule }) => {
       description: 'Platform ROI & performance metrics',
       color: colors.blue,
       badge: 'Featured'
+    },
+    {
+      id: 'producer-analytics',
+      icon: TrendingUp,
+      title: 'My Performance',
+      description: 'MTD & YTD quota tracking',
+      color: colors.orange,
+      badge: null
+    },
+    {
+      id: 'submission-intake',
+      icon: CloudUpload,
+      title: 'Submission Intake',
+      description: 'Document upload & processing',
+      color: colors.lightBlue,
+      badge: null
     },
   ];
 

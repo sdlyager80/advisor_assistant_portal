@@ -57,7 +57,9 @@ import {
   Email,
   Home as HomeIcon,
   Person,
-  ExpandMore
+  ExpandMore,
+  Edit as EditIcon,
+  Save as SaveIcon,
 } from '@mui/icons-material';
 
 // Color Palette
@@ -276,12 +278,48 @@ const CustomersScreen = () => {
       ]
     },
     { id: 5, name: 'Emily Rodriguez', age: 29, status: 'Active', policies: 2, products: ['Auto', 'Renters'], lastContact: '1 day ago', notes: [] },
-    { id: 6, name: 'David Thompson', age: 48, status: 'Active', policies: 4, products: ['Life Insurance', 'Home', 'Auto', 'Umbrella'], lastContact: '5 days ago', notes: [] },
+    {
+      id: 6, name: 'David Thompson', age: 48, status: 'Active', policies: 4,
+      products: ['Life Insurance', 'Home', 'Auto', 'Umbrella'], lastContact: '5 days ago', notes: [],
+      email: 'david.thompson@email.com', phone: '(555) 456-7890', address: '532 Lakewood Drive, Wheaton, IL 60187',
+      occupation: 'Civil Engineer', employer: 'DuPage County Public Works',
+      annualIncome: '$108,000', maritalStatus: 'Married', spouse: 'Rachel Thompson', children: 3,
+      birthday: 'May 19',
+      policyDetails: [
+        { type: 'Whole Life Insurance', policyNumber: 'WL-776655', premium: '$185/month', coverage: '$400,000', status: 'Active' },
+        { type: 'Home Insurance', policyNumber: 'HO-554433', premium: '$120/month', coverage: '$550,000', status: 'Active' },
+        { type: 'Auto Insurance', policyNumber: 'AU-332211', premium: '$165/month', coverage: '$500,000', status: 'Active' },
+        { type: 'Umbrella Policy', policyNumber: 'UM-119922', premium: '$55/month', coverage: '$1,000,000', status: 'Active' },
+      ]
+    },
     { id: 7, name: 'Jennifer Martinez', age: 41, status: 'Active', policies: 3, products: ['Health Insurance', 'Life Insurance', 'Disability'], lastContact: '2 weeks ago', notes: [] },
     { id: 8, name: 'Robert Anderson', age: 58, status: 'Active', policies: 6, products: ['Life Insurance', 'Retirement', 'Health Insurance', 'Home', 'Auto'], lastContact: '4 days ago', notes: [] },
-    { id: 9, name: 'Lisa Taylor', age: 33, status: 'Active', policies: 2, products: ['Life Insurance', 'Auto'], lastContact: '1 week ago', notes: [] },
+    {
+      id: 9, name: 'Lisa Taylor', age: 33, status: 'Active', policies: 2,
+      products: ['Life Insurance', 'Auto'], lastContact: '1 week ago', notes: [],
+      email: 'lisa.taylor@email.com', phone: '(555) 567-8901', address: '88 River Road, Naperville, IL 60540',
+      occupation: 'Nurse Practitioner', employer: 'Northwestern Medicine',
+      annualIncome: '$92,000', maritalStatus: 'Single', children: 0,
+      birthday: 'July 22',
+      policyDetails: [
+        { type: 'Term Life Insurance', policyNumber: 'TL-334455', premium: '$48/month', coverage: '$250,000', status: 'Active' },
+        { type: 'Auto Insurance', policyNumber: 'AU-112233', premium: '$110/month', coverage: '$300,000', status: 'Active' },
+      ]
+    },
     { id: 10, name: 'James Wilson', age: 62, status: 'Active', policies: 5, products: ['Retirement', 'Life Insurance', 'Health Insurance', 'Long-term Care'], lastContact: 'Today', notes: [] },
-    { id: 11, name: 'Patricia Brown', age: 36, status: 'Active', policies: 3, products: ['Life Insurance', 'Home', 'Auto'], lastContact: '6 days ago', notes: [] },
+    {
+      id: 11, name: 'Patricia Brown', age: 36, status: 'Active', policies: 3,
+      products: ['Life Insurance', 'Home', 'Auto'], lastContact: '6 days ago', notes: [],
+      email: 'patricia.brown@email.com', phone: '(555) 678-9012', address: '210 Elmwood Ave, Aurora, IL 60505',
+      occupation: 'Elementary School Teacher', employer: 'Aurora Community School District',
+      annualIncome: '$58,000', maritalStatus: 'Married', spouse: 'Gregory Brown', children: 2,
+      birthday: 'October 3',
+      policyDetails: [
+        { type: 'Term Life Insurance', policyNumber: 'TL-556677', premium: '$75/month', coverage: '$500,000', status: 'Active' },
+        { type: 'Home Insurance', policyNumber: 'HO-334455', premium: '$95/month', coverage: '$380,000', status: 'Active' },
+        { type: 'Auto Insurance', policyNumber: 'AU-998877', premium: '$130/month', coverage: '$300,000', status: 'Active' },
+      ]
+    },
     { id: 12, name: 'Christopher Lee', age: 44, status: 'Active', policies: 4, products: ['Life Insurance', 'Retirement', 'Disability', 'Auto'], lastContact: '3 days ago', notes: [] },
     { id: 13, name: 'Amanda Garcia', age: 27, status: 'Active', policies: 1, products: ['Auto'], lastContact: '2 days ago', notes: [] },
     { id: 14, name: 'Daniel Miller', age: 55, status: 'Active', policies: 5, products: ['Life Insurance', 'Retirement', 'Health Insurance', 'Home', 'Auto'], lastContact: '1 week ago', notes: [] },
@@ -302,6 +340,10 @@ const CustomersScreen = () => {
   const [noteText, setNoteText] = useState('');
   const [noteCategory, setNoteCategory] = useState('general');
   const [error, setError] = useState('');
+
+  // Edit contact states
+  const [isEditingContact, setIsEditingContact] = useState(false);
+  const [editContactData, setEditContactData] = useState({});
 
   // Filter states
   const [productFilter, setProductFilter] = useState('All Products');
@@ -465,10 +507,35 @@ const CustomersScreen = () => {
     setOpenDetailDialog(false);
     setSelectedCustomer(null);
     setDetailTabValue(0);
+    setIsEditingContact(false);
+    setEditContactData({});
   };
 
   const handleTabChange = (event, newValue) => {
     setDetailTabValue(newValue);
+  };
+
+  const handleStartEditContact = () => {
+    setEditContactData({
+      name: selectedCustomer.name || '',
+      email: selectedCustomer.email || '',
+      phone: selectedCustomer.phone || '',
+      address: selectedCustomer.address || '',
+    });
+    setIsEditingContact(true);
+  };
+
+  const handleSaveContactEdit = () => {
+    const updatedCustomer = { ...selectedCustomer, ...editContactData };
+    setCustomers(prev => prev.map(c => c.id === selectedCustomer.id ? updatedCustomer : c));
+    setSelectedCustomer(updatedCustomer);
+    setIsEditingContact(false);
+    speak(`Contact information for ${editContactData.name} has been updated`);
+  };
+
+  const handleCancelContactEdit = () => {
+    setIsEditingContact(false);
+    setEditContactData({});
   };
 
   return (
@@ -906,29 +973,98 @@ const CustomersScreen = () => {
                     {/* Contact Information */}
                       <Card elevation={0} sx={{ bgcolor: alpha(colors.paleAqua, 0.3), borderRadius: 2 }}>
                         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                          <Typography variant="h6" fontWeight={600} sx={{ mb: 2, color: colors.blue, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
-                            Contact Information
-                          </Typography>
-                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Email sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0 }} />
-                              <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' }, wordBreak: 'break-word' }}>
-                                {selectedCustomer.email || 'No email on file'}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Phone sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0 }} />
-                              <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' } }}>
-                                {selectedCustomer.phone || 'No phone on file'}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                              <HomeIcon sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0, mt: 0.3 }} />
-                              <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' } }}>
-                                {selectedCustomer.address || 'No address on file'}
-                              </Typography>
-                            </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Typography variant="h6" fontWeight={600} sx={{ color: colors.blue, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                              Contact Information
+                            </Typography>
+                            {!isEditingContact ? (
+                              <IconButton
+                                size="small"
+                                onClick={handleStartEditContact}
+                                sx={{ color: colors.blue, '&:hover': { bgcolor: alpha(colors.blue, 0.1) } }}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            ) : (
+                              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                                <IconButton
+                                  size="small"
+                                  onClick={handleSaveContactEdit}
+                                  sx={{ color: colors.green, '&:hover': { bgcolor: alpha(colors.green, 0.1) } }}
+                                >
+                                  <SaveIcon fontSize="small" />
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  onClick={handleCancelContactEdit}
+                                  sx={{ color: colors.red, '&:hover': { bgcolor: alpha(colors.red, 0.1) } }}
+                                >
+                                  <Close fontSize="small" />
+                                </IconButton>
+                              </Box>
+                            )}
                           </Box>
+                          {isEditingContact ? (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                              <TextField
+                                label="Full Name"
+                                size="small"
+                                fullWidth
+                                value={editContactData.name || ''}
+                                onChange={(e) => setEditContactData(prev => ({ ...prev, name: e.target.value }))}
+                              />
+                              <TextField
+                                label="Email"
+                                size="small"
+                                fullWidth
+                                value={editContactData.email || ''}
+                                onChange={(e) => setEditContactData(prev => ({ ...prev, email: e.target.value }))}
+                              />
+                              <TextField
+                                label="Phone"
+                                size="small"
+                                fullWidth
+                                value={editContactData.phone || ''}
+                                onChange={(e) => setEditContactData(prev => ({ ...prev, phone: e.target.value }))}
+                              />
+                              <TextField
+                                label="Address"
+                                size="small"
+                                fullWidth
+                                multiline
+                                rows={2}
+                                value={editContactData.address || ''}
+                                onChange={(e) => setEditContactData(prev => ({ ...prev, address: e.target.value }))}
+                              />
+                            </Box>
+                          ) : (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Person sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0 }} />
+                                <Typography variant="body2" fontWeight={600} sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' } }}>
+                                  {selectedCustomer.name}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Email sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0 }} />
+                                <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' }, wordBreak: 'break-word' }}>
+                                  {selectedCustomer.email || 'No email on file'}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Phone sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0 }} />
+                                <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' } }}>
+                                  {selectedCustomer.phone || 'No phone on file'}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                                <HomeIcon sx={{ color: colors.lightBlue, fontSize: { xs: 18, sm: 20 }, flexShrink: 0, mt: 0.3 }} />
+                                <Typography variant="body2" sx={{ fontSize: { xs: '0.813rem', sm: '0.875rem' } }}>
+                                  {selectedCustomer.address || 'No address on file'}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          )}
                         </CardContent>
                       </Card>
 

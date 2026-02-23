@@ -16,8 +16,8 @@ import {
   Grid,
   TextField,
   InputAdornment,
-  Divider,
   Tooltip,
+  Divider,
 } from '@mui/material';
 import {
   TrendingUp,
@@ -59,7 +59,7 @@ const IllustrationWorkflowScreen = ({
   onNavigateToEngagement,
   clientData = {
     name: 'Sam Wright',
-    age: 64,
+    age: 59,            // Sam Wright's current age per customer record
     currentValue: 485000,
   },
   illustrationParams = {
@@ -78,16 +78,17 @@ const IllustrationWorkflowScreen = ({
     topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
   }, []);
 
-  // Interactive parameters state
+  // Interactive parameters state — defaults synced to Policy Z6010310 (Sam Wright)
   const [params, setParams] = useState({
-    monthlyPremium: 500,
+    monthlyPremium: 1000,                                          // PDF: $1,000/month
     monthlyWithdrawal: illustrationParams.monthlyWithdrawal || 2000,
-    growthRate: 6.0,
+    growthRate: 6.0,                                               // PDF illustrated rate: 6.0%
     inflationRate: 2.5,
     annualFees: 1.0,
     withdrawalStartAge: illustrationParams.age || 65,
     monthlyIncome: 8000,
     currentValue: clientData.currentValue || 485000,
+    specifiedAmount: 200000,                                       // PDF: Specified Amount $200K
   });
 
   const [showParameters, setShowParameters] = useState(true);
@@ -119,7 +120,7 @@ const IllustrationWorkflowScreen = ({
   // Reset to default parameters
   const resetParameters = () => {
     setParams({
-      monthlyPremium: 500,
+      monthlyPremium: 1000,
       monthlyWithdrawal: illustrationParams.monthlyWithdrawal || 2000,
       growthRate: 6.0,
       inflationRate: 2.5,
@@ -127,6 +128,7 @@ const IllustrationWorkflowScreen = ({
       withdrawalStartAge: illustrationParams.age || 65,
       monthlyIncome: 8000,
       currentValue: clientData.currentValue || 485000,
+      specifiedAmount: 200000,
     });
   };
 
@@ -149,7 +151,7 @@ const IllustrationWorkflowScreen = ({
     const annualWithdrawal = params.monthlyWithdrawal * 12;
     const annualPremium = params.monthlyPremium * 12;
     const netGrowthRate = (params.growthRate - params.annualFees) / 100;
-    const initialDeathBenefit = params.currentValue * 2.5; // Initial death benefit multiplier
+    const specifiedAmount = params.specifiedAmount || 200000; // PDF: $200K Specified Amount
 
     // Start chart from client's current age to show full accumulation and withdrawal phases
     for (let age = clientData.age; age <= 95; age++) {
@@ -164,8 +166,8 @@ const IllustrationWorkflowScreen = ({
       const surrenderCharge = accountValue * surrenderChargeRate;
       const cashSurrenderValue = Math.max(0, accountValue - surrenderCharge);
 
-      // Calculate death benefit (guaranteed minimum plus account value growth)
-      const deathBenefit = Math.max(initialDeathBenefit, accountValue * 1.1);
+      // Option B Universal Life: Death Benefit = Specified Amount + Account Value (per PDF Z6010310)
+      const deathBenefit = specifiedAmount + accountValue;
 
       data.push({
         age,
@@ -222,6 +224,27 @@ const IllustrationWorkflowScreen = ({
                 {customerName} • Age {illustrationParams.age} Withdrawals
               </Typography>
             </Box>
+            {customerName === 'Sam Wright' && (
+              <Chip
+                label="Download PDF"
+                size="small"
+                onClick={() => {
+                  const a = document.createElement('a');
+                  a.href = '/sam-wright-policy-Z6010310.pdf';
+                  a.download = 'sam-wright-policy-Z6010310.pdf';
+                  a.click();
+                }}
+                sx={{
+                  bgcolor: alpha(colors.blue, 0.1),
+                  color: '#000000',
+                  border: `1px solid ${alpha(colors.blue, 0.25)}`,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  mr: 1,
+                  '&:hover': { bgcolor: alpha(colors.blue, 0.18) },
+                }}
+              />
+            )}
             <IconButton onClick={onClose} sx={{ color: colors.blue }}>
               <Close />
             </IconButton>
@@ -1076,6 +1099,7 @@ const IllustrationWorkflowScreen = ({
           </Card>
         </Fade>
       </Container>
+
     </Box>
   );
 };
